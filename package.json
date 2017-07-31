@@ -1,0 +1,32 @@
+{
+  "name": "icon-font-loader",
+  "description": "Transform icon-font CSS property and generate font files automaticaly",
+  "version": "0.1.0",
+  "author": "moujintao <moujintaotest@163.com>",
+  "contributors": [
+    "Rainfore <rainforest92@126.com>"
+  ],
+  "main": "./index.js",
+  "repository": "vusion/icon-font-loader",
+  "bugs": {
+    "url": "http://github.com/vusion/icon-font-loader/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "icon",
+    "font",
+    "webpack",
+    "loader"
+  ],
+  "tags": [
+    "icon",
+    "font",
+    "webpack",
+    "loader"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.3.0",
+    "eslint-config-vusion": "^1.2.0"
+  }
+}
