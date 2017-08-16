@@ -1,6 +1,6 @@
 # icon-font-loader
 
-Transform icon-font CSS property and generate font files automaticaly.
+Transform icon-font CSS property and generate font files automatically.
 
 ## Install
 
@@ -28,6 +28,6 @@ will be transformed to
 }
 ```
 
-(eot,svg,ttf,woff) fonts, and a global `@font-face` file imported automaticaly.
+(eot,svg,ttf,woff) fonts, and a global `@font-face` file imported automatically.
 
 ## Usage
