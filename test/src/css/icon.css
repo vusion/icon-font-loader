@@ -1,0 +1,9 @@
+.icon-test:before{
+    icon-font:url("../icons/arrow-left.svg");
+    color: red;
+}
+
+.icon-test-2:before{
+    icon-font:url("../icons/arrow-up.svg");
+    color: blue;
+}

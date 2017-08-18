@@ -1,0 +1,51 @@
+@font-face {
+    font-family: "iconFont";
+    src: url(".//iconFont.eot?#iefix") format("embedded-opentype"),
+    url(".//iconFont.woff") format("woff"),
+    url(".//iconFont.ttf") format("truetype"),
+    url(".//iconFont.svg#iconFont") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.iconFont {
+    display: inline-block;
+    font-family: "iconFont";
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    line-height: 1;
+    text-decoration: inherit;
+    text-rendering: optimizeLegibility;
+    text-transform: none;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
+.iconFont:before {
+    font-family: iconFont !important;
+    font-style: normal;
+    font-weight: normal !important;
+}
+
+.iconFont-arrow-left:before {
+	content: "\f101";
+}
+.iconFont-arrow-right:before {
+	content: "\f102";
+}
+.iconFont-arrow-up:before {
+	content: "\f103";
+}
+.iconFont-slice:before {
+	content: "\f104";
+}
+.iconFont-sound-off:before {
+	content: "\f105";
+}
+.iconFont-sound-on:before {
+	content: "\f106";
+}

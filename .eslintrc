@@ -2,6 +2,9 @@
     "extends": "vusion",
     "env": {
         "commonjs": true,
-        "node": true,
+        "node": true
     },
+    "rules":{
+        "func-style":0
+    }
 }

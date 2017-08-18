@@ -24,7 +24,10 @@
     "webpack",
     "loader"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "icon-maker": "^0.2.6"
+  },
   "devDependencies": {
     "eslint": "^4.3.0",
     "eslint-config-vusion": "^1.2.0"
