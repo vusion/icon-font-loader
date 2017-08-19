@@ -6,9 +6,10 @@ class IconFontPlugin {
     constructor(options) {
         this.options = Object.assign({
             types: ['ttf', 'eot', 'woff', 'svg'], // @bug: webfonts-generator
-            output: './',
             fontName: 'icon-font',
+            output: './',
             localCSSTemplate: path.resolve(__dirname, 'local.css.hbs'),
+            globalCSSTemplate: path.resolve(__dirname, 'global.css.hbs'),
         }, options);
     }
 
@@ -40,7 +41,7 @@ class IconFontPlugin {
                 writeFiles: false,
                 dest: 'build', // Required but doesn't get used
                 fontHeight: 1000,
-                cssTemplate: path.resolve(__dirname, 'global.css.hbs'),
+                cssTemplate: this.options.globalCSSTemplate,
             }, (err, result) => {
                 if (err)
                     return callback(err);

@@ -1,111 +1,80 @@
 # icon-font-loader
 
-通过icon-font属性引入svg文件，最终将svg打包成字体文件，并替换css文件中的内容为字体图标插入内容
-
-## Install
-
-```
-npm install --save-dev icon-font-loader
-
-```
+在CSS中用`icon-font`虚拟属性引入svg文件，收集整理后统一打包成字体文件，然后将刚才的虚拟属性转换为浏览器可识别的CSS。从而实现通过CSS引入字体图标，这个过程可以看作字符和字体图标的等效替换。
 
 ## 示例
 
 ``` css
-.head:after {
+.select:after {
     icon-font: url('../icons/arrow-down.svg');
+    color: #666;
 }
 ```
 
 通过icon-font-loader将会转变为
 
 ``` css
-.head:after {
-    font-family: 'IconFont';
+.select:after {
+    font-family: 'icon-font';
     font-style: normal;
     font-weight: normal;
     ...
     content: '\f106';
+    color: #666;
 }
 ```
 
-(eot,svg,ttf,woff) fonts, and a global `@font-face` file imported automatically.
+同时生成(eot,svg,ttf,woff)等字体和一个全局的`@font-face`文件。
 
-## 使用方法
+## 安装
 
-### loader的使用
-
-与普通loader相同
-
-```javascript
-//配置css文件引用如下
-{ test: /\.css$/, use:["style-loader","css-loader","icon-font-loader"]}
+``` shell
+npm install --save-dev icon-font-loader
 ```
 
-### plugin引入
+## 配置
 
-本插件依赖于plugin生成字体文件，所以需要引入plugin来实现字体的最终打包，plugin对象被集成与loader function中通过loader.iconFontCreatPlugin引入
+本loader针对的是CSS文件，但同时需要添加一个Plugin来打包字体图标。
 
 ```javascript
-//配置css文件引用如下
 const IconFontPlugin = require('icon-font-loader').Plugin;
 
 module.exports = {
-    plugins: [
-        new IconFontPlugin({
-             name:"iconDD",
-             output:{font:"src/iconfont",css:"css/"},
-             publishPath:"/dist/src/iconfont/"
-         }),
-    ],
-}
-
+    ...
+    module: {
+        rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', 'icon-font-loader'] }],
+    },
+    plugins: [new IconFontPlugin()],
+};
 ```
-### plugin支持参数
 
-#### name
-字体图标库名称，默认值 iconFont
+### loader参数
+
+暂无。
+
+### plugin参数
+
+#### fontName
+字体图标的字体名和文件名。
+
+- Type: `string`
+- Default: `icon-font`
 
 #### output
 
-文件输出目录，webpack output路径的相对路径，接受string或者是object两种类型
-object类型接受字体文件生成路径与css文件生成路径
+字体和CSS等文件对于webpack的output的相对路径。
 
-```javascript
-{
-    css:"css文件路径",
-    font:"字体文件路径"
-}
+- Type: `string`
+- Default: `./`
 
-```
+#### localCSSTemplate
+局部CSS虚拟属性转换后内容的模板路径。
 
-#### publishPath
+- Type: `string`
+- Default: [global.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
 
-发布路径，替换字体引入的地址，通常用cdn路径或者是网站静态资源路径
+#### globalCSSTemplate
+全局CSS`@font-face`内容的模板路径。
 
-默认生成的字体引用
-
-```css
-@font-face {
-    font-family: "iconDD";
-    src: url("/iconDD.eot?v={hash}") format("embedded-opentype"),
-    url("/iconDD.woff?v={hash}") format("woff"),
-    url("/iconDD.ttf?v={hash}") format("truetype"),
-    url("/iconDD.svg?v={hash}#iconFont") format("svg");
-    font-weight: normal;
-    font-style: normal;
-}
-```
-配置 publishPath = /dist/src/iconfont生成样式
-
-```css
-@font-face {
-    font-family: "iconDD";
-    src: url("/dist/src/iconfont/iconDD.eot?v={hash}") format("embedded-opentype"),
-    url("/dist/src/iconfont/iconDD.woff?v={hash}") format("woff"),
-    url("/dist/src/iconfont/iconDD.ttf?v={hash}") format("truetype"),
-    url("/dist/src/iconfont/iconDD.svg?v={hash}#iconFont") format("svg");
-    font-weight: normal;
-    font-style: normal;
-}
-```
+- Type: `string`
+- Default: [local.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/local.css.hbs)
