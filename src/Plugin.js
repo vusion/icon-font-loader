@@ -47,7 +47,7 @@ class IconFontPlugin {
 
                 const urls = {};
                 types.forEach((type) => urls[type] = `${fontName}.${type}`);
-                const css = result.generateCss(urls);
+                const css = result.generateCss();
 
                 const assets = compilation.assets;
 
