@@ -20,17 +20,17 @@ class IconFontPlugin {
                 files: [],
                 localCSSTemplate: this.options.localCSSTemplate,
             };
-        });
 
-        compiler.plugin('this-compilation', (compilation) => {
+            shell.rm('-rf', path.resolve(__dirname, '../__tmp_*'));
             this.tmpPath = path.resolve(__dirname, '../__tmp_' + Date.now());
             shell.mkdir(this.tmpPath);
-            compiler.options.iconFontOptions.files = [];
         });
 
         // right after emit, files will be generated
         compiler.plugin('emit', (compilation, callback) => {
             const files = this.handleSameName(compiler.options.iconFontOptions.files);
+            if (!files.length)
+                return callback();
 
             const fontName = this.options.fontName;
             const types = this.options.types;
@@ -62,8 +62,6 @@ class IconFontPlugin {
                     source: () => css,
                     size: () => css.length,
                 };
-
-                this.tmpPath && shell.rm('-r', path.resolve(__dirname, '../__tmp_*'));
 
                 callback();
             });

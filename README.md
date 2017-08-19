@@ -50,7 +50,7 @@ module.exports = {
 };
 ```
 
-According to output path, add a stylesheet `<link>` tag in html files, like
+According to output path, add a stylesheet `<link>` tag in html files(We will make this step automatical, but meet some difficulty at present), like
 
 ``` html
 <link rel="stylesheet" type="text/css" href="icon-font.css">
