@@ -48,6 +48,12 @@ module.exports = {
 };
 ```
 
+根据输出路径，在HTML文件中添加一个`<link>`样式标签（我们之后会把这个过程变成自动的，但是目前遇到了一些困难），如：
+
+``` html
+<link rel="stylesheet" type="text/css" href="icon-font.css">
+```
+
 ### loader参数
 
 暂无。

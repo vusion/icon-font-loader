@@ -1,8 +1,8 @@
 # icon-font-loader
 
-Import svg files by using a virtual property `icon-font` in CSS. And generate icon fonts after collecting all svgs. This loader can be seen as an equivalent substitution from characters to font icons.
+Import svg files by using a virtual property `icon-font` in CSS. And generate icon fonts after collecting all svgs.
 
-Transform icon-font CSS property and generate font files automatically.
+This could be seen as an equivalent substitution from characters to font icons.
 
 ## Example
 
@@ -48,6 +48,12 @@ module.exports = {
     },
     plugins: [new IconFontPlugin()],
 };
+```
+
+According to output path, add a stylesheet `<link>` tag in html files, like
+
+``` html
+<link rel="stylesheet" type="text/css" href="icon-font.css">
 ```
 
 ### loader options
