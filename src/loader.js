@@ -22,6 +22,7 @@ function iconFontLoader(source) {
             // This path must be resolved.
             this.resolve(this.context, $1, (err, result) => err ? reject(err) : resolve(result));
         }).then((file) => {
+            this.addDependency(file);
             let index = files.indexOf(file);
             if (~index)
                 index++;
