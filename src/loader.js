@@ -16,10 +16,16 @@ function iconFontLoader(source) {
     const contents = [];
     let i = 0;
     // 由于是异步的，第一遍replace只用于查重
-    source.replace(reg, (m, $1) => {
+    source.replace(reg, (m, url) => {
         promises.push(new Promise((resolve, reject) => {
-            // This path must be resolved.
-            this.resolve(this.context, $1, (err, result) => err ? reject(err) : resolve(result));
+            // Keep url resolver consistent with that of css-loader https://github.com/webpack-contrib/css-loader#url
+            if (!url.startsWith('~') && !url.startsWith('./'))
+                url = './' + url;
+            else if (url.startsWith('~'))
+                url = url.slice(1);
+
+            // This path must be resolved by webpack.
+            this.resolve(this.context, url, (err, result) => err ? reject(err) : resolve(result));
         }).then((file) => {
             this.addDependency(file);
             let index = files.indexOf(file);
@@ -38,7 +44,7 @@ function iconFontLoader(source) {
     Promise.all(promises).then(() => {
         // 第二遍replace真正替换
         let i = 0;
-        const result = source.replace(reg, (m, $1) => template({
+        const result = source.replace(reg, () => template({
             fontName: options.fontName,
             content: contents[i++],
         }));
