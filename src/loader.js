@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const handlebars = require('handlebars');
 
 const Plugin = require('./Plugin');
@@ -9,7 +8,7 @@ function iconFontLoader(source) {
     const callback = this.async();
 
     this.cacheable();
-    const options = this._compilation.options.iconFontOptions;
+    const options = this._compiler.options.iconFontOptions;
     const files = options.files;
     const START_NUM = 256; // webfonts-generator start at this number
 
