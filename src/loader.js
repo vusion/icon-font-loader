@@ -18,12 +18,6 @@ function iconFontLoader(source) {
     // 由于是异步的，第一遍replace只用于查重
     source.replace(reg, (m, url) => {
         promises.push(new Promise((resolve, reject) => {
-            // Keep url resolver consistent with that of css-loader https://github.com/webpack-contrib/css-loader#url
-            if (!url.startsWith('~') && !url.startsWith('./'))
-                url = './' + url;
-            else if (url.startsWith('~'))
-                url = url.slice(1);
-
             // This path must be resolved by webpack.
             this.resolve(this.context, url, (err, result) => err ? reject(err) : resolve(result));
         }).then((file) => {
