@@ -2,7 +2,7 @@ const path = require('path');
 const webfontsGenerator = require('webfonts-generator');
 const shell = require('shelljs');
 const webpack = require('webpack');
-const ConcatSource = require("webpack-sources").ConcatSource;
+const ConcatSource = require('webpack-sources').ConcatSource;
 const crypto = require('crypto');
 
 class IconFontPlugin {
@@ -17,25 +17,25 @@ class IconFontPlugin {
     }
 
     apply(compiler) {
-        const addStylePath = path.resolve(__dirname, './addStyle.js')
-        const PrefetchPlugin = new webpack.PrefetchPlugin(__dirname, './addStyle.js');
-        let styleMessage = {};
-        PrefetchPlugin.apply(compiler);
+        const addStylePath = path.resolve(__dirname, './addStyle.js');
+        const prefetchPlugin = new webpack.PrefetchPlugin(__dirname, './addStyle.js');
+        const styleMessage = {};
+        prefetchPlugin.apply(compiler);
 
         compiler.plugin('after-plugins', (compiler) => {
-            compiler.iconFontOptions = {
-                fontName: this.options.fontName,
-                files: [],
-                localCSSTemplate: this.options.localCSSTemplate,
-            };
+            this.files = [];
 
             shell.rm('-rf', path.resolve(__dirname, '../__tmp_*'));
             this.tmpPath = path.resolve(__dirname, '../__tmp_' + Date.now());
             shell.mkdir(this.tmpPath);
         });
-        compiler.plugin('compilation', (compilation,params) => {
+        compiler.plugin('compilation', (compilation, params) => {
+            compilation.plugin('normal-module-loader', (loaderContext) => {
+                loaderContext.iconFontPlugin = this;
+            });
+
             compilation.plugin('additional-assets', (callback) => {
-                const files = this.handleSameName(compiler.iconFontOptions.files);
+                const files = this.handleSameName(this.files);
                 if (!files.length)
                     return callback();
 
@@ -63,8 +63,8 @@ class IconFontPlugin {
                         const pathFile = path.join(this.options.output, urls[type]);
                         styleMessage[type] = {
                             path: pathFile,
-                            md5: this.md5Create(result[type])
-                        }
+                            md5: this.md5Create(result[type]),
+                        };
                         assets[pathFile] = {
                             source: () => result[type],
                             size: () => result[type].length,
@@ -78,25 +78,24 @@ class IconFontPlugin {
                     callback();
                 });
             });
-            compilation.plugin("optimize-chunks", function(chunks) {
+            compilation.plugin('optimize-chunks', (chunks) => {
                 const modules = compilation.modules;
                 let addStyleModule;
                 modules.forEach((module) => {
-                    if(module.request === addStylePath){
+                    if (module.request === addStylePath)
                         addStyleModule = module;
-                    }
                 });
                 chunks.forEach((chunk) => {
                     chunk.addModule(addStyleModule);
                     addStyleModule.addChunk(chunk);
                 });
             });
-            compilation.plugin("optimize-chunk-assets", function(chunks, callback) {
-                chunks.forEach(function(chunk) {
-                    chunk.files.forEach(function(file) {
+            compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+                chunks.forEach((chunk) => {
+                    chunk.files.forEach((file) => {
                         compilation.assets[file] = new ConcatSource(
-                            "\/**icon font style message**\/",
-                            "\n",
+                            '\/**icon font style message**\/',
+                            '\n',
                             'if(window&&!window.ICON_FONT_STYLE){',
                             `window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};}`,
                             '\n',
@@ -105,14 +104,13 @@ class IconFontPlugin {
                 });
                 callback();
             });
-            compilation.mainTemplate.plugin('startup', function(source, chunk, hash) {
-                let id = -1
+            compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
+                let id = -1;
                 chunk.forEachModule((module) => {
-                    if(module.request === addStylePath){
+                    if (module.request === addStylePath)
                         id = module.id;
-                    }
                 });
-                if (id!=-1) {
+                if (id != -1) {
                     return [
                         ` __webpack_require__(${id})()`,
                     ].join('\n') + source;
@@ -149,10 +147,10 @@ class IconFontPlugin {
 
         return result;
     }
-    md5Create(stream){
+    md5Create(stream) {
         const md5 = crypto.createHash('md5');
         md5.update(stream);
-        return md5.digest('hex')
+        return md5.digest('hex');
     }
 }
 

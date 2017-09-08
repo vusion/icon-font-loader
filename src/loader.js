@@ -8,8 +8,8 @@ function iconFontLoader(source) {
     const callback = this.async();
 
     this.cacheable();
-    const options = this._compiler.iconFontOptions;
-    const files = options.files;
+    const plugin = this.iconFontPlugin;
+    const files = plugin.files;
     const START_NUM = 0xF100; // webfonts-generator start at this number
 
     const promises = [];
@@ -34,12 +34,12 @@ function iconFontLoader(source) {
         }));
     });
 
-    const template = handlebars.compile(fs.readFileSync(options.localCSSTemplate, 'utf8'));
+    const template = handlebars.compile(fs.readFileSync(plugin.options.localCSSTemplate, 'utf8'));
     Promise.all(promises).then(() => {
         // 第二遍replace真正替换
         let i = 0;
         const result = source.replace(reg, () => template({
-            fontName: options.fontName,
+            fontName: plugin.options.fontName,
             content: contents[i++],
         }));
         callback(null, result);
