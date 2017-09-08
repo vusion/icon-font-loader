@@ -1,0 +1,7 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "scripts": {
+     "webpack-dev-run": "../../../node_modules/.bin/webpack-dev-server --hot"
+  }
+}

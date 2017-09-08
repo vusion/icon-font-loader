@@ -1,41 +1,38 @@
 /**
  * Created by moujintao on 2017/8/30.
  */
-const createStyleContent = () => {
-    const style = window.ICON_FONT_STYLE,
-        fontName = style.name;
-    let   srcStr = [];
+function createStyleContent() {
+    var style = window.ICON_FONT_STYLE,
+        fontName = style.name,  srcStr = [];
 
-    for(const name of Object.keys(style)){
-        const path  = style[name].path,hash = style[name].md5;
-        switch (name) {
-            case 'eot':
-                srcStr.push(`url("${path}?${hash}#iefix") format("embedded-opentype")`);
-                break;
-            case 'woff':
-                srcStr.push(`url("${path}?${hash}") format("woff")`);
-                break;
-            case 'ttf':
-                srcStr.push(`url("${path}?${hash}") format("truetype")`);
-                break;
-            case 'svg':
-                srcStr.push(`url("${path}?${hash}#${fontName}") format("svg")`);
-            default:
-                break;
-
+    for(var name in style){
+        var path  = style[name].path,hash = style[name].md5;
+        if(style.hasOwnProperty(name)) {
+            switch (name) {
+                case 'eot':
+                    srcStr.push('url("'+path+'?'+hash+'#iefix") format("embedded-opentype")');
+                    break;
+                case 'woff':
+                    srcStr.push('url("'+path+'?'+hash+'") format("woff")');
+                    break;
+                case 'ttf':
+                    srcStr.push('url("'+path+'?'+hash+'") format("truetype")');
+                    break;
+                case 'svg':
+                    srcStr.push('url("'+path+'?'+hash+'#'+fontName+'") format("svg")');
+                    break;
+                default:
+                    break;
+            }
         }
     }
-    srcStr = srcStr.join(",");
-    return `@font-face {
-                    font-family: "${fontName}";
-                    src: ${srcStr};
-                }`;
+    srcStr = srcStr.join(",\n\t");
+    return '@font-face {\n\tfont-family: "'+fontName+'";\n\tsrc:'+srcStr+";\n}";
 }
 
-const addStyle = () => {
-    const styleTag = document.createElement('style');
+function addStyle() {
+    var styleTag = document.createElement('style'),headElement  = document.getElementsByTagName('head')[0];
     styleTag.innerHTML = createStyleContent();
-    const headElement  = document.getElementsByTagName('head')[0];
     styleTag.type="text/css";
     if(headElement){
         headElement.appendChild(styleTag);
@@ -47,11 +44,10 @@ const addStyle = () => {
 }
 
 
-module.exports= (hash) => {
+module.exports= function(hash) {
     if(window.HAS_CREATE_FONT_STYLE){
         return;
     }
     addStyle();
     window.HAS_CREATE_FONT_STYLE = true;
 }
-console.log(module.hot);
