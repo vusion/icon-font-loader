@@ -8,9 +8,9 @@ function iconFontLoader(source) {
     const callback = this.async();
 
     this.cacheable();
-    const options = this._compiler.options.iconFontOptions;
+    const options = this._compiler.iconFontOptions;
     const files = options.files;
-    const START_NUM = 256; // webfonts-generator start at this number
+    const START_NUM = 0xF100; // webfonts-generator start at this number
 
     const promises = [];
     const contents = [];
@@ -29,7 +29,7 @@ function iconFontLoader(source) {
                 files.push(file);
                 index = files.length;
             }
-            contents[i++] = '\\f' + (START_NUM + index).toString(16);
+            contents[i++] = '\\' + (START_NUM + index).toString(16);
             return file;
         }));
     });

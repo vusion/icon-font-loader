@@ -1,0 +1,4 @@
+.icon-slice:before {
+    icon-font: url('../../icons/slice.svg');
+    color: blue;
+}

@@ -27,7 +27,8 @@
   "dependencies": {
     "handlebars": "^4.0.10",
     "shelljs": "^0.7.8",
-    "webfonts-generator": "^0.3.5"
+    "webfonts-generator": "^0.3.5",
+    "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
     "eslint": "^4.3.0",
