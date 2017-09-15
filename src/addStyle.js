@@ -1,8 +1,9 @@
 /**
  * Created by moujintao on 2017/8/30.
  */
-function createStyleContent() {
-    var style = window.ICON_FONT_STYLE,
+var styleId = 'ICON-FONT-FILE-STYLE';
+function createStyleContent(fontConfig) {
+    var style = fontConfig||window.ICON_FONT_STYLE,
         fontName = style.name,  srcStr = [];
 
     for(var name in style){
@@ -30,9 +31,10 @@ function createStyleContent() {
     return '@font-face {\n\tfont-family: "'+fontName+'";\n\tsrc:'+srcStr+";\n}";
 }
 
-function addStyle() {
+function addStyle(fontConfig) {
     var styleTag = document.createElement('style'),headElement  = document.getElementsByTagName('head')[0];
-    styleTag.innerHTML = createStyleContent();
+    styleTag.innerHTML = createStyleContent(fontConfig);
+    styleTag.id = styleId;
     styleTag.type="text/css";
     if(headElement){
         headElement.appendChild(styleTag);
@@ -43,11 +45,22 @@ function addStyle() {
     }
 }
 
+function updateStyle(fontConfig) {
+    var styleTag = document.getElementById(styleId);
+    if(!styleTag){
+        addStyle(fontConfig);
+    }else{
+        styleTag.innerHTML = createStyleContent(fontConfig);
+    }
+}
 
-module.exports= function(hash) {
+module.exports= function() {
     if(window.HAS_CREATE_FONT_STYLE){
         return;
     }
     addStyle();
     window.HAS_CREATE_FONT_STYLE = true;
+}
+if(module.hot){
+    window.ICON_FONT_STYLE.update = updateStyle;
 }

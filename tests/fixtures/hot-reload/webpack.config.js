@@ -13,8 +13,5 @@ module.exports = {
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },
-    plugins: [new IconFontPlugin(), new webpack.HotModuleReplacementPlugin()],
-    devServer:{
-        hot:true
-    }
+    plugins: [new IconFontPlugin()],
 };

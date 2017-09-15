@@ -98,7 +98,9 @@ class IconFontPlugin {
                             '\n',
                             'if(window&&!window.ICON_FONT_STYLE){',
                             `window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};}`,
-                            '\n',
+                            'else if(window.ICON_FONT_STYLE&&window.ICON_FONT_STYLE.update){',
+                            `window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)})`,
+                            '}',
                             compilation.assets[file]);
                     });
                 });
