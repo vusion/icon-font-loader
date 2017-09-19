@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
-const testCase = ['default', 'options', 'same-name'];
+const testCase = ['default', 'options', 'more-one-css', 'same-name'];
 
 describe('Webpack Integration Tests', () => {
     testCase.forEach((value) => {
@@ -10,8 +10,8 @@ describe('Webpack Integration Tests', () => {
             const configPath = path.join('../tests/fixtures/', value, '/webpack.config.js');
             const outputDirectory = path.join('/fixtures/', value, '/dest');
             const options = require(configPath);
-            for(const chunck of Object.keys(options.entry)){
-                options.entry[chunck] = path.join(__dirname,'/fixtures/',value,options.entry[chunck]);
+            for(const chunck of Object.keys(options.entry)) {
+                options.entry[chunck] = path.join(__dirname, '/fixtures/', value, options.entry[chunck]);
             };
             webpack(options, (err, stats) => {
                 if (err) return done(err);

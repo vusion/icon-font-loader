@@ -6,6 +6,9 @@
   "contributors": [
     "Rainfore <rainforest92@126.com>"
   ],
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha ./tests/final.test.js"
+  },
   "main": "./index.js",
   "repository": "vusion/icon-font-loader",
   "bugs": {
