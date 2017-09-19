@@ -94,7 +94,7 @@ class IconFontPlugin {
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
                         compilation.assets[file] = new ConcatSource(
-                            '\/**icon font style message**\/',
+                            '/**icon font style message**/',
                             '\n',
                             'if(window&&!window.ICON_FONT_STYLE){',
                             `window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};}`,
@@ -112,7 +112,7 @@ class IconFontPlugin {
                     if (module.request === addStylePath)
                         id = module.id;
                 });
-                if (id != -1) {
+                if (id !== -1) {
                     return [
                         ` __webpack_require__(${id})()`,
                     ].join('\n') + source;

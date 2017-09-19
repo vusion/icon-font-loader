@@ -16,6 +16,7 @@ describe('Webpack Integration Tests', () => {
             webpack(options, (err, stats) => {
                 if (err) return done(err);
                 if (stats.hasErrors()) return done(new Error(stats.toString()));
+                //todo checkout result file context
                 done();
             });
         });
