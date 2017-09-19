@@ -7,7 +7,7 @@
     "Rainfore <rainforest92@126.com>"
   ],
   "scripts": {
-    "test": "./node_modules/.bin/_mocha ./tests/final.test.js",
+    "test": "mocha ./tests/final.test.js",
     "eslint": "./node_modules/.bin/eslint ./src",
     "eslint-fix": "./node_modules/.bin/eslint ./src --fix"
   },
