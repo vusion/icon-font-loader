@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 const webfontsGenerator = require('webfonts-generator');
 const shell = require('shelljs');
