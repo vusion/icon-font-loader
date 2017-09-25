@@ -15,7 +15,7 @@ function iconFontLoader(source) {
     const START_NUM = 0xF100; // webfonts-generator start at this number
 
     const promises = [];
-    const contents = [];
+    const contents = {};
     let i = 0;
     // 由于是异步的，第一遍replace只用于查重
     source.replace(reg, (m, url) => {
@@ -31,7 +31,8 @@ function iconFontLoader(source) {
                 files.push(file);
                 index = files.length;
             }
-            contents[i++] = '\\' + (START_NUM + index).toString(16);
+            //存储下每一个svg路径对应下的，字体编号
+            contents[url] = '\\' + (START_NUM + index).toString(16);
             return file;
         }));
     });
@@ -40,9 +41,9 @@ function iconFontLoader(source) {
     Promise.all(promises).then(() => {
         // 第二遍replace真正替换
         let i = 0;
-        const result = source.replace(reg, () => template({
+        const result = source.replace(reg, (m, url) => template({
             fontName: plugin.options.fontName,
-            content: contents[i++],
+            content: contents[url],
         }));
         callback(null, result);
     }).catch((err) => {

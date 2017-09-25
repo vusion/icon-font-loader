@@ -40,7 +40,6 @@ class IconFontPlugin {
                 const files = this.handleSameName(this.files);
                 if (!files.length)
                     return callback();
-
                 const fontName = this.options.fontName;
                 const types = this.options.types;
                 webfontsGenerator({

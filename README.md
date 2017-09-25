@@ -62,7 +62,7 @@ module.exports = {
     plugins: [new IconFontPlugin()],
 };
 ```
-plugin will insert a style tag in your document head to define and import icon font.
+plugin will insert a stylesheet tag in your document head to define and import icon font.
 
 ``` css
 @font-face {
