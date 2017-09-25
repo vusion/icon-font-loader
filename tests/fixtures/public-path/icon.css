@@ -1,0 +1,19 @@
+.icon-arrow-left:before {
+    icon-font: url('../../icons/arrow-left.svg');
+    color: red;
+}
+
+.icon-arrow-left-2:before {
+    icon-font: url('../../icons/same-name/arrow-left.svg');
+    color: red;
+}
+
+.icon-arrow-up:before {
+    icon-font: url('../../icons/arrow-up.svg');
+    color: blue;
+}
+.icon-slice:before {
+    icon-font: url('../../icons/slice.svg');
+    color: blue;
+}
+
