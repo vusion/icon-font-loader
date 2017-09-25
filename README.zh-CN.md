@@ -47,11 +47,16 @@ module.exports = {
     plugins: [new IconFontPlugin()],
 };
 ```
+在打包结束以后，plugin会在chunk中插入一段js，这段js会根据生成的字体文件路径，定义并引入字体文件
 
-根据输出路径，在HTML文件中添加一个`<link>`样式标签（我们之后会把这个过程变成自动的，但是目前遇到了一些困难），如：
-
-``` html
-<link rel="stylesheet" type="text/css" href="icon-font.css">
+``` css
+@font-face {
+	font-family: "icon-font";
+	src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
+	url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
+	url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
+	url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
+}
 ```
 
 ### loader参数

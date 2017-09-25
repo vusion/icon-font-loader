@@ -62,11 +62,16 @@ module.exports = {
     plugins: [new IconFontPlugin()],
 };
 ```
+plugin will insert a style tag in your document head to define and import icon font.
 
-According to output path, add a stylesheet `<link>` tag in html files(We will remove this manual step soon, but there are some difficulties at present), like
-
-``` html
-<link rel="stylesheet" type="text/css" href="icon-font.css">
+``` css
+@font-face {
+	font-family: "icon-font";
+	src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
+	url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
+	url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
+	url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
+}
 ```
 
 ### loader options
