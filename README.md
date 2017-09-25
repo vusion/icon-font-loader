@@ -4,6 +4,19 @@ Import svg files through a virtual property `icon-font` in CSS. And generate ico
 
 This could be seen as an equivalent substitution from characters to font icons.
 
+[![CircleCI][circleci-img]][circleci-url]
+[![NPM Version][npm-img]][npm-url]
+[![Dependencies][david-img]][david-url]
+[![NPM Download][download-img]][download-url]
+
+[circleci-img]: https://img.shields.io/circleci/project/github/vusion/icon-font-loader.svg?style=flat-square
+[circleci-url]: https://circleci.com/gh/vusion/icon-font-loader
+[npm-img]: http://img.shields.io/npm/v/icon-font-loader.svg?style=flat-square
+[npm-url]: http://npmjs.org/package/icon-font-loader
+[david-img]: http://img.shields.io/david/vusion/icon-font-loader.svg?style=flat-square
+[david-url]: https://david-dm.org/vusion/icon-font-loader
+[download-img]: https://img.shields.io/npm/dm/icon-font-loader.svg?style=flat-square
+[download-url]: https://npmjs.org/package/icon-font-loader
 ## Example
 
 ``` css
