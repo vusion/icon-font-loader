@@ -1,6 +1,3 @@
-/**
- * Created by moujintao on 2017/8/30.
- */
 var styleId = 'ICON-FONT-FILE-STYLE';
 function createStyleContent(fontConfig) {
     var style = fontConfig||window.ICON_FONT_STYLE,

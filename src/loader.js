@@ -16,7 +16,6 @@ function iconFontLoader(source) {
 
     const promises = [];
     const contents = {};
-    let i = 0;
     // 由于是异步的，第一遍replace只用于查重
     source.replace(reg, (m, url) => {
         promises.push(new Promise((resolve, reject) => {
@@ -31,7 +30,7 @@ function iconFontLoader(source) {
                 files.push(file);
                 index = files.length;
             }
-            //存储下每一个svg路径对应下的，字体编号
+            // 存储下每一个svg路径对应下的，字体编号
             contents[url] = '\\' + (START_NUM + index).toString(16);
             return file;
         }));
@@ -40,7 +39,6 @@ function iconFontLoader(source) {
     const template = handlebars.compile(fs.readFileSync(plugin.options.localCSSTemplate, 'utf8'));
     Promise.all(promises).then(() => {
         // 第二遍replace真正替换
-        let i = 0;
         const result = source.replace(reg, (m, url) => template({
             fontName: plugin.options.fontName,
             content: contents[url],

@@ -17,6 +17,7 @@ This could be seen as an equivalent substitution from characters to font icons.
 [david-url]: https://david-dm.org/vusion/icon-font-loader
 [download-img]: https://img.shields.io/npm/dm/icon-font-loader.svg?style=flat-square
 [download-url]: https://npmjs.org/package/icon-font-loader
+
 ## Example
 
 ``` css
@@ -62,7 +63,8 @@ module.exports = {
     plugins: [new IconFontPlugin()],
 };
 ```
-plugin will insert a stylesheet tag in your document head to define and import icon font.
+
+This plugin will insert a `<style>` tag in your document head to import and define the icon font.
 
 ``` css
 @font-face {

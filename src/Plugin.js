@@ -94,13 +94,13 @@ class IconFontPlugin {
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
                         compilation.assets[file] = new ConcatSource(
-                            '/**icon font style message**/',
-                            '\n',
-                            'if(window&&!window.ICON_FONT_STYLE){',
-                            `window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};}`,
-                            'else if(window.ICON_FONT_STYLE&&window.ICON_FONT_STYLE.update){',
-                            `window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)})`,
-                            '}',
+                            `/* icon font style message */
+
+                            if (window && !window.ICON_FONT_STYLE) {
+                                window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
+                            } else if (window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
+                                window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
+                            }`,
                             compilation.assets[file]);
                     });
                 });
