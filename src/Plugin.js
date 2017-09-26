@@ -78,18 +78,17 @@ class IconFontPlugin {
                     callback();
                 });
             });
+
             compilation.plugin('optimize-chunks', (chunks) => {
-                const modules = compilation.modules;
-                let addStyleModule;
-                modules.forEach((module) => {
-                    if (module.request === addStylePath)
-                        addStyleModule = module;
-                });
-                chunks.forEach((chunk) => {
-                    chunk.addModule(addStyleModule);
-                    addStyleModule.addChunk(chunk);
-                });
+                const addStyleModule = compilation.modules.find((module) => module.request === addStylePath);
+                if (addStyleModule) {
+                    chunks.forEach((chunk) => {
+                        chunk.addModule(addStyleModule);
+                        addStyleModule.addChunk(chunk);
+                    });
+                }
             });
+
             compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
