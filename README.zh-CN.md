@@ -47,7 +47,7 @@ module.exports = {
     plugins: [new IconFontPlugin()],
 };
 ```
-在打包结束以后，plugin会在chunk中插入一段js，这段js会根据生成的字体文件路径，定义并引入字体文件
+在打包结束以后，这个plugin会在文档头部插入一个`<style>`，引入并定义字体。
 
 ``` css
 @font-face {
