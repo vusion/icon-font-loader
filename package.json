@@ -41,6 +41,7 @@
     "eslint": "^4.3.0",
     "eslint-config-vusion": "^1.2.0",
     "extract-text-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^2.30.1",
     "mocha": "^3.5.3",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
