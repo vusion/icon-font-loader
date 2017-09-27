@@ -15,6 +15,6 @@ module.exports = {
     },
     plugins: [
         new IconFontPlugin(),
-        // new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin(),
     ],
 };
