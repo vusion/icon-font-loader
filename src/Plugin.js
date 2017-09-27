@@ -94,9 +94,9 @@ class IconFontPlugin {
                     chunk.files.forEach((file) => {
                         compilation.assets[file] = new ConcatSource(
                             `/* icon font style message */
-                            if (typeof window!== "undefined" && !window.ICON_FONT_STYLE) {
+                            if (typeof window !== "undefined" && !window.ICON_FONT_STYLE) {
                                 window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
-                            } else if (typeof window!== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
+                            } else if (typeof window !== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
                                 window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
                             }`,
                             compilation.assets[file]);
