@@ -92,7 +92,7 @@ class IconFontPlugin {
             compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
-                        if (file.endsWith('.js'))
+                        if (file.endsWith('.js')) {
                             compilation.assets[file] = new ConcatSource(
                                 compilation.assets[file],
                                 `/* icon font style message */
@@ -100,7 +100,9 @@ class IconFontPlugin {
                                     window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
                                 } else if (typeof window !== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
                                     window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
-                                }`);
+                                }`
+                            );
+                        }
                     });
                 });
                 callback();
