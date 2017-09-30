@@ -55,9 +55,9 @@ module.exports= function() {
     if(window.HAS_CREATE_FONT_STYLE){
         return;
     }
-    addStyle();
+    window.ICON_FONT_STYLE && addStyle();
     window.HAS_CREATE_FONT_STYLE = true;
 }
 if(module.hot){
-    window.ICON_FONT_STYLE.update = updateStyle;
+    window.ICON_FONT_STYLE && (window.ICON_FONT_STYLE.update = updateStyle);
 }
