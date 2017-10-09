@@ -11,6 +11,7 @@ function iconFontLoader(source) {
 
     this.cacheable();
     const plugin = this.iconFontPlugin;
+    const reg = plugin.options.iconCssRegex;
     const files = plugin.files;
     const START_NUM = 0xF100; // webfonts-generator start at this number
 
@@ -36,7 +37,10 @@ function iconFontLoader(source) {
         }));
     });
 
-    const template = handlebars.compile(fs.readFileSync(plugin.options.localCSSTemplate, 'utf8'));
+    const templateData = !plugin.options.localCSSTemplateData
+        ? fs.readFileSync(plugin.options.localCSSTemplate, 'utf8')
+        : plugin.options.localCSSTemplateData;
+    const template = handlebars.compile(templateData);
     Promise.all(promises).then(() => {
         // 第二遍replace真正替换
         const result = source.replace(reg, (m, url) => template({

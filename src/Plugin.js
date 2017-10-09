@@ -15,6 +15,8 @@ class IconFontPlugin {
             output: './',
             localCSSTemplate: path.resolve(__dirname, 'local.css.hbs'),
             globalCSSTemplate: path.resolve(__dirname, 'global.css.hbs'),
+            iconCssRegex: /icon-font\s*:\s*url\(["']?(.*?)["']?\);/g,
+            localCSSTemplateData: null,
         }, options);
     }
 
