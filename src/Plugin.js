@@ -9,12 +9,16 @@ const crypto = require('crypto');
 
 class IconFontPlugin {
     constructor(options) {
+        this.fontFace = '';
         this.options = Object.assign({
             types: ['ttf', 'eot', 'woff', 'svg'], // @bug: webfonts-generator
             fontName: 'icon-font',
             output: './',
             localCSSTemplate: path.resolve(__dirname, 'local.css.hbs'),
             globalCSSTemplate: path.resolve(__dirname, 'global.css.hbs'),
+            iconCssRegex: /icon-font\s*:\s*url\(["']?(.*?)["']?\);/g,
+            localCSSTemplateData: null,
+            fontFaceOutput: true
         }, options);
     }
 
@@ -56,7 +60,8 @@ class IconFontPlugin {
 
                     const urls = {};
                     types.forEach((type) => urls[type] = `${fontName}.${type}`);
-                    const css = result.generateCss();
+
+                    let css = result.generateCss();
 
                     const assets = compilation.assets;
                     styleMessage.name = fontName;
@@ -71,10 +76,17 @@ class IconFontPlugin {
                             size: () => result[type].length,
                         };
                     });
-                    assets[path.join(this.options.output, `${fontName}.css`)] = {
-                        source: () => css,
-                        size: () => css.length,
-                    };
+
+                    if (this.options.fontFaceOutput === true) {
+                        assets[path.join(this.options.output, `${fontName}.css`)] = {
+                            source: () => css,
+                            size: () => css.length,
+                        };
+                    } else {
+                        css = css.replace(/url\("/g, 'url("' + this.options.output);
+                        this.fontFace = css;
+                    }
+
                     callback();
                 });
             });
@@ -103,10 +115,17 @@ class IconFontPlugin {
                                 compilation.assets[file]
                             );
                         }
+                        if (this.options.fontFaceOutput !== true && file.endsWith('.css')) {
+                            compilation.assets[file] = new ConcatSource(
+                                this.fontFace,
+                                compilation.assets[file]
+                            );
+                        }
                     });
                 });
                 callback();
             });
+
             compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
                 let id = -1;
                 chunk.forEachModule((module) => {
@@ -150,6 +169,7 @@ class IconFontPlugin {
 
         return result;
     }
+
     md5Create(stream) {
         const md5 = crypto.createHash('md5');
         md5.update(stream);

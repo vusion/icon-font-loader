@@ -2,5 +2,6 @@
 node_modules/
 npm-debug.log
 tests/**/dest/
+tests/__test_*
 __tmp_*
 .idea
