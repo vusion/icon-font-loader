@@ -4,7 +4,6 @@ const fs = require('fs');
 const handlebars = require('handlebars');
 
 const Plugin = require('./Plugin');
-const reg = /icon-font\s*:\s*url\(["']?(.*?)["']?\);/g;
 
 function iconFontLoader(source) {
     const callback = this.async();
