@@ -60,7 +60,8 @@ class IconFontPlugin {
 
                     const urls = {};
                     types.forEach((type) => urls[type] = `${fontName}.${type}`);
-                    const css = result.generateCss();
+
+                    let css = result.generateCss();
 
                     const assets = compilation.assets;
                     styleMessage.name = fontName;
@@ -82,6 +83,7 @@ class IconFontPlugin {
                             size: () => css.length,
                         };
                     } else {
+                        css = css.replace(/url\("/g, 'url("' + this.options.output);
                         this.fontFace = css;
                     }
 
@@ -167,7 +169,7 @@ class IconFontPlugin {
 
         return result;
     }
-    
+
     md5Create(stream) {
         const md5 = crypto.createHash('md5');
         md5.update(stream);
