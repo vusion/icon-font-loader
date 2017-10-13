@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
-const testCase = ['default', 'options', 'more-one-css', 'same-name'];
+const testCase = ['default', 'options', 'more-one-css', 'same-name', 'public-path', 'html-webpack-plugin'];
 
 describe('Webpack Integration Tests', () => {
     testCase.forEach((value) => {

@@ -62,8 +62,11 @@ class IconFontPlugin {
                     styleMessage.name = fontName;
                     types.forEach((type) => {
                         const pathFile = path.join(this.options.output, urls[type]);
+                        let fontUrl = this.options.publicPath ? path.join(this.options.publicPath, urls[type]) : path.join(compilation.options.output.publicPath || '', urls[type]);
+                        if (path.sep === '\\')
+                            fontUrl = fontUrl.replace(/\\/g, '/');
                         styleMessage[type] = {
-                            path: this.options.publicPath ? path.join(this.options.publicPath, urls[type]) : path.join(compilation.options.output.publicPath || '', urls[type]),
+                            path: fontUrl,
                             md5: this.md5Create(result[type]),
                         };
                         assets[pathFile] = {
