@@ -1,23 +1,25 @@
 var styleId = 'ICON-FONT-FILE-STYLE';
 function createStyleContent(fontConfig) {
-    var style = fontConfig||window.ICON_FONT_STYLE,
-        fontName = style.name,  srcStr = [];
+    var style = fontConfig || window.ICON_FONT_STYLE;
+    var fontName = style.fontName;
+    var srcStr = [];
 
-    for(var name in style){
-        var path  = style[name].path,hash = style[name].md5;
+    for(var name in style) {
+        var url = style[name].url;
+        var hash = style[name].hash;
         if(style.hasOwnProperty(name)) {
             switch (name) {
                 case 'eot':
-                    srcStr.push('url("'+path+'?'+hash+'#iefix") format("embedded-opentype")');
+                    srcStr.push('url("'+url+'?'+hash+'#iefix") format("embedded-opentype")');
                     break;
                 case 'woff':
-                    srcStr.push('url("'+path+'?'+hash+'") format("woff")');
+                    srcStr.push('url("'+url+'?'+hash+'") format("woff")');
                     break;
                 case 'ttf':
-                    srcStr.push('url("'+path+'?'+hash+'") format("truetype")');
+                    srcStr.push('url("'+url+'?'+hash+'") format("truetype")');
                     break;
                 case 'svg':
-                    srcStr.push('url("'+path+'?'+hash+'#'+fontName+'") format("svg")');
+                    srcStr.push('url("'+url+'?'+hash+'#'+fontName+'") format("svg")');
                     break;
                 default:
                     break;
@@ -29,35 +31,35 @@ function createStyleContent(fontConfig) {
 }
 
 function addStyle(fontConfig) {
-    var styleTag = document.createElement('style'),headElement  = document.getElementsByTagName('head')[0];
+    var styleTag = document.createElement('style'), headElement = document.getElementsByTagName('head')[0];
     styleTag.innerHTML = createStyleContent(fontConfig);
     styleTag.id = styleId;
     styleTag.type="text/css";
-    if(headElement){
+    if (headElement) {
         headElement.appendChild(styleTag);
-    }else{
-        window.addEventListener('load',function() {
+    } else {
+        window.addEventListener('load', function () {
             headElement.appendChild(styleTag);
-        })
+        });
     }
 }
 
 function updateStyle(fontConfig) {
     var styleTag = document.getElementById(styleId);
-    if(!styleTag){
+    if (!styleTag) {
         addStyle(fontConfig);
-    }else{
+    } else {
         styleTag.innerHTML = createStyleContent(fontConfig);
     }
 }
 
-module.exports= function() {
-    if(window.HAS_CREATE_FONT_STYLE){
+module.exports = function() {
+    if (window.HAS_CREATE_FONT_STYLE) {
         return;
     }
     addStyle();
     window.HAS_CREATE_FONT_STYLE = true;
 }
-if(module.hot){
+if (module.hot) {
     window.ICON_FONT_STYLE.update = updateStyle;
 }

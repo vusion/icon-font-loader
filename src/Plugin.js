@@ -61,17 +61,17 @@ class IconFontPlugin {
                     const css = result.generateCss();
 
                     const assets = compilation.assets;
-                    styleMessage.name = fontName;
+                    styleMessage.fontName = fontName;
                     types.forEach((type) => {
-                        const pathFile = path.join(this.options.output, urls[type]);
-                        let fontUrl = this.options.publicPath ? path.join(this.options.publicPath, urls[type]) : path.join(compilation.options.output.publicPath || '', urls[type]);
+                        const filePath = path.join(this.options.output, urls[type]);
+                        let url = path.join(compilation.options.output.publicPath || '', urls[type]);
                         if (path.sep === '\\')
-                            fontUrl = fontUrl.replace(/\\/g, '/');
+                            url = url.replace(/\\/g, '/');
                         styleMessage[type] = {
-                            path: fontUrl,
-                            md5: this.md5Create(result[type]),
+                            url,
+                            hash: this.md5Create(result[type]),
                         };
-                        assets[pathFile] = {
+                        assets[filePath] = {
                             source: () => result[type],
                             size: () => result[type].length,
                         };
@@ -86,50 +86,51 @@ class IconFontPlugin {
                     callback();
                 });
             });
-            if (this.options.auto) {
-                //if insert @font-face auto 
-                compilation.plugin('optimize-chunks', (chunks) => {
-                    const addStyleModule = compilation.modules.find((module) => module.request === addStylePath);
-                    if (addStyleModule) {
-                        chunks.forEach((chunk) => {
-                            chunk.addModule(addStyleModule);
-                            addStyleModule.addChunk(chunk);
-                        });
-                    }
-                });
 
-                compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+            if (!this.options.auto)
+                return;
+            //if insert @font-face auto
+            compilation.plugin('optimize-chunks', (chunks) => {
+                const addStyleModule = compilation.modules.find((module) => module.request === addStylePath);
+                if (addStyleModule) {
                     chunks.forEach((chunk) => {
-                        chunk.files.forEach((file) => {
-                            if (file.endsWith('.js')) {
-                                compilation.assets[file] = new ConcatSource(
-                                    `/* icon font style message */
-                                    if (typeof window !== "undefined" && !window.ICON_FONT_STYLE) {
-                                        window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
-                                    } else if (typeof window !== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
-                                        window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
-                                    }`,
-                                    compilation.assets[file]
-                                );
-                            }
-                        });
+                        chunk.addModule(addStyleModule);
+                        addStyleModule.addChunk(chunk);
                     });
-                    callback();
-                });
-                compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
-                    let id = -1;
-                    chunk.forEachModule((module) => {
-                        if (module.request === addStylePath)
-                            id = module.id;
+                }
+            });
+
+            compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+                chunks.forEach((chunk) => {
+                    chunk.files.forEach((file) => {
+                        if (file.endsWith('.js')) {
+                            compilation.assets[file] = new ConcatSource(
+                                `/* icon font style message */
+                                if (typeof window !== "undefined" && !window.ICON_FONT_STYLE) {
+                                    window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
+                                } else if (typeof window !== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
+                                    window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
+                                }`,
+                                compilation.assets[file]
+                            );
+                        }
                     });
-                    if (id !== -1) {
-                        return [
-                            ` __webpack_require__(${id})()`,
-                        ].join('\n') + source;
-                    }
-                    return source;
                 });
-            }
+                callback();
+            });
+            compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
+                let id = -1;
+                chunk.forEachModule((module) => {
+                    if (module.request === addStylePath)
+                        id = module.id;
+                });
+                if (id !== -1) {
+                    return [
+                        ` __webpack_require__(${id})()`,
+                    ].join('\n') + source;
+                }
+                return source;
+            });
         });
     }
 
