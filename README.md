@@ -112,13 +112,14 @@ Template of global CSS containing `@font-face`.
 
 #### property
 
-CSS property name to transform
+Virtual CSS property name
 
 - Type: `string`
 - Default: `icon-font`
 
 #### auto
 
-Whether insert @font-face into the document with a style tag automatically or emit a css file.
+Whether insert `@font-face` into the document with a style tag automatically or emit a css file.
+
 - Type: `boolean`
 - Default: true

@@ -92,13 +92,14 @@ module.exports = {
 
 #### property
 
-引入font图标的css属性名
+CSS虚拟属性名
 
 - Type: `string`
 - Default: `icon-font`
 
 #### auto
 
-是否自动在document中插入`@font-face`，如果auto为false将生成一个含@font-face的css文件
+是否在document中自动插入`@font-face`，或生成一个含`@font-face`的css文件。
+
 - Type: `boolean`
 - Default: true
