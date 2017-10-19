@@ -10,11 +10,13 @@ const crypto = require('crypto');
 class IconFontPlugin {
     constructor(options) {
         this.options = Object.assign({
+            property: 'icon-font',
             types: ['ttf', 'eot', 'woff', 'svg'], // @bug: webfonts-generator
             fontName: 'icon-font',
             output: './',
             localCSSTemplate: path.resolve(__dirname, 'local.css.hbs'),
             globalCSSTemplate: path.resolve(__dirname, 'global.css.hbs'),
+            auto: true,
         }, options);
     }
 
@@ -74,55 +76,60 @@ class IconFontPlugin {
                             size: () => result[type].length,
                         };
                     });
-                    assets[path.join(this.options.output, `${fontName}.css`)] = {
-                        source: () => css,
-                        size: () => css.length,
-                    };
+                    if (!this.options.auto) {
+                        // auto is false and emit a css file
+                        assets[path.join(this.options.output, `${fontName}.css`)] = {
+                            source: () => css,
+                            size: () => css.length,
+                        };
+                    }
                     callback();
                 });
             });
+            if (this.options.auto) {
+                //if insert @font-face auto 
+                compilation.plugin('optimize-chunks', (chunks) => {
+                    const addStyleModule = compilation.modules.find((module) => module.request === addStylePath);
+                    if (addStyleModule) {
+                        chunks.forEach((chunk) => {
+                            chunk.addModule(addStyleModule);
+                            addStyleModule.addChunk(chunk);
+                        });
+                    }
+                });
 
-            compilation.plugin('optimize-chunks', (chunks) => {
-                const addStyleModule = compilation.modules.find((module) => module.request === addStylePath);
-                if (addStyleModule) {
+                compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
                     chunks.forEach((chunk) => {
-                        chunk.addModule(addStyleModule);
-                        addStyleModule.addChunk(chunk);
+                        chunk.files.forEach((file) => {
+                            if (file.endsWith('.js')) {
+                                compilation.assets[file] = new ConcatSource(
+                                    `/* icon font style message */
+                                    if (typeof window !== "undefined" && !window.ICON_FONT_STYLE) {
+                                        window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
+                                    } else if (typeof window !== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
+                                        window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
+                                    }`,
+                                    compilation.assets[file]
+                                );
+                            }
+                        });
                     });
-                }
-            });
-
-            compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
-                chunks.forEach((chunk) => {
-                    chunk.files.forEach((file) => {
-                        if (file.endsWith('.js')) {
-                            compilation.assets[file] = new ConcatSource(
-                                `/* icon font style message */
-                                if (typeof window !== "undefined" && !window.ICON_FONT_STYLE) {
-                                    window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
-                                } else if (typeof window !== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
-                                    window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
-                                }`,
-                                compilation.assets[file]
-                            );
-                        }
+                    callback();
+                });
+                compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
+                    let id = -1;
+                    chunk.forEachModule((module) => {
+                        if (module.request === addStylePath)
+                            id = module.id;
                     });
+                    if (id !== -1) {
+                        return [
+                            ` __webpack_require__(${id})()`,
+                        ].join('\n') + source;
+                    }
+                    return source;
                 });
-                callback();
-            });
-            compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
-                let id = -1;
-                chunk.forEachModule((module) => {
-                    if (module.request === addStylePath)
-                        id = module.id;
-                });
-                if (id !== -1) {
-                    return [
-                        ` __webpack_require__(${id})()`,
-                    ].join('\n') + source;
-                }
-                return source;
-            });
+            }
         });
     }
 

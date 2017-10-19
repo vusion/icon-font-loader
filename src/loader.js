@@ -4,7 +4,6 @@ const fs = require('fs');
 const handlebars = require('handlebars');
 
 const Plugin = require('./Plugin');
-const reg = /icon-font\s*:\s*url\(["']?(.*?)["']?\);/g;
 
 function iconFontLoader(source) {
     const callback = this.async();
@@ -13,6 +12,8 @@ function iconFontLoader(source) {
     const plugin = this.iconFontPlugin;
     const files = plugin.files;
     const START_NUM = 0xF100; // webfonts-generator start at this number
+    const property = plugin.options.property;
+    const reg = new RegExp(`${property}\\s*:\\s*url\\(["']?(.*?)["']?\\);`, 'g');
 
     const promises = [];
     const contents = {};
