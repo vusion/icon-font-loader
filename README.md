@@ -109,3 +109,16 @@ Template of global CSS containing `@font-face`.
 
 - Type: `string`
 - Default: [local.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/local.css.hbs)
+
+#### property
+
+CSS property name to transform
+
+- Type: `string`
+- Default: `icon-font`
+
+#### auto
+
+Whether insert @font-face into the document with a style tag automatically or emit a css file.
+- Type: `boolean`
+- Default: true

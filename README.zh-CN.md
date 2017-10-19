@@ -89,3 +89,16 @@ module.exports = {
 
 - Type: `string`
 - Default: [local.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/local.css.hbs)
+
+#### property
+
+引入font图标的css属性名
+
+- Type: `string`
+- Default: `icon-font`
+
+#### auto
+
+是否自动在document中插入`@font-face`，如果auto为false将生成一个含@font-face的css文件
+- Type: `boolean`
+- Default: true
