@@ -36,7 +36,7 @@ function addStyle(fontConfig) {
     if(headElement){
         headElement.appendChild(styleTag);
     }else{
-        window.addEventListener('load',() => {
+        window.addEventListener('load',function() {
             headElement.appendChild(styleTag);
         })
     }
