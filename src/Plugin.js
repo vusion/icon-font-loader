@@ -6,6 +6,7 @@ const shell = require('shelljs');
 const webpack = require('webpack');
 const ConcatSource = require('webpack-sources').ConcatSource;
 const crypto = require('crypto');
+const util = require('./util.js');
 
 class IconFontPlugin {
     constructor(options) {
@@ -28,6 +29,7 @@ class IconFontPlugin {
 
         compiler.plugin('after-plugins', (compiler) => {
             this.files = [];
+            this.md5s = [];
 
             shell.rm('-rf', path.resolve(__dirname, '../__tmp_*'));
             this.tmpPath = path.resolve(__dirname, '../__tmp_' + Date.now());
@@ -69,7 +71,7 @@ class IconFontPlugin {
                             url = url.replace(/\\/g, '/');
                         styleMessage[type] = {
                             url,
-                            hash: this.md5Create(result[type]),
+                            hash: util.md5Create(result[type]),
                         };
                         assets[filePath] = {
                             source: () => result[type],
@@ -160,11 +162,6 @@ class IconFontPlugin {
         });
 
         return result;
-    }
-    md5Create(stream) {
-        const md5 = crypto.createHash('md5');
-        md5.update(stream);
-        return md5.digest('hex');
     }
 }
 

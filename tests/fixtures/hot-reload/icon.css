@@ -9,7 +9,7 @@
 } 
 
 .icon-arrow-up:before {
-    icon-font: url('../../icons/same-name/arrow-right.svg');
+    icon-font: url('../../icons/same-name/arrow-left.svg');
     color: green;
 }
 
