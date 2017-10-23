@@ -18,6 +18,7 @@ class IconFontPlugin {
             localCSSTemplate: path.resolve(__dirname, 'local.css.hbs'),
             globalCSSTemplate: path.resolve(__dirname, 'global.css.hbs'),
             auto: true,
+            mergeDuplicates: false,
         }, options);
     }
 
