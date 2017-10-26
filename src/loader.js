@@ -31,6 +31,7 @@ function iconFontLoader(source) {
             if (mergeDuplicates) {
                 filesContent = fs.readFileSync(file);
                 md5Code = util.md5Create(filesContent);
+                filesContent = null;
                 index = md5s.indexOf(md5Code);
             } else
                 index = files.indexOf(file);
