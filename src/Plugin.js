@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const webfontsGenerator = require('webfonts-generator');
 const shell = require('shelljs');
 const webpack = require('webpack');
@@ -15,8 +16,7 @@ class IconFontPlugin {
             types: ['ttf', 'eot', 'woff', 'svg'], // @bug: webfonts-generator
             fontName: 'icon-font',
             output: './',
-            localCSSTemplate: path.resolve(__dirname, 'local.css.hbs'),
-            globalCSSTemplate: path.resolve(__dirname, 'global.css.hbs'),
+            localCSSTemplate: fs.readFileSync(path.resolve(__dirname, 'local.css.hbs'), 'utf8'),
             auto: true,
             mergeDuplicates: false,
         }, options);
@@ -54,23 +54,21 @@ class IconFontPlugin {
                     writeFiles: false,
                     dest: 'build', // Required but doesn't get used
                     fontHeight: 1000,
-                    cssTemplate: this.options.globalCSSTemplate,
                 }, (err, result) => {
                     if (err)
                         return callback(err);
 
                     const urls = {};
                     types.forEach((type) => urls[type] = `${fontName}.${type}`);
-                    const css = result.generateCss();
 
                     const assets = compilation.assets;
-                    styleMessage.fontName = fontName;
+                    const styleConfig = { fontName };
                     types.forEach((type) => {
                         const filePath = path.join(this.options.output, urls[type]);
                         let url = path.join(compilation.options.output.publicPath || '', urls[type]);
                         if (path.sep === '\\')
                             url = url.replace(/\\/g, '/');
-                        styleMessage[type] = {
+                        styleConfig[type] = {
                             url,
                             hash: util.md5Create(result[type]),
                         };
@@ -79,6 +77,7 @@ class IconFontPlugin {
                             size: () => result[type].length,
                         };
                     });
+                    const css = util.createCssStyle(styleConfig);
                     if (!this.options.auto) {
                         // auto is false and emit a css file
                         assets[path.join(this.options.output, `${fontName}.css`)] = {
@@ -86,13 +85,16 @@ class IconFontPlugin {
                             size: () => css.length,
                         };
                     }
+                    // save font name and style content
+                    styleMessage.fontName = fontName;
+                    styleMessage.styleContent = css;
                     callback();
                 });
             });
 
             if (!this.options.auto)
                 return;
-            //if insert @font-face auto
+            // if insert @font-face auto
             compilation.plugin('optimize-chunks', (chunks) => {
                 const addStyleModule = compilation.modules.find((module) => module.request === addStylePath);
                 if (addStyleModule) {
@@ -107,6 +109,7 @@ class IconFontPlugin {
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
                         if (file.endsWith('.js')) {
+                            // add icon font message in chunk file
                             compilation.assets[file] = new ConcatSource(
                                 `/* icon font style message */
                                 if (typeof window !== "undefined" && !window.ICON_FONT_STYLE) {

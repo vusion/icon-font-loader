@@ -1,40 +1,14 @@
 var styleId = 'ICON-FONT-FILE-STYLE';
 function createStyleContent(fontConfig) {
     var style = fontConfig || window.ICON_FONT_STYLE;
-    var fontName = style.fontName;
-    var srcStr = [];
-
-    for(var name in style) {
-        var url = style[name].url;
-        var hash = style[name].hash;
-        if(style.hasOwnProperty(name)) {
-            switch (name) {
-                case 'eot':
-                    srcStr.push('url("'+url+'?'+hash+'#iefix") format("embedded-opentype")');
-                    break;
-                case 'woff':
-                    srcStr.push('url("'+url+'?'+hash+'") format("woff")');
-                    break;
-                case 'ttf':
-                    srcStr.push('url("'+url+'?'+hash+'") format("truetype")');
-                    break;
-                case 'svg':
-                    srcStr.push('url("'+url+'?'+hash+'#'+fontName+'") format("svg")');
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    srcStr = srcStr.join(",\n\t");
-    return '@font-face {\n\tfont-family: "'+fontName+'";\n\tsrc:'+srcStr+";\n}";
+    return style.styleContent || '';
 }
 
 function addStyle(fontConfig) {
     var styleTag = document.createElement('style'), headElement = document.getElementsByTagName('head')[0];
     styleTag.innerHTML = createStyleContent(fontConfig);
     styleTag.id = styleId;
-    styleTag.type="text/css";
+    styleTag.type = 'text/css';
     if (headElement) {
         headElement.appendChild(styleTag);
     } else {

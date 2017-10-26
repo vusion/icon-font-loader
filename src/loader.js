@@ -48,7 +48,7 @@ function iconFontLoader(source) {
         }));
     });
 
-    const template = handlebars.compile(fs.readFileSync(plugin.options.localCSSTemplate, 'utf8'));
+    const template = handlebars.compile(plugin.options.localCSSTemplate);
     Promise.all(promises).then(() => {
         // 第二遍replace真正替换
         const result = source.replace(reg, (m, url) => template({
