@@ -79,16 +79,10 @@ module.exports = {
 - Default: `./`
 
 #### localCSSTemplate
-局部CSS虚拟属性转换后内容的模板路径。
+局部CSS虚拟属性转换后内容, 接受模板内容而不是模板文件的路径。
 
 - Type: `string`
-- Default: [global.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
-
-#### globalCSSTemplate
-全局CSS`@font-face`内容的模板路径。
-
-- Type: `string`
-- Default: [local.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/local.css.hbs)
+- Default: [global.css.hbs内容](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
 
 #### property
 

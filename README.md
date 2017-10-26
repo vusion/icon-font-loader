@@ -98,17 +98,10 @@ Path of font and css files relative to webpack output path.
 
 #### localCSSTemplate
 
-Template of virtual property transformed local CSS.
+Template of virtual property transformed local CSS. It accept template content no template file path。
 
 - Type: `string`
-- Default: [global.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
-
-#### globalCSSTemplate
-
-Template of global CSS containing `@font-face`.
-
-- Type: `string`
-- Default: [local.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/local.css.hbs)
+- Default: [global.css.hbs'content](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
 
 #### property
 
@@ -123,3 +116,10 @@ Whether insert `@font-face` into the document with a style tag automatically or 
 
 - Type: `boolean`
 - Default: true
+
+#### mergeDuplicates
+
+Whether merge duplicates icon in font file
+
+- Type: `boolean`
+- Default: false
