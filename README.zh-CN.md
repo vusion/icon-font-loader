@@ -97,3 +97,10 @@ CSS虚拟属性名
 
 - Type: `boolean`
 - Default: true
+
+#### mergeDuplicates
+是否合并字体文件中重复的字体，默认是不开启合并的
+
+- Type: `boolean`
+- Default: false
+
