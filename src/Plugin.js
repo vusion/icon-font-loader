@@ -6,8 +6,7 @@ const webfontsGenerator = require('webfonts-generator');
 const shell = require('shelljs');
 const webpack = require('webpack');
 const ConcatSource = require('webpack-sources').ConcatSource;
-const crypto = require('crypto');
-const util = require('./util.js');
+const utils = require('./utils');
 
 class IconFontPlugin {
     constructor(options) {
@@ -62,22 +61,22 @@ class IconFontPlugin {
                     types.forEach((type) => urls[type] = `${fontName}.${type}`);
 
                     const assets = compilation.assets;
-                    const styleConfig = { fontName };
+                    const font = { name: fontName };
                     types.forEach((type) => {
                         const filePath = path.join(this.options.output, urls[type]);
                         let url = path.join(compilation.options.output.publicPath || '', urls[type]);
                         if (path.sep === '\\')
                             url = url.replace(/\\/g, '/');
-                        styleConfig[type] = {
+                        font[type] = {
                             url,
-                            hash: util.md5Create(result[type]),
+                            hash: utils.md5Create(result[type]),
                         };
                         assets[filePath] = {
                             source: () => result[type],
                             size: () => result[type].length,
                         };
                     });
-                    const css = util.createCssStyle(styleConfig);
+                    const css = utils.createFontFace(font);
                     if (!this.options.auto) {
                         // auto is false and emit a css file
                         assets[path.join(this.options.output, `${fontName}.css`)] = {

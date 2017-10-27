@@ -79,10 +79,11 @@ module.exports = {
 - Default: `./`
 
 #### localCSSTemplate
+
 局部CSS虚拟属性转换后内容, 接受模板内容而不是模板文件的路径。
 
 - Type: `string`
-- Default: [global.css.hbs内容](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
+- Default: [global.css.hbs的内容](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
 
 #### property
 
@@ -99,8 +100,8 @@ CSS虚拟属性名
 - Default: true
 
 #### mergeDuplicates
-是否合并字体文件中重复的字体，默认是不开启合并的
+
+是否合并重复的图标。可以减少生成的字体文件大小，但可能会增加编译时间，建议在发布阶段开启。
 
 - Type: `boolean`
 - Default: false
-

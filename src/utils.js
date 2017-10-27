@@ -7,17 +7,15 @@ module.exports = {
         md5.update(stream);
         return md5.digest('hex');
     },
-    createCssStyle(fontConfig) {
-        const style = fontConfig;
-        const fontName = style.fontName;
+    createFontFace(font) {
         let srcStr = [];
-        const svgHash = style['svg'].hash;
+        const svgHash = font.svg.hash;
 
-        for (const name in style) {
-            const url = style[name].url;
-            const hash = style[name].hash;
-            if (style.hasOwnProperty(name)) {
-                switch (name) {
+        for (const type in font) {
+            const url = font[type].url;
+            // const hash = font[type].hash;
+            if (font.hasOwnProperty(type)) {
+                switch (type) {
                     case 'eot':
                         srcStr.push('url("' + url + '?' + svgHash + '#iefix") format("embedded-opentype")');
                         break;
@@ -28,7 +26,7 @@ module.exports = {
                         srcStr.push('url("' + url + '?' + svgHash + '") format("truetype")');
                         break;
                     case 'svg':
-                        srcStr.push('url("' + url + '?' + svgHash + '#' + fontName + '") format("svg")');
+                        srcStr.push('url("' + url + '?' + svgHash + '#' + font.name + '") format("svg")');
                         break;
                     default:
                         break;
@@ -36,6 +34,6 @@ module.exports = {
             }
         }
         srcStr = srcStr.join(',\n\t');
-        return `@font-face {\n\tfont-family: "${fontName}";\n\tsrc:${srcStr};\n}`;
+        return `@font-face {\n\tfont-family: "${font.name}";\n\tsrc:${srcStr};\n}`;
     },
 };

@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const handlebars = require('handlebars');
-const util = require('./util');
+const utils = require('./utils');
 
 const Plugin = require('./Plugin');
 
@@ -27,14 +27,15 @@ function iconFontLoader(source) {
             this.resolve(this.context, url, (err, result) => err ? reject(err) : resolve(result));
         }).then((file) => {
             this.addDependency(file);
-            let filesContent, md5Code, index;
+            let md5Code, index;
+
             if (mergeDuplicates) {
-                filesContent = fs.readFileSync(file);
-                md5Code = util.md5Create(filesContent);
-                filesContent = null;
+                const filesContent = fs.readFileSync(file);
+                md5Code = utils.md5Create(filesContent);
                 index = md5s.indexOf(md5Code);
             } else
                 index = files.indexOf(file);
+
             if (~index)
                 index++;
             else {
