@@ -1,7 +1,7 @@
 {
   "name": "icon-font-loader",
   "description": "Transform icon-font CSS property and generate font files automatically",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "author": "moujintao <moujintaotest@163.com>",
   "contributors": [
     "Rainfore <rainforest92@126.com>"
