@@ -105,3 +105,15 @@ CSS虚拟属性名
 
 - Type: `boolean`
 - Default: false
+
+## 修改日志
+
+See [Releases](https://github.com/vusion/icon-font-loader/releases)
+
+## 贡献指南
+
+See [Contributing Guide](https://github.com/vusion/DOCUMENTATION/blob/master/CONTRIBUTING.md)
+
+## 开源协议
+
+See [LICENSE](LICENSE)

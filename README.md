@@ -123,3 +123,16 @@ Whether merge duplicated icons in font file. It can shrink built font file, but 
 
 - Type: `boolean`
 - Default: false
+
+## Changelog
+
+See [Releases](https://github.com/vusion/icon-font-loader/releases)
+
+## Contributing
+
+See [Contributing Guide](https://github.com/vusion/DOCUMENTATION/blob/master/CONTRIBUTING.md)
+
+## License
+
+See [LICENSE](LICENSE)
+
