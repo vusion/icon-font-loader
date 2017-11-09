@@ -4,7 +4,7 @@
 }
 
 .icon-arrow-left-2:before {
-    icon-font: url('../../icons/same-name/slice.svg');
+    font-size:0px;
     color: blue;
 }
 
