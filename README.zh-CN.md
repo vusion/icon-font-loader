@@ -1,6 +1,6 @@
 # icon-font-loader
 
-icon-font-loader是一款在Webpack中使用的图标加载器，它可以自动将svg转换成字体图标。
+这是一款在Webpack中使用的图标加载器，它可以自动将svg转换成字体图标。
 
 ## 示例
 
@@ -32,14 +32,14 @@ icon-font-loader是一款在Webpack中使用的图标加载器，它可以自动
 
 与别的类似的字体图标加载器不同的是：
 
-- 在CSS中使用。利用CSS的特性，可以复写图标：
+- 在CSS中使用。利用CSS的特性，可以很轻松地覆盖原图标：
     ``` css
     .select:after {
         icon-font: url('../icons/arrow-down.svg');
         color: #666;
     }
 
-    .select:after {
+    .select.up:after {
         icon-font: url('../icons/arrow-up.svg');
     }
     ```

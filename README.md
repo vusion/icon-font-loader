@@ -1,6 +1,6 @@
 # icon-font-loader
 
-This is an icon loader in webpack, it can converts your svg files into icon font automatically.
+This is an icon loader in webpack. It can convert your svg files into icon font automatically.
 
 [![CircleCI][circleci-img]][circleci-url]
 [![NPM Version][npm-img]][npm-url]
@@ -18,7 +18,7 @@ This is an icon loader in webpack, it can converts your svg files into icon font
 
 ## Example
 
-Import svg file with a custom property called `icon-font` where you wanna use icon font in CSS:
+Import svg file with a custom property called `icon-font` by default where you want to use icon font in CSS:
 
 ``` css
 .select:after {
@@ -27,10 +27,7 @@ Import svg file with a custom property called `icon-font` where you wanna use ic
 }
 ```
 
-
-Then `icon-font-loader` will gernerate corresponding css so web browsers can recognize.
-
-
+Then `icon-font-loader` will generate corresponding css so web browsers can recognize.
 
 ``` css
 .select:after {
@@ -42,28 +39,27 @@ Then `icon-font-loader` will gernerate corresponding css so web browsers can rec
     color: #666;
 }
 ```
-After packing all these imports, our loader will create font files(such as eot, svg, ttf, woff etc) and generate a `<style>` script containing `@font-face` or one CSS file globally.
 
-## Advantage
+After packing all these imports, the loader will create font files(eot,svg,ttf,woff), and generate a `<style>` tag or a CSS file containing `@font-face` globally.
+
+## Features
 
 Our loader works in a way different to others:
 
 - css only. You can override existing style like this:
-    ``` 
-    parent.css
+    ```
     .select:after {
         icon-font: url('../icons/arrow-down.svg');
         color: #666;
     }
 
-	child.css
-    .select:after {
-        icon-font: url('../icons/arrow-down-special.svg');
+    .select.up:after {
+        icon-font: url('../icons/arrow-up.svg');
     }
     ```
 - pseudo elements(`before` or `after`) only. We treat these icon fonts as some certain characters under one font-famliy by using their property `content`.
 - Merge duplicated svgs. We will merge those same svgs into only one to keep slim even they lie in different places in your project.
- 
+
 ## Install
 
 ``` shell
@@ -71,6 +67,7 @@ npm install --save-dev icon-font-loader
 ```
 
 ## Config
+
 You must import plugin below in webpack in addition to adding custom properties in CSS.
 
 ```javascript
