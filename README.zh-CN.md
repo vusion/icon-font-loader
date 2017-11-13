@@ -51,11 +51,11 @@ module.exports = {
 
 ``` css
 @font-face {
-	font-family: "icon-font";
-	src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
-	url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
-	url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
-	url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
+    font-family: "icon-font";
+    src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
+         url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
+         url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
+         url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
 }
 ```
 
@@ -112,7 +112,7 @@ See [Releases](https://github.com/vusion/icon-font-loader/releases)
 
 ## 贡献指南
 
-See [Contributing Guide](https://github.com/vusion/DOCUMENTATION/blob/master/CONTRIBUTING.md)
+See [Contributing Guide](https://github.com/vusion/DOCUMENTATION/issues/4)
 
 ## 开源协议
 
