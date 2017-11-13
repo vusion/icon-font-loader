@@ -1,10 +1,13 @@
 {
   "name": "icon-font-loader",
   "description": "Transform icon-font CSS property and generate font files automatically",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "moujintao <moujintaotest@163.com>",
   "contributors": [
-    "Rainfore <rainforest92@126.com>"
+    "Rainfore <rainforest92@126.com>",
+    "CXHtml <lanhai723@126.com>",
+    "akimoto-share <akimotobeloved@163.com>",
+    "KenorFR"
   ],
   "scripts": {
     "test": "mocha ./tests/final.test.js",

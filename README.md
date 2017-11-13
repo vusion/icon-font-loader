@@ -40,7 +40,7 @@ Then `icon-font-loader` will generate corresponding css so web browsers can reco
 }
 ```
 
-After packing all these imports, the loader will create font files(eot,svg,ttf,woff), and generate a `<style>` tag or a CSS file containing `@font-face` globally.
+After packing all these imports, the loader will create font files (eot,svg,ttf,woff), and generate a `<style>` tag or a CSS file containing `@font-face` globally.
 
 ## Features
 
