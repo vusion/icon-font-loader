@@ -4,7 +4,7 @@ icon-font-loader是一款在Webpack中使用的图标加载器，它可以自动
 
 ## 示例
 
-在CSS中需要使用图标的地方用自定义属性`icon-font`引入svg文件
+在CSS中需要使用图标的地方用自定义属性`icon-font`引入svg文件：
 
 ``` css
 .select:after {
@@ -32,19 +32,19 @@ icon-font-loader是一款在Webpack中使用的图标加载器，它可以自动
 
 与别的类似的字体图标加载器不同的是：
 
-- 在CSS中使用。利用CSS的特性，可以复写图标
+- 在CSS中使用。利用CSS的特性，可以复写图标：
     ``` css
-        .select:after {
-            icon-font: url('../icons/arrow-down.svg');
-            color: #666;
-        }
+    .select:after {
+        icon-font: url('../icons/arrow-down.svg');
+        color: #666;
+    }
 
-        .select:after {
-            icon-font: url('../icons/arrow-up.svg');
-        }
+    .select:after {
+        icon-font: url('../icons/arrow-up.svg');
+    }
     ```
-- 必须在`before`或`after`伪元素中使用，我们正是利用了它们的`content`属性，将字体图标视为某种字体下的特殊字符
-- 合并重复的图标。如果有相同的图标而它们的文件名或路径不同，我们会将它们合并起来，减少字体大小
+- 必须在`before`或`after`伪元素中使用，我们正是利用了它们的`content`属性，将字体图标视为某种字体下的特殊字符。
+- 合并重复的图标。如果有相同的图标而它们的文件名或路径不同，我们会将它们合并起来，减少字体大小。
 
 ## 安装
 
@@ -54,7 +54,7 @@ npm install --save-dev icon-font-loader
 
 ## 配置
 
-除了在CSS中添加自定义属性，还需要在Webpack配置中添加一个Plugin
+除了在CSS中添加自定义属性，还需要在Webpack配置中添加一个Plugin。
 
 ```javascript
 const IconFontPlugin = require('icon-font-loader').Plugin;
@@ -128,12 +128,12 @@ CSS虚拟属性名
 
 ## 修改日志
 
-See [Releases](https://github.com/vusion/icon-font-loader/releases)
+参见[Releases](https://github.com/vusion/icon-font-loader/releases)
 
 ## 贡献指南
 
-See [Contributing Guide](https://github.com/vusion/DOCUMENTATION/issues/4)
+参见[Contributing Guide](https://github.com/vusion/DOCUMENTATION/issues/4)
 
 ## 开源协议
 
-See [LICENSE](LICENSE)
+参见[LICENSE](LICENSE)
