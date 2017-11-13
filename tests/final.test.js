@@ -1,2 +1,2 @@
-require('./api.test.js');
-require('./webpack-integration.test.js');
+require('./unit.test.js');
+require('./integration.test.js');

@@ -14,9 +14,9 @@ shell.mkdir(IconFontPlugin.tmpPath);
 describe('icon font plugin api test:', () => {
     it('#function handleSameName file list none same test: ', (done) => {
         const files = [
-            path.resolve(__dirname, '/icons/arrow-left.svg'),
-            path.resolve(__dirname, '/icons/arrow-right.svg'),
-            path.resolve(__dirname, '/icons/arrow-up.svg'),
+            path.resolve(__dirname, './icons/arrow-left.svg'),
+            path.resolve(__dirname, './icons/arrow-right.svg'),
+            path.resolve(__dirname, './icons/arrow-up.svg'),
         ];
         const result = IconFontPlugin.handleSameName(files);
         expect(result).to.eql(files);
@@ -32,7 +32,7 @@ describe('icon font plugin api test:', () => {
         const result = IconFontPlugin.handleSameName(files);
         expect(result).to.eql([
             path.resolve(__dirname, './icons/arrow-left.svg'),
-            IconFontPlugin.tmpPath + '/arrow-left-1.svg',
+            path.resolve(IconFontPlugin.tmpPath, './arrow-left-1.svg'),
             path.resolve(__dirname, './icons/arrow-right.svg'),
             path.resolve(__dirname, './icons/arrow-up.svg'),
         ]);
