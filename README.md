@@ -1,8 +1,6 @@
 # icon-font-loader
 
-Import svg files through a virtual property `icon-font` in CSS. And generate icon fonts after collecting all svgs.
-
-This could be seen as an equivalent substitution from characters to font icons.
+This is an icon loader in webpack, it can converts your svg files into icon font automatically.
 
 [![CircleCI][circleci-img]][circleci-url]
 [![NPM Version][npm-img]][npm-url]
@@ -20,6 +18,8 @@ This could be seen as an equivalent substitution from characters to font icons.
 
 ## Example
 
+Import svg file with a custom property called `icon-font` where you wanna use icon font in CSS:
+
 ``` css
 .select:after {
     icon-font: url('../icons/arrow-down.svg');
@@ -27,7 +27,10 @@ This could be seen as an equivalent substitution from characters to font icons.
 }
 ```
 
-will be transformed to the following codes by icon-font-loader
+
+Then `icon-font-loader` will gernerate corresponding css so web browsers can recognize.
+
+
 
 ``` css
 .select:after {
@@ -39,9 +42,28 @@ will be transformed to the following codes by icon-font-loader
     color: #666;
 }
 ```
+After packing all these imports, our loader will create font files(such as eot, svg, ttf, woff etc) and generate a `<style>` script containing `@font-face` or one CSS file globally.
 
-(eot,svg,ttf,woff) fonts and a global `@font-face` file will be generated after collecting all svgs.
+## Advantage
 
+Our loader works in a way different to others:
+
+- css only. You can override existing style like this:
+    ``` 
+    parent.css
+    .select:after {
+        icon-font: url('../icons/arrow-down.svg');
+        color: #666;
+    }
+
+	child.css
+    .select:after {
+        icon-font: url('../icons/arrow-down-special.svg');
+    }
+    ```
+- pseudo elements(`before` or `after`) only. We treat these icon fonts as some certain characters under one font-famliy by using their property `content`.
+- Merge duplicated svgs. We will merge those same svgs into only one to keep slim even they lie in different places in your project.
+ 
 ## Install
 
 ``` shell
@@ -49,8 +71,7 @@ npm install --save-dev icon-font-loader
 ```
 
 ## Config
-
-This loader is against CSS files while a Plugin is required to collect svgs and generate font icons.
+You must import plugin below in webpack in addition to adding custom properties in CSS.
 
 ```javascript
 const IconFontPlugin = require('icon-font-loader').Plugin;
@@ -112,14 +133,14 @@ Virtual CSS property name
 
 #### auto
 
-Whether insert `@font-face` into the document with a style tag automatically or emit a css file.
+Whether to insert `@font-face` into the document with a style tag automatically or emit a css file.
 
 - Type: `boolean`
 - Default: true
 
 #### mergeDuplicates
 
-Whether merge duplicated icons in font file. It can shrink built font file, but make compilation slower. It's better to enable this option in production mode.
+Whether to merge duplicated icons in font file. If true, it will shrink font file after built, but this makes compilation slower. Recommand that you enable this option in production mode.
 
 - Type: `boolean`
 - Default: false
