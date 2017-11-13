@@ -152,7 +152,7 @@ class IconFontPlugin {
 
         files.forEach((file) => {
             if (!fs.existsSync(file))
-                file = path.join(__dirname, './empty.svg');
+                file = path.resolve(__dirname, 'empty.svg');
             let name = path.basename(file, '.svg');
             if (names[name]) {
                 name = getUniqueName(name);
