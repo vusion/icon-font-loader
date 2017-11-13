@@ -1,8 +1,10 @@
 # icon-font-loader
 
-在CSS中用`icon-font`虚拟属性引入svg文件，收集整理后统一打包成字体文件，然后将刚才的虚拟属性转换为浏览器可识别的CSS。从而实现通过CSS引入字体图标，这个过程可以看作字符和字体图标的等效替换。
+icon-font-loader是一款在Webpack中使用的图标加载器，它可以自动将svg转换成字体图标。
 
 ## 示例
+
+在CSS中需要使用图标的地方用自定义属性`icon-font`引入svg文件
 
 ``` css
 .select:after {
@@ -11,7 +13,7 @@
 }
 ```
 
-通过icon-font-loader将会转变为
+通过icon-font-loader将会转变为浏览器可识别的CSS：
 
 ``` css
 .select:after {
@@ -24,7 +26,25 @@
 }
 ```
 
-同时生成(eot,svg,ttf,woff)等字体和一个全局的`@font-face`文件。
+加载器会收集所有这样的引用，统一打包成(eot,svg,ttf,woff)字体文件，并生成一个全局的包含`@font-face`的`<style>`标签或CSS文件。
+
+## 特色
+
+与别的类似的字体图标加载器不同的是：
+
+- 在CSS中使用。利用CSS的特性，可以复写图标
+    ``` css
+        .select:after {
+            icon-font: url('../icons/arrow-down.svg');
+            color: #666;
+        }
+
+        .select:after {
+            icon-font: url('../icons/arrow-up.svg');
+        }
+    ```
+- 必须在`before`或`after`伪元素中使用，我们正是利用了它们的`content`属性，将字体图标视为某种字体下的特殊字符
+- 合并重复的图标。如果有相同的图标而它们的文件名或路径不同，我们会将它们合并起来，减少字体大小
 
 ## 安装
 
@@ -34,7 +54,7 @@ npm install --save-dev icon-font-loader
 
 ## 配置
 
-本loader针对的是CSS文件，但同时需要添加一个Plugin来打包字体图标。
+除了在CSS中添加自定义属性，还需要在Webpack配置中添加一个Plugin
 
 ```javascript
 const IconFontPlugin = require('icon-font-loader').Plugin;
@@ -101,7 +121,7 @@ CSS虚拟属性名
 
 #### mergeDuplicates
 
-是否合并重复的图标。可以减少生成的字体文件大小，但可能会增加编译时间，建议在发布阶段开启。
+如果有相同的svg文件而它们的文件名或路径不同，是否将它们合并起来。开启后，可以减少生成的字体文件大小，但会增加一定的编译时间，建议在发布阶段开启。
 
 - Type: `boolean`
 - Default: false
