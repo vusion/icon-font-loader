@@ -8,12 +8,13 @@ module.exports = {
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
-        publicPath: '/',
+        publicPath: 'dest/',
     },
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },
     plugins: [new IconFontPlugin({
         property: 'test',
+        startCodepoint: 0xF201,
     })],
 };

@@ -10,13 +10,15 @@ describe('Webpack Integration Tests', () => {
             const configPath = path.join('../tests/fixtures/', value, '/webpack.config.js');
             const outputDirectory = path.join('/fixtures/', value, '/dest');
             const options = require(configPath);
-            for(const chunck of Object.keys(options.entry)) {
-                options.entry[chunck] = path.join(__dirname, '/fixtures/', value, options.entry[chunck]);
-            };
+            for (const chunk of Object.keys(options.entry))
+                options.entry[chunk] = path.join(__dirname, '/fixtures/', value, options.entry[chunk]);
+
             webpack(options, (err, stats) => {
-                if (err) return done(err);
-                if (stats.hasErrors()) return done(new Error(stats.toString()));
-                //todo checkout result file context
+                if (err)
+                    return done(err);
+                if (stats.hasErrors())
+                    return done(new Error(stats.toString()));
+                // todo checkout result file context
                 done();
             });
         });

@@ -48,14 +48,15 @@ class IconFontPlugin {
                 const fontName = this.options.fontName;
                 const types = this.options.types;
                 const startCodepoint = this.options.startCodepoint;
+
                 webfontsGenerator({
                     files,
                     types,
                     fontName,
                     writeFiles: false,
-                    dest: 'build', // Required but doesn't get used
+                    dest: 'build', // Required but not used
                     fontHeight: 1000,
-                    startCodepoint: startCodepoint,
+                    startCodepoint,
                 }, (err, result) => {
                     if (err)
                         return callback(err);

@@ -6,6 +6,7 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dest',
+        publicPath: 'dest/',
         filename: '[name].js',
     },
     module: {

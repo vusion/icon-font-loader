@@ -13,7 +13,7 @@ function iconFontLoader(source) {
     const plugin = this.iconFontPlugin;
     const files = plugin.files;
     const md5s = plugin.md5s;
-    const START_NUM = plugin.options.startCodepoint - 1;
+    const startCodepoint = plugin.options.startCodepoint;
     const property = plugin.options.property;
     const mergeDuplicates = plugin.options.mergeDuplicates;
     const reg = new RegExp(`${property}\\s*:\\s*url\\(["']?(.*?)["']?\\);`, 'g');
@@ -36,16 +36,14 @@ function iconFontLoader(source) {
             } else
                 index = files.indexOf(file);
 
-            if (~index)
-                index++;
-            else {
+            if (index < 0) {
                 files.push(file);
                 if (mergeDuplicates)
                     md5s.push(md5Code);
-                index = files.length;
+                index = files.length - 1;
             }
             // 存储下每一个svg路径对应下的，字体编号
-            contents[url] = '\\' + (START_NUM + index).toString(16);
+            contents[url] = '\\' + (startCodepoint + index).toString(16);
             return file;
         }));
     });
