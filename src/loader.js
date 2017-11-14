@@ -13,7 +13,7 @@ function iconFontLoader(source) {
     const plugin = this.iconFontPlugin;
     const files = plugin.files;
     const md5s = plugin.md5s;
-    const START_NUM = 0xF100; // webfonts-generator start at this number
+    const START_NUM = plugin.options.startCodepoint - 1;
     const property = plugin.options.property;
     const mergeDuplicates = plugin.options.mergeDuplicates;
     const reg = new RegExp(`${property}\\s*:\\s*url\\(["']?(.*?)["']?\\);`, 'g');

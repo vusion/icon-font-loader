@@ -18,6 +18,7 @@ class IconFontPlugin {
             localCSSTemplate: fs.readFileSync(path.resolve(__dirname, 'local.css.hbs'), 'utf8'),
             auto: true,
             mergeDuplicates: false,
+            startCodepoint: 0xF101,
         }, options);
     }
 
@@ -46,6 +47,7 @@ class IconFontPlugin {
                     return callback();
                 const fontName = this.options.fontName;
                 const types = this.options.types;
+                const startCodepoint = this.options.startCodepoint;
                 webfontsGenerator({
                     files,
                     types,
@@ -53,6 +55,7 @@ class IconFontPlugin {
                     writeFiles: false,
                     dest: 'build', // Required but doesn't get used
                     fontHeight: 1000,
+                    startCodepoint: startCodepoint,
                 }, (err, result) => {
                     if (err)
                         return callback(err);
