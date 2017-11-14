@@ -40,7 +40,17 @@ Then `icon-font-loader` will generate corresponding css so web browsers can reco
 }
 ```
 
-After packing all these imports, the loader will create font files (eot,svg,ttf,woff), and generate a `<style>` tag or a CSS file containing `@font-face` globally.
+After packing all these imports, the loader will create font files (eot,svg,ttf,woff), and insert a `<style>` tag into the `<head>` automatically or emit a CSS file containing `@font-face`.
+
+``` css
+@font-face {
+    font-family: "icon-font";
+    src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
+         url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
+         url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
+         url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
+}
+```
 
 ## Features
 
@@ -82,18 +92,6 @@ module.exports = {
 };
 ```
 
-This plugin will insert a `<style>` tag in your document head to import and define the icon font.
-
-``` css
-@font-face {
-    font-family: "icon-font";
-    src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
-         url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
-         url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
-         url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
-}
-```
-
 ### loader options
 
 None.
@@ -130,7 +128,7 @@ Custom CSS property name
 
 #### auto
 
-Whether to insert `@font-face` into the document with a style tag automatically or emit a css file.
+Whether to insert `@font-face` into the `<head>` with a `<style>` tag automatically or emit a css file.
 
 - Type: `boolean`
 - Default: true

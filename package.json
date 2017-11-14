@@ -10,9 +10,9 @@
     "KenorFR"
   ],
   "scripts": {
-    "test": "mocha ./tests/final.test.js",
-    "eslint": "./node_modules/.bin/eslint ./src",
-    "eslint-fix": "./node_modules/.bin/eslint ./src --fix"
+    "test": "mocha --timeout 5000 ./tests/final.test.js",
+    "eslint": "eslint ./src",
+    "eslint-fix": "eslint ./src --fix"
   },
   "main": "./index.js",
   "repository": "vusion/icon-font-loader",

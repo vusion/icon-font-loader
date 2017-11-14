@@ -26,7 +26,17 @@
 }
 ```
 
-加载器会收集所有这样的引用，统一打包成(eot,svg,ttf,woff)字体文件，并生成一个全局的包含`@font-face`的`<style>`标签或CSS文件。
+加载器会收集所有这样的引用，统一打包成(eot,svg,ttf,woff)字体文件，并在`<head>`中插入一个有`@font-face`的`<style>`标签或抛出一个这样的CSS文件。
+
+``` css
+@font-face {
+    font-family: "icon-font";
+    src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
+         url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
+         url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
+         url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
+}
+```
 
 ## 特色
 
@@ -67,17 +77,6 @@ module.exports = {
     plugins: [new IconFontPlugin()],
 };
 ```
-在打包结束以后，这个plugin会在文档头部插入一个`<style>`，引入并定义字体。
-
-``` css
-@font-face {
-    font-family: "icon-font";
-    src: url("icon-font.eot?4063944d4c3fb8fa7bf4c19ad0f59965?#iefix") format("embedded-opentype"),
-         url("icon-font.woff?4063944d4c3fb8fa7bf4c19ad0f59965") format("woff"),
-         url("icon-font.ttf?4063944d4c3fb8fa7bf4c19ad0f59965") format("truetype"),
-         url("icon-font.svg?4063944d4c3fb8fa7bf4c19ad0f59965#icon-font") format("svg");
-}
-```
 
 ### loader参数
 
@@ -114,7 +113,7 @@ CSS的自定义属性名
 
 #### auto
 
-是否在document中自动插入`@font-face`，或生成一个含`@font-face`的css文件。
+是否在`<head>`中自动插入有`@font-face`的`<style>`标签，或生成一个含`@font-face`的css文件。
 
 - Type: `boolean`
 - Default: true
