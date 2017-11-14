@@ -1,6 +1,6 @@
 # icon-font-loader
 
-This is an icon loader in webpack. It can convert your svg files into icon font automatically.
+A webpack loader to convert svgs into font icons in CSS.
 
 [![CircleCI][circleci-img]][circleci-url]
 [![NPM Version][npm-img]][npm-url]
@@ -109,7 +109,7 @@ Name of font family and font files.
 
 #### output
 
-Path of font and css files relative to webpack output path.
+Path of font and css files relative to webpack output path. **Must be a relative path.**
 
 - Type: `string`
 - Default: `./`
@@ -119,11 +119,11 @@ Path of font and css files relative to webpack output path.
 Template of virtual property transformed local CSS. It accepts template content instead of a template file path。
 
 - Type: `string`
-- Default: [content of global.css.hbs'](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
+- Default: [content of global.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
 
 #### property
 
-Virtual CSS property name
+Custom CSS property name
 
 - Type: `string`
 - Default: `icon-font`
@@ -141,6 +141,13 @@ Whether to merge duplicated icons in font file. If true, it will shrink font fil
 
 - Type: `boolean`
 - Default: false
+
+#### startCodepoint
+
+- Type: `number`
+- Default: `0xF101`
+
+Starting codepoint. Defaults to beginning of unicode private area.
 
 ## Changelog
 

@@ -1,6 +1,6 @@
 # icon-font-loader
 
-这是一款在Webpack中使用的图标加载器，它可以自动将svg转换成字体图标。
+这是一款Webpack loader，它可以自动将svg转换成字体图标。
 
 ## 示例
 
@@ -93,7 +93,7 @@ module.exports = {
 
 #### output
 
-字体和CSS等文件对于webpack的output的相对路径。
+字体和CSS等文件对于webpack的output的相对路径。**必须是一个相对路径。**
 
 - Type: `string`
 - Default: `./`
@@ -107,7 +107,7 @@ module.exports = {
 
 #### property
 
-CSS虚拟属性名
+CSS的自定义属性名
 
 - Type: `string`
 - Default: `icon-font`
@@ -125,6 +125,13 @@ CSS虚拟属性名
 
 - Type: `boolean`
 - Default: false
+
+#### startCodepoint
+
+- Type: `number`
+- Default: `0xF101`
+
+unicode的字符起始点。
 
 ## 修改日志
 
