@@ -47,7 +47,9 @@ function iconFontLoader(source) {
             return file;
         }));
     });
-
+    // if have iconfont prototype in source, flag = true tell plugin to generate new icon font
+    if (promises.length > 0)
+        plugin.flag = true;
     const template = handlebars.compile(plugin.options.localCSSTemplate);
     Promise.all(promises).then(() => {
         // 第二遍replace真正替换

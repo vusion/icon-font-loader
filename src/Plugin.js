@@ -36,12 +36,11 @@ class IconFontPlugin {
             this.tmpPath = path.resolve(__dirname, '../__tmp_' + Date.now());
             shell.mkdir(this.tmpPath);
         });
-        compiler.plugin('compilation', (compilation, params) => {
-            compilation.plugin('normal-module-loader', (loaderContext) => {
-                loaderContext.iconFontPlugin = this;
-            });
-
+        compiler.plugin('this-compilation', (compilation, params) => {
             compilation.plugin('additional-assets', (callback) => {
+                const flag = this.flag;
+                if (!flag)
+                    return callback();
                 const files = this.handleSameName(this.files);
                 if (!files.length)
                     return callback();
@@ -91,6 +90,7 @@ class IconFontPlugin {
                     // save font name and style content
                     styleMessage.fontName = fontName;
                     styleMessage.styleContent = css;
+                    this.flag = false;
                     callback();
                 });
             });
@@ -139,6 +139,11 @@ class IconFontPlugin {
                     ].join('\n') + source;
                 }
                 return source;
+            });
+        });
+        compiler.plugin('compilation', (compilation, params) => {
+            compilation.plugin('normal-module-loader', (loaderContext) => {
+                loaderContext.iconFontPlugin = this;
             });
         });
     }
