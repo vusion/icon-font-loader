@@ -36,14 +36,23 @@ class IconFontPlugin {
             this.tmpPath = path.resolve(__dirname, '../__tmp_' + Date.now());
             shell.mkdir(this.tmpPath);
         });
+
         compiler.plugin('this-compilation', (compilation, params) => {
             compilation.plugin('additional-assets', (callback) => {
-                const flag = this.flag;
-                if (!flag)
+                // If loader doesn't collect icons, then don't generate fonts.
+                if (!this.shouldGenerate)
                     return callback();
-                const files = this.handleSameName(this.files);
+
+                let files;
+                try {
+                    files = this.handleSameName(this.files);
+                } catch (e) {
+                    return callback(e);
+                }
+
                 if (!files.length)
                     return callback();
+
                 const fontName = this.options.fontName;
                 const types = this.options.types;
                 const startCodepoint = this.options.startCodepoint;
@@ -90,7 +99,7 @@ class IconFontPlugin {
                     // save font name and style content
                     styleMessage.fontName = fontName;
                     styleMessage.styleContent = css;
-                    this.flag = false;
+                    this.shouldGenerate = false;
                     callback();
                 });
             });
@@ -127,6 +136,7 @@ class IconFontPlugin {
                 });
                 callback();
             });
+
             compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
                 let id = -1;
                 chunk.forEachModule((module) => {
@@ -141,6 +151,7 @@ class IconFontPlugin {
                 return source;
             });
         });
+
         compiler.plugin('compilation', (compilation, params) => {
             compilation.plugin('normal-module-loader', (loaderContext) => {
                 loaderContext.iconFontPlugin = this;
