@@ -76,7 +76,8 @@ class IconFontPlugin {
                     const font = { name: fontName };
                     types.forEach((type) => {
                         const filePath = path.join(this.options.output, urls[type]);
-                        let url = path.join(compilation.options.output.publicPath || '', this.options.output, urls[type]);
+                        const urlPath = this.options.auto ? this.options.output : '';
+                        let url = path.join(compilation.options.output.publicPath || '', urlPath, urls[type]);
                         if (path.sep === '\\')
                             url = url.replace(/\\/g, '/');
                         font[type] = {
