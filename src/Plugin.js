@@ -60,7 +60,7 @@ class IconFontPlugin {
                 const types = this.options.types;
                 const startCodepoint = this.options.startCodepoint;
                 const fontOptions = this.options.fontOptions;
-                
+
                 webfontsGenerator(Object.assign({
                     files,
                     types,
@@ -147,9 +147,17 @@ class IconFontPlugin {
                         id = module.id;
                 });
                 if (id !== -1) {
-                    return [
-                        ` __webpack_require__(${id})()`,
-                    ].join('\n') + source;
+                    // someTime id is not a number 
+                    //if you use NamedMoudlesPlugin or HashMoudlesPlugin id will be a path string or hash String 
+                    if( typeof id === 'number' ){
+                        return [
+                            ` __webpack_require__(${id})()`,
+                        ].join('\n') + source;
+                    }else{
+                        return [
+                            ` __webpack_require__('${id}')()`,
+                        ].join('\n') + source;
+                    }
                 }
                 return source;
             });
