@@ -19,6 +19,9 @@ class IconFontPlugin {
             auto: true,
             mergeDuplicates: false,
             startCodepoint: 0xF101,
+            fontOptions: {
+                fontHeight: 1000,
+            },
         }, options);
     }
 
@@ -56,16 +59,16 @@ class IconFontPlugin {
                 const fontName = this.options.fontName;
                 const types = this.options.types;
                 const startCodepoint = this.options.startCodepoint;
-
-                webfontsGenerator({
+                const fontOptions = this.options.fontOptions;
+                
+                webfontsGenerator(Object.assign({
                     files,
                     types,
                     fontName,
                     writeFiles: false,
                     dest: 'build', // Required but not used
-                    fontHeight: 1000,
                     startCodepoint,
-                }, (err, result) => {
+                }, fontOptions), (err, result) => {
                     if (err)
                         return callback(err);
 
