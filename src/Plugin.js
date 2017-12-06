@@ -147,13 +147,13 @@ class IconFontPlugin {
                         id = module.id;
                 });
                 if (id !== -1) {
-                    // someTime id is not a number 
-                    //if you use NamedMoudlesPlugin or HashMoudlesPlugin id will be a path string or hash String 
-                    if( typeof id === 'number' ){
+                    // someTime id is not a number
+                    // if you use NamedMoudlesPlugin or HashMoudlesPlugin id will be a path string or hash String
+                    if (typeof id === 'number') {
                         return [
                             ` __webpack_require__(${id})()`,
                         ].join('\n') + source;
-                    }else{
+                    } else {
                         return [
                             ` __webpack_require__('${id}')()`,
                         ].join('\n') + source;
