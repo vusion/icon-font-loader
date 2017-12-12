@@ -132,6 +132,19 @@ CSS的自定义属性名
 
 unicode的字符起始点。
 
+#### startCodepoint
+
+- Type: `number`
+- Default: `0xF101`
+
+unicode的字符起始点。
+
+#### fontOptions
+
+- Type: `Object`
+- Default: normalize, fontHeight, round, descent
+
+这个属性将直接覆盖掉[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).的属性，可以通过这个属性设置字体图标生成后的大小及上下偏移量
 ## 修改日志
 
 参见[Releases](https://github.com/vusion/icon-font-loader/releases)
