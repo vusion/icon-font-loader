@@ -19,6 +19,9 @@ class IconFontPlugin {
             auto: true,
             mergeDuplicates: false,
             startCodepoint: 0xF101,
+            fontOptions: {
+                fontHeight: 1000,
+            },
         }, options);
     }
 
@@ -56,16 +59,16 @@ class IconFontPlugin {
                 const fontName = this.options.fontName;
                 const types = this.options.types;
                 const startCodepoint = this.options.startCodepoint;
+                const fontOptions = this.options.fontOptions;
 
-                webfontsGenerator({
+                webfontsGenerator(Object.assign({
                     files,
                     types,
                     fontName,
                     writeFiles: false,
                     dest: 'build', // Required but not used
-                    fontHeight: 1000,
                     startCodepoint,
-                }, (err, result) => {
+                }, fontOptions), (err, result) => {
                     if (err)
                         return callback(err);
 
@@ -145,9 +148,17 @@ class IconFontPlugin {
                         id = module.id;
                 });
                 if (id !== -1) {
-                    return [
-                        ` __webpack_require__(${id})()`,
-                    ].join('\n') + source;
+                    // someTime id is not a number
+                    // if you use NamedMoudlesPlugin or HashMoudlesPlugin id will be a path string or hash String
+                    if (typeof id === 'number') {
+                        return [
+                            ` __webpack_require__(${id})()`,
+                        ].join('\n') + source;
+                    } else {
+                        return [
+                            ` __webpack_require__('${id}')()`,
+                        ].join('\n') + source;
+                    }
                 }
                 return source;
             });

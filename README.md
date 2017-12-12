@@ -147,6 +147,14 @@ Whether to merge duplicated icons in font file. If true, it will shrink font fil
 
 Starting codepoint. Defaults to beginning of unicode private area.
 
+#### fontOptions
+
+- Type: `Object`
+- Default: normalize, fontHeight, round, descent
+
+Options that are passed directly to
+[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
+
 ## Changelog
 
 See [Releases](https://github.com/vusion/icon-font-loader/releases)
