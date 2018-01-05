@@ -19,7 +19,6 @@ function iconFontLoader(source) {
     const reg = new RegExp(`${property}\\s*:\\s*url\\(["']?(.*?)["']?\\);`, 'g');
 
     const promises = [];
-    const contents = {};
     // 由于是异步的，第一遍replace只用于查重
     source.replace(reg, (m, url) => {
         promises.push(new Promise((resolve, reject) => {
@@ -28,30 +27,44 @@ function iconFontLoader(source) {
         }).then((file) => {
             this.addDependency(file);
             let md5Code, index;
-
+            const result = {
+                url,
+                add: false,
+                file,
+            };
             if (mergeDuplicates) {
                 const filesContent = fs.readFileSync(file);
                 md5Code = utils.md5Create(filesContent);
                 index = md5s.indexOf(md5Code);
+                result.md5Code = md5Code;
             } else
                 index = files.indexOf(file);
-
-            if (index < 0) {
-                files.push(file);
-                if (mergeDuplicates)
-                    md5s.push(md5Code);
-                index = files.length - 1;
-            }
-            // 存储下每一个svg路径对应下的，字体编号
-            contents[url] = '\\' + (startCodepoint + index).toString(16);
-            return file;
+            result.index = index;
+            if (index < 0)
+                result.add = true;
+            return result;
         }));
     });
 
     if (promises.length > 0)
         plugin.shouldGenerate = true;
     const template = handlebars.compile(plugin.options.localCSSTemplate);
-    Promise.all(promises).then(() => {
+    Promise.all(promises).then((results) => {
+        const contents = {};
+        results.forEach((item) => {
+            const { url, add, file, md5Code } = item;
+            let index = item.index;
+            if (add) {
+                files.push(file);
+                if (mergeDuplicates)
+                    md5s.push(md5Code);
+                index = files.length - 1;
+            }
+            // save svg font code
+            contents[url] = '\\' + (startCodepoint + index).toString(16);
+        });
+        return contents;
+    }).then((contents) => {
         // 第二遍replace真正替换
         const result = source.replace(reg, (m, url) => template({
             fontName: plugin.options.fontName,
