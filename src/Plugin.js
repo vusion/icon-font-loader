@@ -2,8 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const webfontsGenerator = require('webfonts-generator');
-const shell = require('shelljs');
+const webfontsGenerator = require('vusion-webfonts-generator');
 const webpack = require('webpack');
 const ConcatSource = require('webpack-sources').ConcatSource;
 const utils = require('./utils');
@@ -34,10 +33,6 @@ class IconFontPlugin {
         compiler.plugin('after-plugins', (compiler) => {
             this.files = [];
             this.md5s = [];
-
-            shell.rm('-rf', path.resolve(__dirname, '../__tmp_*'));
-            this.tmpPath = path.resolve(__dirname, '../__tmp_' + Date.now());
-            shell.mkdir(this.tmpPath);
         });
 
         compiler.plugin('this-compilation', (compilation, params) => {
@@ -187,10 +182,9 @@ class IconFontPlugin {
                 file = path.resolve(__dirname, 'empty.svg');
             let name = path.basename(file, '.svg');
             if (names[name]) {
+                file = fs.createReadStream(file);
                 name = getUniqueName(name);
-                const newFile = path.join(this.tmpPath, name + '.svg');
-                shell.cp(file, newFile);
-                file = newFile;
+                file.metadata = { name };
             }
 
             names[name] = true;

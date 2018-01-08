@@ -3,9 +3,10 @@
     color: red;
 }
 
-.icon-arrow-left-2:before {
-    font-size:0px;
+.icon-arrow-slice:before {
+    font-size:20px;
     color: blue;
+    icon-font: url('../../icons/same-name/slice.svg');
 }
 
 .icon-arrow-up:before {
