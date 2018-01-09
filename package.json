@@ -35,6 +35,7 @@
   ],
   "dependencies": {
     "handlebars": "^4.0.10",
+    "shelljs": "^0.7.8",
     "vusion-webfonts-generator": "^0.4.0",
     "webpack-sources": "^1.0.1"
   },
