@@ -1,16 +1,11 @@
 /**
  * test attribute function in plugin Object
  */
-const shell = require('shelljs');
 const fs = require('fs');
 const path = require('path');
 const Plugin = require('../src/Plugin.js');
 const IconFontPlugin = new Plugin();
 const expect = require('chai').expect;
-
-shell.rm('-rf', path.resolve(__dirname, './__test_tmp_*'));
-IconFontPlugin.tmpPath = path.resolve(__dirname, './__test_tmp_' + Date.now());
-shell.mkdir(IconFontPlugin.tmpPath);
 
 describe('icon font plugin api test:', () => {
     it('#function handleSameName file list none same test: ', (done) => {
