@@ -52,11 +52,8 @@ function iconFontLoader(source) {
     Promise.all(promises).then((results) => {
         const contents = {};
         results.forEach((item) => {
-            const url = item.url,
-            add = item.add,
-            file = item.file,
-            md5Code = item.md5Code;
-            
+            const { url, add, file, md5Code } = item;
+
             let index = item.index;
             if (add) {
                 files.push(file);

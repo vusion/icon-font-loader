@@ -11,9 +11,10 @@
     "Thiago Faleiro <contato@thiagofaleiro.com>"
   ],
   "scripts": {
+    "precommit": "bash node_modules/vusion-hooks/pre-commit",
     "test": "mocha --timeout 5000 ./tests/final.test.js",
-    "eslint": "eslint ./src",
-    "eslint-fix": "eslint ./src --fix"
+    "lint": "eslint ./src",
+    "lint-fix": "eslint ./src --fix"
   },
   "main": "./index.js",
   "repository": "vusion/icon-font-loader",
@@ -41,13 +42,15 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "css-loader": "^0.28.4",
-    "eslint": "^4.3.0",
-    "eslint-config-vusion": "^1.2.0",
+    "eslint": "^4.13.1",
+    "eslint-config-vusion": "^2.0.3",
     "extract-text-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^2.30.1",
+    "husky": "^0.14.3",
     "mocha": "^3.5.3",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
+    "vusion-hooks": "^0.1.1",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.7.1"
   }

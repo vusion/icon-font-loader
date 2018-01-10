@@ -5,3 +5,5 @@ tests/**/dest/
 __test_tmp_*
 __tmp_*
 .idea
+yarn.lock
+package-lock.json
