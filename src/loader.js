@@ -3,6 +3,7 @@
 const fs = require('fs');
 const handlebars = require('handlebars');
 const utils = require('./utils');
+const css = require('postcss');
 
 const Plugin = require('./Plugin');
 
@@ -16,11 +17,13 @@ function iconFontLoader(source) {
     const startCodepoint = plugin.options.startCodepoint;
     const property = plugin.options.property;
     const mergeDuplicates = plugin.options.mergeDuplicates;
-    const reg = new RegExp(`${property}\\s*:\\s*url\\(["']?(.*?)["']?\\);`, 'g');
+    const reg = new RegExp(`url\\(["']?(.*?)["']?\\)`, 'g');
 
     const promises = [];
-    // 由于是异步的，第一遍replace只用于查重
-    source.replace(reg, (m, url) => {
+    const ast = css.parse(source);
+    ast.walkDecls(property, (declaration) => {
+        const result = reg.exec(declaration.value);
+        const url = result[1];
         promises.push(new Promise((resolve, reject) => {
             // This path must be resolved by webpack.
             this.resolve(this.context, url, (err, result) => err ? reject(err) : resolve(result));
@@ -40,10 +43,13 @@ function iconFontLoader(source) {
             } else
                 index = files.indexOf(file);
             result.index = index;
+            result.declaration = declaration;
+            result.rule = declaration.parent;
             if (index < 0)
                 result.add = true;
             return result;
         }));
+        reg.lastIndex = 0;
     });
 
     if (promises.length > 0)
@@ -57,6 +63,8 @@ function iconFontLoader(source) {
             const add = item.add;
             const file = item.file;
             const md5Code = item.md5Code;
+            const declaration = item.declaration;
+            const rule = item.rule;
 
             let index = item.index;
             if (add) {
@@ -65,17 +73,29 @@ function iconFontLoader(source) {
                     md5s.push(md5Code);
                 index = files.length - 1;
             }
+            rule.removeChild(declaration);
+            rule.isFontCssselector = true;
             // save svg font code
             contents[url] = '\\' + (startCodepoint + index).toString(16);
+            const cssRule = template({
+                fontName: plugin.options.fontName,
+                content: contents[url],
+            });
+            rule.append(cssRule);
         });
-        return contents;
-    }).then((contents) => {
-        // 第二遍replace真正替换
-        const result = source.replace(reg, (m, url) => template({
-            fontName: plugin.options.fontName,
-            content: contents[url],
-        }));
-        callback(null, result);
+        let cssStr = '';
+        // const iconFontCssNames = [];
+        // css rule stringify
+        css.stringify(ast, (str, map) => {
+            // if (map.isFontCssselector)
+            //     iconFontCssNames.push(map.selector);
+            cssStr += str;
+        });
+        // if (iconFontCssNames.length > 0) {
+        //     const iconFontCssNamesStr = iconFontCssNames.join(',');
+        //     cssStr = cssStr + ''
+        // }
+        callback(null, cssStr);
     }).catch((err) => {
         callback(err, source);
     });
