@@ -77,24 +77,25 @@ function iconFontLoader(source) {
             rule.isFontCssselector = true;
             // save svg font code
             contents[url] = '\\' + (startCodepoint + index).toString(16);
-            const cssRule = template({
-                fontName: plugin.options.fontName,
-                content: contents[url],
-            });
-            rule.append(cssRule);
+            rule.append(`\n\tcontent:'${contents[url]}';`);
         });
         let cssStr = '';
-        // const iconFontCssNames = [];
+        const iconFontCssNames = [];
         // css rule stringify
         css.stringify(ast, (str, map) => {
-            // if (map.isFontCssselector)
-            //     iconFontCssNames.push(map.selector);
+            if (map && map.isFontCssselector && iconFontCssNames.indexOf(map.selector) === -1)
+                iconFontCssNames.push(map.selector);
             cssStr += str;
         });
-        // if (iconFontCssNames.length > 0) {
-        //     const iconFontCssNamesStr = iconFontCssNames.join(',');
-        //     cssStr = cssStr + ''
-        // }
+        if (iconFontCssNames.length > 0) {
+            let cssAdd = template({
+                fontName: plugin.options.fontName,
+                content: '\\' + startCodepoint.toString(16),
+            });
+            const iconFontCssNamesStr = iconFontCssNames.join(',');
+            cssAdd = `${iconFontCssNamesStr}{\n${cssAdd}\n}\n`;
+            cssStr = cssAdd + cssStr;
+        }
         callback(null, cssStr);
     }).catch((err) => {
         callback(err, source);

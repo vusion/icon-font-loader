@@ -1,9 +1,12 @@
-.icon-arrow-left:before {
+body.test .des{
+    color: salmon
+}
+body .icon-arrow-left:before {
     icon-font: url('../../icons/arrow-left.svg');
     color: red;
 }
 
-.icon-arrow-slice:before {
+body span.icon-arrow-slice:before {
     font-size:20px;
     color: blue;
     icon-font: url('../../icons/same-name/slice.svg');
