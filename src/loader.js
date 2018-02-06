@@ -7,6 +7,15 @@ const css = require('postcss');
 
 const Plugin = require('./Plugin');
 
+function getNextLoader(loader) {
+    const loaders = loader.loaders;
+    const previousRequest = loader.previousRequest;
+    const loaderContexts = loaders.map((loader) => loader.normalExecuted);
+    const index = loaderContexts.lastIndexOf(false);
+    const nextLoader = loaders[index].normal;
+    return nextLoader;
+}
+
 function iconFontLoader(source) {
     const callback = this.async();
 
@@ -20,7 +29,8 @@ function iconFontLoader(source) {
     const reg = new RegExp(`url\\(["']?(.*?)["']?\\)`, 'g');
 
     const promises = [];
-    const ast = css.parse(source);
+    const ast = typeof source === 'string' ? css.parse(source) : source;
+    const acceptPostCssAst = !!getNextLoader(this).acceptPostCssAst;
     ast.walkDecls(property, (declaration) => {
         const result = reg.exec(declaration.value);
         const url = result[1];
@@ -81,11 +91,9 @@ function iconFontLoader(source) {
         });
         let cssStr = '';
         const iconFontCssNames = [];
-        // css rule stringify
-        css.stringify(ast, (str, map) => {
-            if (map && map.isFontCssselector && iconFontCssNames.indexOf(map.selector) === -1)
-                iconFontCssNames.push(map.selector);
-            cssStr += str;
+        ast.walkRules((rule) => {
+            if (rule && rule.isFontCssselector && iconFontCssNames.indexOf(rule.selector) === -1)
+                iconFontCssNames.push(rule.selector);
         });
         if (iconFontCssNames.length > 0) {
             let cssAdd = template({
@@ -94,14 +102,22 @@ function iconFontLoader(source) {
             });
             const iconFontCssNamesStr = iconFontCssNames.join(',');
             cssAdd = `${iconFontCssNamesStr}{\n${cssAdd}\n}\n`;
-            cssStr = cssAdd + cssStr;
+            ast.insertBefore(ast.first, cssAdd);
         }
-        callback(null, cssStr);
+        // css rule stringify
+        if (!acceptPostCssAst) {
+            css.stringify(ast, (str, map) => {
+                cssStr += str;
+            });
+        }
+        callback(null, acceptPostCssAst ? ast : cssStr);
     }).catch((err) => {
         callback(err, source);
     });
 }
 
 iconFontLoader.Plugin = Plugin;
+
+iconFontLoader.acceptPostCssAst = true;
 
 module.exports = iconFontLoader;
