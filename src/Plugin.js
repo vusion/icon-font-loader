@@ -6,6 +6,7 @@ const webfontsGenerator = require('vusion-webfonts-generator');
 const webpack = require('webpack');
 const ConcatSource = require('webpack-sources').ConcatSource;
 const utils = require('./utils');
+const ReplaceSource = require('webpack-sources').ReplaceSource;
 
 class IconFontPlugin {
     constructor(options) {
@@ -42,20 +43,26 @@ class IconFontPlugin {
                     return callback();
 
                 let files;
+                const startCodepoint = this.options.startCodepoint;
+                this.fontCodePoint = {};
                 try {
-                    files = this.handleSameName(this.files);
+                    this.files = this.files.sort();
+                    files = this.files;
+                    for (let i = 0, length = this.files.length; i < length; i++) {
+                        let fontCodePoint = (i + startCodepoint).toString(16);
+                        fontCodePoint = fontCodePoint.substring(1);
+                        this.fontCodePoint[files[i]] = fontCodePoint;
+                    }
+                    files = this.handleSameName(files);
                 } catch (e) {
                     return callback(e);
                 }
-
                 if (!files.length)
                     return callback();
 
                 const fontName = this.options.fontName;
                 const types = this.options.types;
-                const startCodepoint = this.options.startCodepoint;
                 const fontOptions = this.options.fontOptions;
-
                 webfontsGenerator(Object.assign({
                     files,
                     types,
@@ -66,7 +73,6 @@ class IconFontPlugin {
                 }, fontOptions), (err, result) => {
                     if (err)
                         return callback(err);
-
                     const urls = {};
                     types.forEach((type) => urls[type] = `${fontName}.${type}`);
 
@@ -115,8 +121,9 @@ class IconFontPlugin {
                     });
                 }
             });
-
             compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+                const fontCodePoint = this.fontCodePoint;
+                const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
                         if (file.endsWith('.js')) {
@@ -130,6 +137,21 @@ class IconFontPlugin {
                                 }`,
                                 compilation.assets[file]
                             );
+                        }
+                        if (file.endsWith('.js') || file.endsWith('.css')) {
+                            // 处理css模块
+                            const source = compilation.assets[file];
+                            let content = compilation.assets[file].source();
+                            content = content.replace(replaceReg, ($1, $2) => {
+                                if (fontCodePoint[$2]) {
+                                    const code = String.fromCharCode(parseInt('F' + fontCodePoint[$2], 16));
+                                    return `'${code}'`;
+                                } else
+                                    return $1;
+                            });
+                            const replaceSource = new ReplaceSource(source);
+                            replaceSource.replace(0, source.size(), content);
+                            compilation.assets[file] = replaceSource;
                         }
                     });
                 });

@@ -52,7 +52,6 @@ function iconFontLoader(source) {
                 result.md5Code = md5Code;
             } else
                 index = files.indexOf(file);
-            result.index = index;
             result.declaration = declaration;
             result.rule = declaration.parent;
             if (index < 0)
@@ -66,7 +65,6 @@ function iconFontLoader(source) {
         plugin.shouldGenerate = true;
     const template = handlebars.compile(plugin.options.localCSSTemplate);
     Promise.all(promises).then((results) => {
-        const contents = {};
         results.forEach((item) => {
             // const { url, add, file, md5Code } = item;
             const url = item.url;
@@ -75,19 +73,14 @@ function iconFontLoader(source) {
             const md5Code = item.md5Code;
             const declaration = item.declaration;
             const rule = item.rule;
-
-            let index = item.index;
             if (add) {
                 files.push(file);
                 if (mergeDuplicates)
                     md5s.push(md5Code);
-                index = files.length - 1;
             }
             rule.removeChild(declaration);
             rule.isFontCssselector = true;
-            // save svg font code
-            contents[url] = '\\' + (startCodepoint + index).toString(16);
-            rule.append(`\n\tcontent:'${contents[url]}';`);
+            rule.append(`\n\tcontent: ICON_FONT_LOADER_IMAGE(${file});`);
         });
         let cssStr = '';
         const iconFontCssNames = [];
