@@ -33,6 +33,7 @@ class IconFontPlugin {
         compiler.plugin('after-plugins', (compiler) => {
             this.files = [];
             this.md5s = [];
+            this.beforeTreatmentProcess = Promise.resolve();
         });
 
         compiler.plugin('this-compilation', (compilation, params) => {
@@ -55,7 +56,14 @@ class IconFontPlugin {
                 const types = this.options.types;
                 const startCodepoint = this.options.startCodepoint;
                 const fontOptions = this.options.fontOptions;
-
+                for (const file of files) {
+                    if (file instanceof Object) {
+                        console.log(file.path);
+                    } else {
+                        console.log(file);
+                    }
+                }
+                // console.log(files);
                 webfontsGenerator(Object.assign({
                     files,
                     types,
@@ -82,6 +90,7 @@ class IconFontPlugin {
                             url,
                             hash: utils.md5Create(result[type]),
                         };
+                        console.log(`${type}文件:${font[type].hash}`);
                         assets[filePath] = {
                             source: () => result[type],
                             size: () => result[type].length,
@@ -160,6 +169,7 @@ class IconFontPlugin {
         });
 
         compiler.plugin('compilation', (compilation, params) => {
+            this.beforeTreatmentProcess = Promise.resolve();
             compilation.plugin('normal-module-loader', (loaderContext) => {
                 loaderContext.iconFontPlugin = this;
             });
