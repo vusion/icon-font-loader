@@ -40,30 +40,29 @@ class IconFontPlugin {
             compilation.plugin('after-optimize-chunks', (chunks) => {
                 const startCodepoint = this.options.startCodepoint;
                 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
-                this.files = this.files.sort();
-                this.fontCodePoint = {};
-                for (let i = 0, length = this.files.length; i < length; i++) {
-                    let fontCodePoint = (i + startCodepoint).toString(16);
-                    fontCodePoint = fontCodePoint.substring(1);
-                    this.fontCodePoint[this.files[i]] = fontCodePoint;
-                }
+                this.files = Array.from(new Set(this.files)).sort();
+                this.fontCodePoints = {};
+                this.files.forEach((file, index) => {
+                    const codePoint = (startCodepoint + index).toString(16).slice(1);
+                    this.fontCodePoints[file] = codePoint;
+                });
                 chunks.forEach((chunk) => {
                     const modules = chunk._modules;
-                    const fontCodePoint = this.fontCodePoint;
+                    const fontCodePoints = this.fontCodePoints;
                     modules.forEach((module) => {
                         const source = module._source;
                         if (typeof source === 'string') {
                             module._source = source.replace(replaceReg, ($1, $2) => {
-                                if (fontCodePoint[$2]) {
-                                    const code = String.fromCharCode(parseInt('F' + fontCodePoint[$2], 16));
+                                if (fontCodePoints[$2]) {
+                                    const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
                                     return `'${code}'`;
                                 } else
                                     return $1;
                             });
                         } else if (typeof source === 'object' && typeof source._value === 'string') {
                             source._value = source._value.replace(replaceReg, ($1, $2) => {
-                                if (fontCodePoint[$2]) {
-                                    const code = String.fromCharCode(parseInt('F' + fontCodePoint[$2], 16));
+                                if (fontCodePoints[$2]) {
+                                    const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
                                     return `'${code}'`;
                                 } else
                                     return $1;

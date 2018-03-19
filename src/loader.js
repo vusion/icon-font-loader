@@ -56,6 +56,8 @@ function iconFontLoader(source) {
             result.rule = declaration.parent;
             if (index < 0)
                 result.add = true;
+            else
+                result.file = files[index];
             return result;
         }));
         reg.lastIndex = 0;
