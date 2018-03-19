@@ -44,15 +44,15 @@ class IconFontPlugin {
 
                 let files;
                 const startCodepoint = this.options.startCodepoint;
-                this.fontCodePoint = {};
+                this.fontCodePoints = {};
                 try {
-                    this.files = this.files.sort();
-                    files = this.files;
-                    for (let i = 0, length = this.files.length; i < length; i++) {
-                        let fontCodePoint = (i + startCodepoint).toString(16);
-                        fontCodePoint = fontCodePoint.substring(1);
-                        this.fontCodePoint[files[i]] = fontCodePoint;
-                    }
+                    this.files = files = Array.from(new Set(this.files)).sort();
+
+                    files.forEach((file, index) => {
+                        const codePoint = (startCodepoint + index).toString(16).slice(1);
+                        this.fontCodePoints[file] = codePoint;
+                    });
+
                     files = this.handleSameName(files);
                 } catch (e) {
                     return callback(e);
@@ -122,7 +122,7 @@ class IconFontPlugin {
                 }
             });
             compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
-                const fontCodePoint = this.fontCodePoint;
+                const fontCodePoints = this.fontCodePoints;
                 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
@@ -143,8 +143,8 @@ class IconFontPlugin {
                             const source = compilation.assets[file];
                             let content = compilation.assets[file].source();
                             content = content.replace(replaceReg, ($1, $2) => {
-                                if (fontCodePoint[$2]) {
-                                    const code = String.fromCharCode(parseInt('F' + fontCodePoint[$2], 16));
+                                if (fontCodePoints[$2]) {
+                                    const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
                                     return `'${code}'`;
                                 } else
                                     return $1;
