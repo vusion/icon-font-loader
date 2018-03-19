@@ -37,22 +37,49 @@ class IconFontPlugin {
         });
 
         compiler.plugin('this-compilation', (compilation, params) => {
+            compilation.plugin('after-optimize-chunks', (chunks) => {
+                const startCodepoint = this.options.startCodepoint;
+                const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
+                this.files = this.files.sort();
+                this.fontCodePoint = {};
+                for (let i = 0, length = this.files.length; i < length; i++) {
+                    let fontCodePoint = (i + startCodepoint).toString(16);
+                    fontCodePoint = fontCodePoint.substring(1);
+                    this.fontCodePoint[this.files[i]] = fontCodePoint;
+                }
+                chunks.forEach((chunk) => {
+                    const modules = chunk._modules;
+                    const fontCodePoint = this.fontCodePoint;
+                    modules.forEach((module) => {
+                        const source = module._source;
+                        if (typeof source === 'string') {
+                            module._source = source.replace(replaceReg, ($1, $2) => {
+                                if (fontCodePoint[$2]) {
+                                    const code = String.fromCharCode(parseInt('F' + fontCodePoint[$2], 16));
+                                    return `'${code}'`;
+                                } else
+                                    return $1;
+                            });
+                        } else if (typeof source === 'object' && typeof source._value === 'string') {
+                            source._value = source._value.replace(replaceReg, ($1, $2) => {
+                                if (fontCodePoint[$2]) {
+                                    const code = String.fromCharCode(parseInt('F' + fontCodePoint[$2], 16));
+                                    return `'${code}'`;
+                                } else
+                                    return $1;
+                            });
+                        }
+                    });
+                });
+            });
             compilation.plugin('additional-assets', (callback) => {
                 // If loader doesn't collect icons, then don't generate fonts.
                 if (!this.shouldGenerate)
                     return callback();
 
                 let files;
-                const startCodepoint = this.options.startCodepoint;
-                this.fontCodePoint = {};
                 try {
-                    this.files = this.files.sort();
                     files = this.files;
-                    for (let i = 0, length = this.files.length; i < length; i++) {
-                        let fontCodePoint = (i + startCodepoint).toString(16);
-                        fontCodePoint = fontCodePoint.substring(1);
-                        this.fontCodePoint[files[i]] = fontCodePoint;
-                    }
                     files = this.handleSameName(files);
                 } catch (e) {
                     return callback(e);
@@ -63,6 +90,7 @@ class IconFontPlugin {
                 const fontName = this.options.fontName;
                 const types = this.options.types;
                 const fontOptions = this.options.fontOptions;
+                const startCodepoint = this.options.startCodepoint;
                 webfontsGenerator(Object.assign({
                     files,
                     types,
@@ -122,8 +150,6 @@ class IconFontPlugin {
                 }
             });
             compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
-                const fontCodePoint = this.fontCodePoint;
-                const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
                 chunks.forEach((chunk) => {
                     chunk.files.forEach((file) => {
                         if (file.endsWith('.js')) {
@@ -137,21 +163,6 @@ class IconFontPlugin {
                                 }`,
                                 compilation.assets[file]
                             );
-                        }
-                        if (file.endsWith('.js') || file.endsWith('.css')) {
-                            // 处理css模块
-                            const source = compilation.assets[file];
-                            let content = compilation.assets[file].source();
-                            content = content.replace(replaceReg, ($1, $2) => {
-                                if (fontCodePoint[$2]) {
-                                    const code = String.fromCharCode(parseInt('F' + fontCodePoint[$2], 16));
-                                    return `'${code}'`;
-                                } else
-                                    return $1;
-                            });
-                            const replaceSource = new ReplaceSource(source);
-                            replaceSource.replace(0, source.size(), content);
-                            compilation.assets[file] = replaceSource;
                         }
                     });
                 });
