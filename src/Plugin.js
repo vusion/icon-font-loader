@@ -52,21 +52,9 @@ class IconFontPlugin {
                     modules.forEach((module) => {
                         const source = module._source;
                         if (typeof source === 'string') {
-                            module._source = source.replace(replaceReg, ($1, $2) => {
-                                if (fontCodePoints[$2]) {
-                                    const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
-                                    return `'${code}'`;
-                                } else
-                                    return $1;
-                            });
+                            module._source = this.replaceHolder(source, replaceReg, fontCodePoints);
                         } else if (typeof source === 'object' && typeof source._value === 'string') {
-                            source._value = source._value.replace(replaceReg, ($1, $2) => {
-                                if (fontCodePoints[$2]) {
-                                    const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
-                                    return `'${code}'`;
-                                } else
-                                    return $1;
-                            });
+                            source._value = this.replaceHolder(source._value, replaceReg, fontCodePoints);
                         }
                     });
                 });
@@ -224,6 +212,15 @@ class IconFontPlugin {
         });
 
         return result;
+    }
+    replaceHolder(value, replaceReg, fontCodePoints) {
+        return value.replace(replaceReg, ($1, $2) => {
+            if (fontCodePoints[$2]) {
+                const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
+                return `'${code}'`;
+            } else
+                return $1;
+        });
     }
 }
 
