@@ -7,6 +7,7 @@ const webpack = require('webpack');
 const ConcatSource = require('webpack-sources').ConcatSource;
 const utils = require('./utils');
 const ReplaceSource = require('webpack-sources').ReplaceSource;
+const getAllModules = require('./getAllModules');
 
 class IconFontPlugin {
     constructor(options) {
@@ -46,17 +47,14 @@ class IconFontPlugin {
                     const codePoint = (startCodepoint + index).toString(16).slice(1);
                     this.fontCodePoints[file] = codePoint;
                 });
-                chunks.forEach((chunk) => {
-                    const modules = chunk._modules;
-                    const fontCodePoints = this.fontCodePoints;
-                    modules.forEach((module) => {
-                        const source = module._source;
-                        if (typeof source === 'string') {
-                            module._source = this.replaceHolder(source, replaceReg, fontCodePoints);
-                        } else if (typeof source === 'object' && typeof source._value === 'string') {
-                            source._value = this.replaceHolder(source._value, replaceReg, fontCodePoints);
-                        }
-                    });
+                const fontCodePoints = this.fontCodePoints;
+                getAllModules(compilation).forEach((module) => {
+                    const source = module._source;
+                    if (typeof source === 'string') {
+                        module._source = this.replaceHolder(source, replaceReg, fontCodePoints);
+                    } else if (typeof source === 'object' && typeof source._value === 'string') {
+                        source._value = this.replaceHolder(source._value, replaceReg, fontCodePoints);
+                    }
                 });
             });
             compilation.plugin('additional-assets', (callback) => {
