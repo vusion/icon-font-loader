@@ -48,7 +48,7 @@ class IconFontPlugin {
                     this.fontCodePoints[file] = codePoint;
                 });
                 const fontCodePoints = this.fontCodePoints;
-                getAllModules(compilation).forEach((module) => {
+                getAllModules(compilation).filter((module) => module.IconFontSVGModule).forEach((module) => {
                     const source = module._source;
                     if (typeof source === 'string') {
                         module._source = this.replaceHolder(source, replaceReg, fontCodePoints);

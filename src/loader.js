@@ -67,6 +67,8 @@ function iconFontLoader(source) {
         plugin.shouldGenerate = true;
     const template = handlebars.compile(plugin.options.localCSSTemplate);
     Promise.all(promises).then((results) => {
+        if (results.length > 0)
+            this._module.IconFontSVGModule = true;
         results.forEach((item) => {
             // const { url, add, file, md5Code } = item;
             const url = item.url;
