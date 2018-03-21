@@ -1,3 +1,5 @@
+'use strict';
+
 let ConcatenatedModule;
 try {
     ConcatenatedModule = require('webpack/lib/optimize/ConcatenatedModule');
