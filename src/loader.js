@@ -25,7 +25,7 @@ function iconFontLoader(source) {
     const md5s = plugin.md5s;
     const startCodepoint = plugin.options.startCodepoint;
     const property = plugin.options.property;
-    const mergeDuplicates = plugin.options.mergeDuplicates;
+    // const mergeDuplicates = plugin.options.mergeDuplicates;
     const reg = new RegExp(`url\\(["']?(.*?)["']?\\)`, 'g');
 
     const promises = [];
@@ -39,25 +39,21 @@ function iconFontLoader(source) {
             this.resolve(this.context, url, (err, result) => err ? reject(err) : resolve(result));
         }).then((file) => {
             this.addDependency(file);
-            let md5Code, index;
             const result = {
                 url,
                 add: false,
                 file,
             };
-            if (mergeDuplicates) {
-                const filesContent = fs.readFileSync(file);
-                md5Code = utils.md5Create(filesContent);
-                index = md5s.indexOf(md5Code);
-                result.md5Code = md5Code;
-            } else
-                index = files.indexOf(file);
+            const filesContent = fs.readFileSync(file);
+            const md5Code = utils.md5Create(filesContent);
+            const index = md5s.indexOf(md5Code);
+            result.md5Code = md5Code;
             result.declaration = declaration;
             result.rule = declaration.parent;
             if (index < 0)
                 result.add = true;
             else
-                result.file = files[index];
+                result.file = files[index].file;
             return result;
         }));
         reg.lastIndex = 0;
@@ -70,7 +66,6 @@ function iconFontLoader(source) {
         if (results.length > 0)
             this._module.IconFontSVGModule = true;
         results.forEach((item) => {
-            // const { url, add, file, md5Code } = item;
             const url = item.url;
             const add = item.add;
             const file = item.file;
@@ -78,13 +73,12 @@ function iconFontLoader(source) {
             const declaration = item.declaration;
             const rule = item.rule;
             if (add) {
-                files.push(file);
-                if (mergeDuplicates)
-                    md5s.push(md5Code);
+                files.push({ url, file, md5Code });
+                md5s.push(md5Code);
             }
             rule.removeChild(declaration);
             rule.isFontCssselector = true;
-            rule.append(`\n\tcontent: ICON_FONT_LOADER_IMAGE(${file});`);
+            rule.append(`\n\tcontent: ICON_FONT_LOADER_IMAGE(${md5Code});`);
         });
         let cssStr = '';
         const iconFontCssNames = [];

@@ -8,6 +8,7 @@ const ConcatSource = require('webpack-sources').ConcatSource;
 const utils = require('./utils');
 const ReplaceSource = require('webpack-sources').ReplaceSource;
 const getAllModules = require('./getAllModules');
+const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 
 class IconFontPlugin {
     constructor(options) {
@@ -35,18 +36,13 @@ class IconFontPlugin {
         compiler.plugin('after-plugins', (compiler) => {
             this.files = [];
             this.md5s = [];
+            this.filesToFont = [];
+            this.fontCodePoints = {};
         });
 
         compiler.plugin('this-compilation', (compilation, params) => {
             compilation.plugin('after-optimize-chunks', (chunks) => {
-                const startCodepoint = this.options.startCodepoint;
-                const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
-                this.files = Array.from(new Set(this.files)).sort();
-                this.fontCodePoints = {};
-                this.files.forEach((file, index) => {
-                    const codePoint = (startCodepoint + index).toString(16).slice(1);
-                    this.fontCodePoints[file] = codePoint;
-                });
+                this.pickFileList();
                 const fontCodePoints = this.fontCodePoints;
                 getAllModules(compilation).filter((module) => module.IconFontSVGModule).forEach((module) => {
                     const source = module._source;
@@ -57,6 +53,20 @@ class IconFontPlugin {
                     }
                 });
             });
+            compilation.plugin('optimize-extracted-chunks', (chunks) => {
+                const fontCodePoints = this.fontCodePoints;
+                chunks.forEach((chunk) => {
+                    const modules = !chunk.mapModules ? chunk._modules : chunk.mapModules();
+                    modules.filter((module) => '_originalModule' in module).forEach((module) => {
+                        const source = module._source;
+                        if (typeof source === 'string') {
+                            module._source = this.replaceHolder(source, replaceReg, fontCodePoints);
+                        } else if (typeof source === 'object' && typeof source._value === 'string') {
+                            source._value = this.replaceHolder(source._value, replaceReg, fontCodePoints);
+                        }
+                    });
+                });
+            });
             compilation.plugin('additional-assets', (callback) => {
                 // If loader doesn't collect icons, then don't generate fonts.
                 if (!this.shouldGenerate)
@@ -64,7 +74,7 @@ class IconFontPlugin {
 
                 let files;
                 try {
-                    files = this.files;
+                    files = this.filesToFont;
                     files = this.handleSameName(files);
                 } catch (e) {
                     return callback(e);
@@ -218,6 +228,19 @@ class IconFontPlugin {
                 return `'${code}'`;
             } else
                 return $1;
+        });
+    }
+    pickFileList() {
+        const startCodepoint = this.options.startCodepoint;
+        const filesMap = {};
+        for (const file of this.files)
+            filesMap[file.file] = file.md5Code;
+        this.filesToFont = Array.from(new Set(this.files.map((file) => file.file))).sort();
+        this.fontCodePoints = {};
+        this.filesToFont.forEach((file, index) => {
+            const md5Code = filesMap[file];
+            const codePoint = (startCodepoint + index).toString(16).slice(1);
+            this.fontCodePoints[md5Code] = codePoint;
         });
     }
 }
