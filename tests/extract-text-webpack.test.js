@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const { expect } = require('chai');
+const expect = require('chai').expect;
 const utils = require('../src/utils');
 const rm = require('rimraf').sync;
 
