@@ -1,6 +1,8 @@
+import iconFontStyle from './iconFontStyle.js';
 var styleId = 'ICON-FONT-FILE-STYLE';
+
 function createStyleContent(fontConfig) {
-    var style = fontConfig || window.ICON_FONT_STYLE;
+    var style = fontConfig || iconFontStyle.ICON_FONT_STYLE;
     return style.styleContent || '';
 }
 
@@ -26,14 +28,13 @@ function updateStyle(fontConfig) {
         styleTag.innerHTML = createStyleContent(fontConfig);
     }
 }
-
-module.exports = function() {
-    if (window.HAS_CREATE_FONT_STYLE) {
-        return;
-    }
-    addStyle();
-    window.HAS_CREATE_FONT_STYLE = true;
-}
+// if (!window.HAS_CREATE_FONT_STYLE) {
+addStyle();
+//     window.HAS_CREATE_FONT_STYLE = true;
+// }
 if (module.hot) {
-    window.ICON_FONT_STYLE.update = updateStyle;
+    module.hot.accept("./iconFontStyle.js", function() {
+        var newContent = require("./iconFontStyle.js");
+        updateStyle(newContent);
+    });
 }

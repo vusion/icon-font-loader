@@ -13,6 +13,8 @@
   "scripts": {
     "precommit": "bash node_modules/vusion-hooks/pre-commit",
     "test": "mocha --timeout 5000 ./tests/final.test.js",
+    "test-extract": "mocha --timeout 12000 ./tests/extract-text-webpack.test.js",
+    "test-entry": "mocha --timeout 12000 ./tests/entry.test.js",
     "lint": "eslint ./src",
     "lint-fix": "eslint ./src --fix"
   },
@@ -45,10 +47,12 @@
     "css-loader": "^0.28.4",
     "eslint": "^4.13.1",
     "eslint-config-vusion": "^2.0.3",
+    "execa": "^0.10.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^2.30.1",
     "husky": "^0.14.3",
     "mocha": "^3.5.3",
+    "shelljs": "^0.8.1",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "vusion-hooks": "^0.1.1",

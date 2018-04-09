@@ -25,13 +25,50 @@ class IconFontPlugin {
                 fontHeight: 1000,
             },
         }, options);
+        this.context = '';
     }
 
     apply(compiler) {
         const addStylePath = path.resolve(__dirname, './addStyle.js');
-        const prefetchPlugin = new webpack.PrefetchPlugin(__dirname, './addStyle.js');
+        const iconFontStylePath = path.resolve(__dirname, './iconFontStyle.js');
         const styleMessage = {};
-        prefetchPlugin.apply(compiler);
+
+        function entryCallBack(entry) {
+            function addStyleModuleToEntry(entry) {
+                let result;
+                if (typeof entry === 'string') {
+                    result = [addStylePath, entry];
+                } else if (Array.isArray(entry)) {
+                    entry.unshift(addStylePath);
+                    result = entry;
+                }
+                return result;
+            }
+            if (typeof entry === 'string' || Array.isArray(entry)) {
+                return addStyleModuleToEntry(entry);
+            } else if (typeof entry === 'object') {
+                const result = {};
+                for (const name of Object.keys(entry)) {
+                    result[name] = addStyleModuleToEntry(entry[name]);
+                }
+                return result;
+            }
+        }
+
+        compiler.plugin('environment', () => {
+            const entry = compiler.options.entry;
+            if (this.options.auto) {
+                if (typeof entry === 'string' || Array.isArray(entry)) {
+                    compiler.options.entry = entryCallBack(entry);
+                } else if (typeof entry === 'object') {
+                    compiler.options.entry = entryCallBack(entry);
+                } else if (typeof entry === 'function') {
+                    compiler.options.entry = function () {
+                        return Promise.resolve(entry()).then((entry) => entryCallBack(entry));
+                    };
+                }
+            }
+        });
 
         compiler.plugin('after-plugins', (compiler) => {
             this.files = [];
@@ -44,7 +81,8 @@ class IconFontPlugin {
             compilation.plugin('after-optimize-chunks', (chunks) => {
                 this.pickFileList();
                 const fontCodePoints = this.fontCodePoints;
-                getAllModules(compilation).filter((module) => module.IconFontSVGModule).forEach((module) => {
+                const allModules = getAllModules(compilation);
+                allModules.filter((module) => module.IconFontSVGModule).forEach((module) => {
                     const source = module._source;
                     if (typeof source === 'string') {
                         module._source = this.replaceHolder(source, replaceReg, fontCodePoints);
@@ -67,7 +105,7 @@ class IconFontPlugin {
                     });
                 });
             });
-            compilation.plugin('additional-assets', (callback) => {
+            compilation.plugin('optimize-tree', (chunks, modules, callback) => {
                 // If loader doesn't collect icons, then don't generate fonts.
                 if (!this.shouldGenerate)
                     return callback();
@@ -131,69 +169,30 @@ class IconFontPlugin {
                     callback();
                 });
             });
-
-            if (!this.options.auto)
-                return;
             // if insert @font-face auto
-            compilation.plugin('optimize-chunks', (chunks) => {
-                const addStyleModule = compilation.modules.find((module) => module.request === addStylePath);
-                if (addStyleModule) {
-                    chunks.forEach((chunk) => {
-                        chunk.addModule(addStyleModule);
-                        addStyleModule.addChunk(chunk);
-                    });
-                }
-            });
-            compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
-                chunks.forEach((chunk) => {
-                    chunk.files.forEach((file) => {
-                        if (file.endsWith('.js')) {
-                            // add icon font message in chunk file
-                            compilation.assets[file] = new ConcatSource(
-                                `/* icon font style message */
-                                if (typeof window !== "undefined" && !window.ICON_FONT_STYLE) {
-                                    window.ICON_FONT_STYLE = ${JSON.stringify(styleMessage)};
-                                } else if (typeof window !== "undefined" && window.ICON_FONT_STYLE && window.ICON_FONT_STYLE.update) {
-                                    window.ICON_FONT_STYLE.update(${JSON.stringify(styleMessage)});
-                                }`,
-                                compilation.assets[file]
-                            );
-                        }
-                    });
-                });
-                callback();
-            });
-
-            compilation.mainTemplate.plugin('startup', (source, chunk, hash) => {
-                let id = -1;
-                chunk.forEachModule((module) => {
-                    if (module.request === addStylePath)
-                        id = module.id;
-                });
-                if (id !== -1) {
-                    // someTime id is not a number
-                    // if you use NamedMoudlesPlugin or HashMoudlesPlugin id will be a path string or hash String
-                    if (typeof id === 'number') {
-                        return [
-                            ` __webpack_require__(${id})()`,
-                        ].join('\n') + source;
-                    } else {
-                        return [
-                            ` __webpack_require__('${id}')()`,
-                        ].join('\n') + source;
+            compilation.plugin('after-optimize-tree', (modules) => {
+                const allModules = getAllModules(compilation);
+                allModules.filter((module) => module.request === iconFontStylePath).forEach((module) => {
+                    const source = module._source;
+                    if (typeof source === 'string') {
+                        module._source = ['module.exports = {',
+                            `ICON_FONT_STYLE: ${JSON.stringify(styleMessage)}`,
+                            '}'].join('\n');
+                    } else if (typeof source === 'object' && typeof source._value === 'string') {
+                        source._value = ['module.exports = {',
+                            `ICON_FONT_STYLE: ${JSON.stringify(styleMessage)}`,
+                            '}'].join('\n');
                     }
-                }
-                return source;
+                });
             });
         });
 
         compiler.plugin('compilation', (compilation, params) => {
-            compilation.plugin('normal-module-loader', (loaderContext) => {
+            compilation.plugin('normal-module-loader', (loaderContext, module) => {
                 loaderContext.iconFontPlugin = this;
             });
         });
     }
-
     handleSameName(files) {
         const names = {};
         const result = [];
