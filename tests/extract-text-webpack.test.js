@@ -3,7 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 const expect = require('chai').expect;
 const utils = require('../src/utils');
-const rm = require('rimraf').sync;
 
 const value = 'extract-text-webpack-plugin';
 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
@@ -14,10 +13,6 @@ describe('Webpack Integration Tests', () => {
     const options = require(configPath);
     for (const chunk of Object.keys(options.entry))
         options.entry[chunk] = path.join(__dirname, '/fixtures/', value, options.entry[chunk]);
-
-    after(() => {
-        rm(path.resolve(__dirname, outputDirectory));
-    });
 
     it('#test webpack extract-text case: ' + value, (done) => {
         webpack(options, (err, stats) => {
