@@ -28,7 +28,7 @@ describe('Webpack Integration Tests', () => {
                 'icon-font.svg',
                 'icon-font.ttf',
                 'icon-font.woff',
-                'main.02244813a966895a9bdb.js',
+                'main.7b7f34532fdea8539808.js',
             ]);
             done();
         });
@@ -41,7 +41,7 @@ describe('Webpack Integration Tests', () => {
                 'icon-font.svg',
                 'icon-font.ttf',
                 'icon-font.woff',
-                'main.02244813a966895a9bdb.js',
+                'main.7b7f34532fdea8539808.js',
             ]);
             done();
         });
@@ -54,7 +54,7 @@ describe('Webpack Integration Tests', () => {
                 'icon-font.svg',
                 'icon-font.ttf',
                 'icon-font.woff',
-                'main.02244813a966895a9bdb.js',
+                'main.7b7f34532fdea8539808.js',
             ]);
             done();
         });
@@ -67,7 +67,7 @@ describe('Webpack Integration Tests', () => {
                 'icon-font.svg',
                 'icon-font.ttf',
                 'icon-font.woff',
-                'main.02244813a966895a9bdb.js',
+                'main.7b7f34532fdea8539808.js',
             ]);
             done();
         });
@@ -76,7 +76,7 @@ describe('Webpack Integration Tests', () => {
         execa(buildCLI, ['--config', './webpack.config.object.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
-                'bundle.a677216fd5fd1ff832ae.js',
+                'bundle.e9e0a358a0708f989ffd.js',
                 'icon-font.eot',
                 'icon-font.svg',
                 'icon-font.ttf',
@@ -89,7 +89,7 @@ describe('Webpack Integration Tests', () => {
         execa(buildCLI, ['--config', './webpack.config.function.object.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
-                'bundle.a677216fd5fd1ff832ae.js',
+                'bundle.e9e0a358a0708f989ffd.js',
                 'icon-font.eot',
                 'icon-font.svg',
                 'icon-font.ttf',

@@ -22,7 +22,7 @@ describe('Webpack Integration Tests', () => {
                 return done(new Error(stats.toString()));
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
-                'bundle.f9228c8854bd9d2955bb.js',
+                'bundle.bf6721871f073e720c94.js',
                 'icon-font.eot',
                 'icon-font.svg',
                 'icon-font.ttf',
