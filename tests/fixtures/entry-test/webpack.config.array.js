@@ -6,7 +6,7 @@ module.exports = {
     entry: ['./index.js'],
     output: {
         path: __dirname + '/dest',
-        filename: '[name].[hash].js',
+        filename: '[name].js',
         publicPath:"/"
     },
     module: {

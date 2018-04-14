@@ -20,15 +20,6 @@ describe('Webpack Integration Tests', () => {
                 return done(err);
             if (stats.hasErrors())
                 return done(new Error(stats.toString()));
-            const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
-            expect(files).to.eql([
-                'bundle.bf6721871f073e720c94.js',
-                'icon-font.eot',
-                'icon-font.svg',
-                'icon-font.ttf',
-                'icon-font.woff',
-                'index.css'
-            ]);
             const filesContent = fs.readFileSync(path.resolve(__dirname,outputDirectory+'/icon-font.svg'));
             const md5Code = utils.md5Create(filesContent);
             expect(md5Code).to.eql('65710e1596abed7a7320ad764713d11d');
