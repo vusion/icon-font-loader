@@ -63,7 +63,7 @@ class IconFontPlugin {
             compiler.hooks.thisCompilation.tap(NAMESPACE, (compilation, params) => {
                 compilation.hooks.afterOptimizeChunks.tap(NAMESPACE, (chunks) => this.afterOptimizeChunks(chunks, compilation));
                 compilation.hooks.optimizeExtractedChunks.tap(NAMESPACE, (chunks) => this.optimizeExtractedChunks(chunks));
-                compilation.hooks.optimizeTree.tap(NAMESPACE, (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
+                compilation.hooks.optimizeTree.tapAsync(NAMESPACE, (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
                 compilation.hooks.afterOptimizeTree.tap(NAMESPACE, (modules) => this.afterOptimizeTree(compilation));
             });
             compiler.hooks.compilation.tap(NAMESPACE, (compilation, params) => {
