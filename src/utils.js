@@ -1,6 +1,9 @@
 'use strict';
 
 const crypto = require('crypto');
+const url = require('url');
+const path = require('path');
+
 module.exports = {
     md5Create(stream) {
         const md5 = crypto.createHash('md5');
@@ -35,5 +38,14 @@ module.exports = {
         }
         srcStr = srcStr.join(',\n\t');
         return `@font-face {\n\tfont-family: "${font.name}";\n\tsrc:${srcStr};\n}`;
+    },
+    urlResolve(base, urlPath) {
+        if (path.sep === '\\')
+            urlPath = urlPath.replace(/\\/g, '/');
+        if (urlPath[0] !== '/')
+            urlPath = '/' + urlPath;
+        if (base[base.length - 1] !== '/')
+            base = base + '/';
+        return url.resolve(base, '.' + urlPath);
     },
 };

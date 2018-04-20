@@ -25,6 +25,7 @@ class IconFontPlugin {
             fontOptions: {
                 fontHeight: 1000,
             },
+            publicPath: undefined,
         }, options);
         this.context = '';
         this.styleMessage = {};
@@ -172,7 +173,11 @@ class IconFontPlugin {
             types.forEach((type) => {
                 const filePath = path.join(this.options.output, urls[type]);
                 const urlPath = this.options.auto ? this.options.output : '';
-                let url = path.join(compilation.options.output.publicPath || '', urlPath, urls[type]);
+                let url = '/';
+                if (this.options.publicPath)
+                    url = utils.urlResolve(this.options.publicPath, urls[type]);
+                else
+                    url = utils.urlResolve(compilation.options.output.publicPath || '', path.join(urlPath, urls[type]));
                 if (path.sep === '\\')
                     url = url.replace(/\\/g, '/');
                 font[type] = {

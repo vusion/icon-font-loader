@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const Plugin = require('../src/Plugin.js');
+const utils = require('../src/utils.js');
 const IconFontPlugin = new Plugin();
 const expect = require('chai').expect;
 
@@ -36,6 +37,28 @@ describe('icon font plugin api test:', () => {
             path.resolve(__dirname, './icons/arrow-right.svg'),
             path.resolve(__dirname, './icons/arrow-up.svg'),
         ]);
+        done();
+    });
+    it('#function resovle url test: ', (done) => {
+        const urlList = [
+            ['http://nos.163.com/cloud/public', '/font/icon-font.eot', 'http://nos.163.com/cloud/public/font/icon-font.eot'],
+            ['http://nos.163.com/cloud/public', 'font/icon-font.eot', 'http://nos.163.com/cloud/public/font/icon-font.eot'],
+            ['http://nos.163.com/cloud/public/', 'font/icon-font.eot', 'http://nos.163.com/cloud/public/font/icon-font.eot'],
+            ['/public/', 'font/icon-font.eot', '/public/font/icon-font.eot'],
+            ['/public/', '../font/icon-font.eot', '/font/icon-font.eot'],
+            ['/public/', '/font/icon-font.eot', '/public/font/icon-font.eot'],
+            ['/public', 'font/icon-font.eot', '/public/font/icon-font.eot'],
+            ['/public', '/font/icon-font.eot', '/public/font/icon-font.eot'],
+            ['public', 'font/icon-font.eot', 'public/font/icon-font.eot'],
+            ['public', '/font/icon-font.eot', 'public/font/icon-font.eot'],
+            ['public/', 'font/icon-font.eot', 'public/font/icon-font.eot'],
+            ['public/', '/font/icon-font.eot', 'public/font/icon-font.eot'],
+        ]
+        urlList.forEach((urls) => {
+            const resultEql = urls[2];
+            const result = utils.urlResolve(urls[0], urls[1]);
+            expect(result).to.eql(resultEql);
+        }) 
         done();
     });
 });
