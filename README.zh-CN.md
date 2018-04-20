@@ -145,6 +145,14 @@ unicode的字符起始点。
 - Default: normalize, fontHeight, round, descent
 
 这个属性将直接覆盖掉[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).的属性，可以通过这个属性设置字体图标生成后的大小及上下偏移量
+
+#### publicPath
+
+- Type: `String`
+- Default: undefined
+
+这个属性主要用于设置字体图标的发布获取路径，设置了这个路径将会覆盖掉webpack的publicPath，我们将会生成类似publicPath+文件名的文件路径。
+
 ## 修改日志
 
 参见[Releases](https://github.com/vusion/icon-font-loader/releases)

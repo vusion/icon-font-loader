@@ -155,6 +155,13 @@ Starting codepoint. Defaults to beginning of unicode private area.
 Options that are passed directly to
 [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
 
+#### publicPath
+
+- Type: `String`
+- Default: undefined
+
+font file public path in css file, this publicPath will cover webpack‘publicPath,and we will generate public path `publicPath/fileName`;
+
 ## Changelog
 
 See [Releases](https://github.com/vusion/icon-font-loader/releases)
