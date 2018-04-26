@@ -61,6 +61,10 @@ class IconFontPlugin {
         if (compiler.hooks) {
             compiler.hooks.environment.tap(NAMESPACE, () => this.environmentCallback(compiler, entryCallBack));
             compiler.hooks.afterPlugins.tap(NAMESPACE, (compiler) => this.afterPluginCallBack());
+            compiler.hooks.watchRun.tapAsync(NAMESPACE, (compiler, callback) => {
+                this.watching = true;
+                callback();
+            });
             compiler.hooks.thisCompilation.tap(NAMESPACE, (compilation, params) => {
                 compilation.hooks.afterOptimizeChunks.tap(NAMESPACE, (chunks) => this.afterOptimizeChunks(chunks, compilation));
                 compilation.hooks.optimizeExtractedChunks.tap(NAMESPACE, (chunks) => this.optimizeExtractedChunks(chunks));
@@ -74,6 +78,11 @@ class IconFontPlugin {
             compiler.plugin('environment', () => this.environmentCallback(compiler, entryCallBack));
 
             compiler.plugin('after-plugins', (compiler) => this.afterPluginCallBack());
+
+            compiler.plugin('watch-run', (compiler, callback) => {
+                this.watching = true;
+                callback();
+            });
 
             compiler.plugin('this-compilation', (compilation, params) => {
                 compilation.plugin('after-optimize-chunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
@@ -260,7 +269,12 @@ class IconFontPlugin {
         const filesMap = {};
         for (const file of this.files)
             filesMap[file.file] = file.md5Code;
-        this.filesToFont = Array.from(new Set(this.files.map((file) => file.file))).sort();
+        if (this.watching) {
+            // if webpack is watching and maybe will use webpack module cache, so file list should be same as before
+            this.filesToFont = Array.from(new Set(this.files.map((file) => file.file)));
+        } else {
+            this.filesToFont = Array.from(new Set(this.files.map((file) => file.file))).sort();
+        }
         this.fontCodePoints = {};
         this.filesToFont.forEach((file, index) => {
             const md5Code = filesMap[file];

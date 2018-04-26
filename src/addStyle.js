@@ -35,6 +35,6 @@ addStyle();
 if (module.hot) {
     module.hot.accept("./iconFontStyle.js", function() {
         var newContent = require("./iconFontStyle.js");
-        updateStyle(newContent);
+        updateStyle(newContent.ICON_FONT_STYLE);
     });
 }
