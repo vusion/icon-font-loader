@@ -10,33 +10,37 @@ module.exports = {
         md5.update(stream);
         return md5.digest('hex');
     },
-    createFontFace(font) {
+    createFontFace(font, isDataUrl) {
         let srcStr = [];
-        const svgHash = font.svg.hash;
-
-        for (const type in font) {
-            const url = font[type].url;
-            // const hash = font[type].hash;
-            if (font.hasOwnProperty(type)) {
-                switch (type) {
-                    case 'eot':
-                        srcStr.push('url("' + url + '?' + svgHash + '#iefix") format("embedded-opentype")');
-                        break;
-                    case 'woff':
-                        srcStr.push('url("' + url + '?' + svgHash + '") format("woff")');
-                        break;
-                    case 'ttf':
-                        srcStr.push('url("' + url + '?' + svgHash + '") format("truetype")');
-                        break;
-                    case 'svg':
-                        srcStr.push('url("' + url + '?' + svgHash + '#' + font.name + '") format("svg")');
-                        break;
-                    default:
-                        break;
+        if (isDataUrl) {
+            const base64 = font.woff;
+            srcStr = `url("data:application/x-font-woff;base64,${base64}") format("woff")`;
+        } else {
+            const svgHash = font.svg.hash;
+            for (const type in font) {
+                const url = font[type].url;
+                // const hash = font[type].hash;
+                if (font.hasOwnProperty(type)) {
+                    switch (type) {
+                        case 'eot':
+                            srcStr.push('url("' + url + '?' + svgHash + '#iefix") format("embedded-opentype")');
+                            break;
+                        case 'woff':
+                            srcStr.push('url("' + url + '?' + svgHash + '") format("woff")');
+                            break;
+                        case 'ttf':
+                            srcStr.push('url("' + url + '?' + svgHash + '") format("truetype")');
+                            break;
+                        case 'svg':
+                            srcStr.push('url("' + url + '?' + svgHash + '#' + font.name + '") format("svg")');
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+            srcStr = srcStr.join(',\n\t');
         }
-        srcStr = srcStr.join(',\n\t');
         return `@font-face {\n\tfont-family: "${font.name}";\n\tsrc:${srcStr};\n}`;
     },
     urlResolve(base, urlPath) {

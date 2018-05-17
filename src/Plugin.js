@@ -25,6 +25,7 @@ class IconFontPlugin {
             fontOptions: {
                 fontHeight: 1000,
             },
+            dataUrl: false,
             publicPath: undefined,
         }, options);
         this.context = '';
@@ -179,26 +180,30 @@ class IconFontPlugin {
 
             const assets = compilation.assets;
             const font = { name: fontName };
-            types.forEach((type) => {
-                const filePath = path.join(this.options.output, urls[type]);
-                const urlPath = this.options.auto ? this.options.output : '';
-                let url = '/';
-                if (this.options.publicPath)
-                    url = utils.urlResolve(this.options.publicPath, urls[type]);
-                else
-                    url = utils.urlResolve(compilation.options.output.publicPath || '', path.join(urlPath, urls[type]));
-                if (path.sep === '\\')
-                    url = url.replace(/\\/g, '/');
-                font[type] = {
-                    url,
-                    hash: utils.md5Create(result[type]),
-                };
-                assets[filePath] = {
-                    source: () => result[type],
-                    size: () => result[type].length,
-                };
-            });
-            const css = utils.createFontFace(font);
+            if (this.options.dataUrl) {
+                font.woff = result.woff.toString('base64');
+            } else {
+                types.forEach((type) => {
+                    const filePath = path.join(this.options.output, urls[type]);
+                    const urlPath = this.options.auto ? this.options.output : '';
+                    let url = '/';
+                    if (this.options.publicPath)
+                        url = utils.urlResolve(this.options.publicPath, urls[type]);
+                    else
+                        url = utils.urlResolve(compilation.options.output.publicPath || '', path.join(urlPath, urls[type]));
+                    if (path.sep === '\\')
+                        url = url.replace(/\\/g, '/');
+                    font[type] = {
+                        url,
+                        hash: utils.md5Create(result[type]),
+                    };
+                    assets[filePath] = {
+                        source: () => result[type],
+                        size: () => result[type].length,
+                    };
+                });
+            }
+            const css = utils.createFontFace(font, this.options.dataUrl);
             if (!this.options.auto) {
                 // auto is false and emit a css file
                 assets[path.join(this.options.output, `${fontName}.css`)] = {
