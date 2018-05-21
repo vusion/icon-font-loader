@@ -10,6 +10,8 @@ const ReplaceSource = require('webpack-sources').ReplaceSource;
 const getAllModules = require('./getAllModules');
 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 const NAMESPACE = 'IconFontPlugin';
+const ReplaceDependency = require('./replaceDependency');
+const NullFactory = require('webpack/lib/NullFactory');
 
 class IconFontPlugin {
     constructor(options) {
@@ -67,6 +69,8 @@ class IconFontPlugin {
                 callback();
             });
             compiler.hooks.thisCompilation.tap(NAMESPACE, (compilation, params) => {
+                compilation.dependencyFactories.set(ReplaceDependency, new NullFactory());
+                compilation.dependencyTemplates.set(ReplaceDependency, ReplaceDependency.Template);
                 compilation.hooks.afterOptimizeChunks.tap(NAMESPACE, (chunks) => this.afterOptimizeChunks(chunks, compilation));
                 compilation.hooks.optimizeExtractedChunks.tap(NAMESPACE, (chunks) => this.optimizeExtractedChunks(chunks));
                 compilation.hooks.optimizeTree.tapAsync(NAMESPACE, (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
@@ -86,6 +90,8 @@ class IconFontPlugin {
             });
 
             compiler.plugin('this-compilation', (compilation, params) => {
+                compilation.dependencyFactories.set(ReplaceDependency, new NullFactory());
+                compilation.dependencyTemplates.set(ReplaceDependency, ReplaceDependency.Template);
                 compilation.plugin('after-optimize-chunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
                 compilation.plugin('optimize-extracted-chunks', (chunks) => this.optimizeExtractedChunks(chunks));
                 compilation.plugin('optimize-tree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
@@ -125,10 +131,19 @@ class IconFontPlugin {
         const allModules = getAllModules(compilation);
         allModules.filter((module) => module.IconFontSVGModule).forEach((module) => {
             const source = module._source;
+            let range = [];
+            const replaceDependency = module.dependencies.filter((dependency) => dependency.constructor === ReplaceDependency)[0];
             if (typeof source === 'string') {
-                module._source = this.replaceHolder(source, replaceReg, fontCodePoints);
+                range = this.replaceHolder(source, replaceReg, fontCodePoints);
             } else if (typeof source === 'object' && typeof source._value === 'string') {
-                source._value = this.replaceHolder(source._value, replaceReg, fontCodePoints);
+                range = this.replaceHolder(source._value, replaceReg, fontCodePoints);
+            }
+            if (range.length > 0) {
+                if (replaceDependency) {
+                    replaceDependency.updateRange(range);
+                } else {
+                    module.addDependency(new ReplaceDependency(range));
+                }
             }
         });
     }
@@ -139,9 +154,9 @@ class IconFontPlugin {
             modules.filter((module) => '_originalModule' in module).forEach((module) => {
                 const source = module._source;
                 if (typeof source === 'string') {
-                    module._source = this.replaceHolder(source, replaceReg, fontCodePoints);
+                    module._source = this.replaceStringHolder(source, replaceReg, fontCodePoints);
                 } else if (typeof source === 'object' && typeof source._value === 'string') {
-                    source._value = this.replaceHolder(source._value, replaceReg, fontCodePoints);
+                    source._value = this.replaceStringHolder(source._value, replaceReg, fontCodePoints);
                 }
             });
         });
@@ -260,7 +275,7 @@ class IconFontPlugin {
 
         return result;
     }
-    replaceHolder(value, replaceReg, fontCodePoints) {
+    replaceStringHolder(value, replaceReg, fontCodePoints) {
         return value.replace(replaceReg, ($1, $2) => {
             if (fontCodePoints[$2]) {
                 const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
@@ -268,6 +283,24 @@ class IconFontPlugin {
             } else
                 return $1;
         });
+    }
+    replaceHolder(value, replaceReg, fontCodePoints) {
+        const rangeList = [];
+        const haveChecked = [];
+        value.replace(replaceReg, ($1, $2) => {
+            if (fontCodePoints[$2] && haveChecked.indexOf($1) === -1) {
+                haveChecked.push($1);
+                const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
+                const content = `'${code}'`;
+                let index = value.indexOf($1);
+                while (index !== -1) {
+                    rangeList.push([index, index + $1.length, content]);
+                    index = value.indexOf($1, index + 1);
+                }
+            }
+            return $1;
+        });
+        return rangeList;
     }
     pickFileList() {
         const startCodepoint = this.options.startCodepoint;

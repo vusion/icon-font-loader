@@ -21,5 +21,7 @@ module.exports = {
             })
         }]
     },
-    plugins: [new IconFontPlugin(), new ExtractTextPlugin('index.css')],
+    plugins: [new IconFontPlugin({
+        publicPath: './dest',
+    }), new ExtractTextPlugin('index.css')],
 };

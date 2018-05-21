@@ -1,5 +1,5 @@
-body.test .des{
-    color: salmon
+:local(.des){
+    composes: item from "./com.css";
 }
 body .icon-arrow-left:before {
     icon-font: url('../../icons/arrow-left.svg');
