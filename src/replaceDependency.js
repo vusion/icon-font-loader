@@ -1,3 +1,5 @@
+'use strict';
+
 const Dependency = require('webpack/lib/dependencies/NullDependency');
 const path = require('path');
 
