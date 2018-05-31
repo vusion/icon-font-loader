@@ -39,26 +39,28 @@ describe('icon font plugin api test:', () => {
         ]);
         done();
     });
-    it('#function resovle url test: ', (done) => {
+    it('#function resolve url test: ', (done) => {
         const urlList = [
-            ['http://nos.163.com/cloud/public', '/font/icon-font.eot', 'http://nos.163.com/cloud/public/font/icon-font.eot'],
+            ['http://nos.163.com/cloud/public', '/font/icon-font.eot', 'http://nos.163.com/font/icon-font.eot'],
             ['http://nos.163.com/cloud/public', 'font/icon-font.eot', 'http://nos.163.com/cloud/public/font/icon-font.eot'],
             ['http://nos.163.com/cloud/public/', 'font/icon-font.eot', 'http://nos.163.com/cloud/public/font/icon-font.eot'],
             ['/public/', 'font/icon-font.eot', '/public/font/icon-font.eot'],
             ['/public/', '../font/icon-font.eot', '/font/icon-font.eot'],
-            ['/public/', '/font/icon-font.eot', '/public/font/icon-font.eot'],
+            ['/public/', '/font/icon-font.eot', '/font/icon-font.eot'],
             ['/public', 'font/icon-font.eot', '/public/font/icon-font.eot'],
-            ['/public', '/font/icon-font.eot', '/public/font/icon-font.eot'],
+            ['/public', '/font/icon-font.eot', '/font/icon-font.eot'],
             ['public', 'font/icon-font.eot', 'public/font/icon-font.eot'],
-            ['public', '/font/icon-font.eot', 'public/font/icon-font.eot'],
+            ['public', '/font/icon-font.eot', '/font/icon-font.eot'],
             ['public/', 'font/icon-font.eot', 'public/font/icon-font.eot'],
-            ['public/', '/font/icon-font.eot', 'public/font/icon-font.eot'],
-        ]
+            ['public/', '/font/icon-font.eot', '/font/icon-font.eot'],
+            ['', 'font/icon-font.eot', 'font/icon-font.eot'],
+            ['.', 'font/icon-font.eot', 'font/icon-font.eot'],
+        ];
         urlList.forEach((urls) => {
             const resultEql = urls[2];
             const result = utils.urlResolve(urls[0], urls[1]);
             expect(result).to.eql(resultEql);
-        }) 
+        });
         done();
     });
 });

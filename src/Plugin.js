@@ -22,12 +22,12 @@ class IconFontPlugin {
             output: './',
             localCSSTemplate: fs.readFileSync(path.resolve(__dirname, 'local.css.hbs'), 'utf8'),
             auto: true,
+            dataURL: false,
             mergeDuplicates: false,
             startCodepoint: 0xF101,
             fontOptions: {
                 fontHeight: 1000,
             },
-            dataUrl: false,
             publicPath: undefined,
         }, options);
         this.context = '';
@@ -195,7 +195,7 @@ class IconFontPlugin {
 
             const assets = compilation.assets;
             const font = { name: fontName };
-            if (this.options.dataUrl) {
+            if (this.options.dataURL) {
                 font.woff = result.woff.toString('base64');
             } else {
                 types.forEach((type) => {
@@ -218,7 +218,7 @@ class IconFontPlugin {
                     };
                 });
             }
-            const css = utils.createFontFace(font, this.options.dataUrl);
+            const css = utils.createFontFace(font, this.options.dataURL);
             if (!this.options.auto) {
                 // auto is false and emit a css file
                 assets[path.join(this.options.output, `${fontName}.css`)] = {
