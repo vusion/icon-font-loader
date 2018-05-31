@@ -46,10 +46,8 @@ module.exports = {
     urlResolve(base, urlPath) {
         if (path.sep === '\\')
             urlPath = urlPath.replace(/\\/g, '/');
-        if (urlPath[0] !== '/')
-            urlPath = '/' + urlPath;
-        if (base[base.length - 1] !== '/')
+        if (base && base[base.length - 1] !== '/')
             base = base + '/';
-        return url.resolve(base, '.' + urlPath);
+        return url.resolve(base, urlPath);
     },
 };

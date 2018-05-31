@@ -1,10 +1,10 @@
 # icon-font-loader
 
-这是一款Webpack loader，它可以自动将svg转换成字体图标。
+这是一款 Webpack loader，它可以自动将 svg 转换成字体图标。
 
 ## 示例
 
-在CSS中需要使用图标的地方用自定义属性`icon-font`引入svg文件：
+在 CSS 中需要使用图标的地方用自定义属性`icon-font`引入 svg 文件：
 
 ``` css
 .select:after {
@@ -13,7 +13,7 @@
 }
 ```
 
-通过icon-font-loader将会转变为浏览器可识别的CSS：
+通过 icon-font-loader 将会转变为浏览器可识别的 CSS：
 
 ``` css
 .select:after {
@@ -26,7 +26,7 @@
 }
 ```
 
-加载器会收集所有这样的引用，统一打包成(eot,svg,ttf,woff)字体文件，并在`<head>`中插入一个有`@font-face`的`<style>`标签或抛出一个这样的CSS文件。
+加载器会收集所有这样的引用，统一打包成 (eot,svg,ttf,woff) 字体文件，并在`<head>`中插入一个有`@font-face`的`<style>`标签或抛出一个这样的 CSS 文件。
 
 ``` css
 @font-face {
@@ -38,11 +38,20 @@
 }
 ```
 
-## 特色
+当然，如果开启`dataURL`选项会转换为
+
+``` css
+@font-face {
+	font-family: "icon-font";
+	src:url("data:application/x-font-woff;base64,d09GRgABAAAAAAUkAAsAAAAACQgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAAHcAAAC4Ifsmu09TLzIAAAGAAAAAPQAAAFZWTEunY21hcAAAAcAAAADxAAACuqtTRqJnbHlmAAACtAAAAEIAAABwWoXqgmhlYBewAAA=") format("woff");
+}
+```
+
+## 特性
 
 与别的类似的字体图标加载器不同的是：
 
-- 在CSS中使用。利用CSS的特性，可以很轻松地覆盖原图标：
+- 在 CSS 中使用。利用 CSS 的特性，可以很轻松地覆盖原图标：
     ``` css
     .select:after {
         icon-font: url('../icons/arrow-down.svg');
@@ -64,7 +73,7 @@ npm install --save-dev icon-font-loader
 
 ## 配置
 
-除了在CSS中添加自定义属性，还需要在Webpack配置中添加一个Plugin。
+除了在 CSS 中添加自定义属性，还需要在 Webpack 配置中添加一个 Plugin。
 
 ```javascript
 const IconFontPlugin = require('icon-font-loader').Plugin;
@@ -78,11 +87,11 @@ module.exports = {
 };
 ```
 
-### loader参数
+### Loader 参数
 
 暂无。
 
-### plugin参数
+### Plugin 参数
 
 #### fontName
 字体图标的字体名和文件名。
@@ -92,35 +101,44 @@ module.exports = {
 
 #### output
 
-字体和CSS等文件对于webpack的output的相对路径。**必须是一个相对路径。**
+字体和 CSS 等文件对于 webpack 的 output 的相对路径。**必须是一个相对路径。**
 
 - Type: `string`
 - Default: `./`
 
 #### localCSSTemplate
 
-局部CSS虚拟属性转换后内容, 接受模板内容而不是模板文件的路径。
+局部 CSS 虚拟属性转换后内容, 接受模板内容而不是模板文件的路径。
 
 - Type: `string`
 - Default: [global.css.hbs的内容](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
 
 #### property
 
-CSS的自定义属性名
+CSS 的自定义属性名
 
 - Type: `string`
 - Default: `icon-font`
 
 #### auto
 
-是否在`<head>`中自动插入有`@font-face`的`<style>`标签，或生成一个含`@font-face`的css文件。
+是否在`<head>`中自动插入有`@font-face`的`<style>`标签，或生成一个含`@font-face`的 CSS 文件。
 
 - Type: `boolean`
 - Default: true
 
+### dataURL
+
+如果设置为`true`，字体会转换成 data base64 嵌入到 CSS 中，而不是生成对应的字体文件。
+
+在字体图标不多的情况下推荐使用，因为字体文件会产生额外的请求。
+
+- Type: `boolean`
+- Default: false
+
 #### mergeDuplicates
 
-如果有相同的svg文件而它们的文件名或路径不同，是否将它们合并起来。开启后，可以减少生成的字体文件大小，但会增加一定的编译时间，建议在发布阶段开启。
+如果有相同的 svg 文件而它们的文件名或路径不同，是否将它们合并起来。开启后，可以减少生成的字体文件大小，但会增加一定的编译时间，建议在发布阶段开启。
 
 - Type: `boolean`
 - Default: false
@@ -130,28 +148,28 @@ CSS的自定义属性名
 - Type: `number`
 - Default: `0xF101`
 
-unicode的字符起始点。
+unicode 的字符起始点。
 
 #### startCodepoint
 
 - Type: `number`
 - Default: `0xF101`
 
-unicode的字符起始点。
+unicode 的字符起始点。
 
 #### fontOptions
 
 - Type: `Object`
 - Default: normalize, fontHeight, round, descent
 
-这个属性将直接覆盖掉[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).的属性，可以通过这个属性设置字体图标生成后的大小及上下偏移量
+这个属性将直接覆盖掉[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont)的属性，可以通过这个属性设置字体图标生成后的大小及上下偏移量。
 
 #### publicPath
 
 - Type: `String`
 - Default: undefined
 
-这个属性主要用于设置字体图标的发布获取路径，设置了这个路径将会覆盖掉webpack的publicPath，我们将会生成类似publicPath+文件名的文件路径。
+这个属性主要用于设置字体图标的发布获取路径，设置了这个路径将会覆盖掉 Webpack 的 publicPath，我们将会生成类似 publicPath + 文件名的文件路径。
 
 ## 修改日志
 

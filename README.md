@@ -52,6 +52,15 @@ After packing all these imports, the loader will create font files (eot,svg,ttf,
 }
 ```
 
+Well, if `dataURL` option enabled, the result is:
+
+``` css
+@font-face {
+	font-family: "icon-font";
+	src:url("data:application/x-font-woff;base64,d09GRgABAAAAAAUkAAsAAAAACQgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAAHcAAAC4Ifsmu09TLzIAAAGAAAAAPQAAAFZWTEunY21hcAAAAcAAAADxAAACuqtTRqJnbHlmAAACtAAAAEIAAABwWoXqgmhlYBewAAA=") format("woff");
+}
+```
+
 ## Features
 
 Our loader works in a way different to others:
@@ -92,11 +101,11 @@ module.exports = {
 };
 ```
 
-### loader options
+### Loader options
 
 None.
 
-### plugin options
+### Plugin options
 
 #### fontName
 
@@ -132,6 +141,15 @@ Whether to insert `@font-face` into the `<head>` with a `<style>` tag automatica
 
 - Type: `boolean`
 - Default: true
+
+### dataURL
+
+If true, fonts will be converted into data base64 format embedded in css, instead o emitted as font files.
+
+It's recommanded if there are not many icons because font files need extra requests.
+
+- Type: `boolean`
+- Default: false
 
 #### mergeDuplicates
 
