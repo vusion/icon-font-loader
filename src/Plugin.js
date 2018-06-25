@@ -278,7 +278,7 @@ class IconFontPlugin {
     replaceStringHolder(value, replaceReg, fontCodePoints) {
         return value.replace(replaceReg, ($1, $2) => {
             if (fontCodePoints[$2]) {
-                const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
+                const code = '\\F' + fontCodePoints[$2];
                 return `"${code}"`;
             } else
                 return $1;
@@ -290,7 +290,7 @@ class IconFontPlugin {
         value.replace(replaceReg, ($1, $2) => {
             if (fontCodePoints[$2] && haveChecked.indexOf($1) === -1) {
                 haveChecked.push($1);
-                const code = String.fromCharCode(parseInt('F' + fontCodePoints[$2], 16));
+                const code = '\\\\F' + fontCodePoints[$2];
                 const content = `\\"${code}\\"`;
                 let index = value.indexOf($1);
                 while (index !== -1) {
