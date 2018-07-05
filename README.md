@@ -76,7 +76,7 @@ Our loader works in a way different to others:
         icon-font: url('../icons/arrow-up.svg');
     }
     ```
-- pseudo elements(`before` or `after`) only. We treat these icon fonts as some certain characters under one font-famliy by using their property `content`.
+- pseudo elements(`before` or `after`) only. We treat these icon fonts as some certain characters under one font-family by using their property `content`.
 - Merge duplicated svgs. We will merge those same svgs into only one to keep slim even they lie in different places in your project.
 
 ## Install
@@ -112,7 +112,7 @@ None.
 Name of font family and font files.
 
 - Type: `string`
-- Default; `icon-font`
+- Default: `icon-font`
 
 #### output
 
@@ -144,7 +144,7 @@ Whether to insert `@font-face` into the `<head>` with a `<style>` tag automatica
 
 ### dataURL
 
-If true, fonts will be converted into data base64 format embedded in css, instead o emitted as font files.
+If true, fonts will be converted into data base64 format embedded in css, instead of emitted as font files.
 
 It's recommanded if there are not many icons because font files need extra requests.
 

@@ -94,6 +94,7 @@ module.exports = {
 ### Plugin 参数
 
 #### fontName
+
 字体图标的字体名和文件名。
 
 - Type: `string`
