@@ -190,5 +190,5 @@ See [Contributing Guide](https://github.com/vusion/DOCUMENTATION/issues/8)
 
 ## License
 
-See [LICENSE](LICENSE)
+[MIT](LICENSE)
 
