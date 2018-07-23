@@ -28,6 +28,7 @@ class IconFontPlugin {
             fontOptions: {
                 fontHeight: 1000,
             },
+            filename: '[fontName].[type]?[hash]',
             publicPath: undefined,
         }, options);
         this.context = '';
@@ -180,6 +181,7 @@ class IconFontPlugin {
         const types = this.options.types;
         const fontOptions = this.options.fontOptions;
         const startCodepoint = this.options.startCodepoint;
+        const filename = this.options.filename;
         webfontsGenerator(Object.assign({
             files,
             types,
@@ -190,8 +192,6 @@ class IconFontPlugin {
         }, fontOptions), (err, result) => {
             if (err)
                 return callback(err);
-            const urls = {};
-            types.forEach((type) => urls[type] = `${fontName}.${type}`);
 
             const assets = compilation.assets;
             const font = { name: fontName };
@@ -199,18 +199,20 @@ class IconFontPlugin {
                 font.woff = result.woff.toString('base64');
             } else {
                 types.forEach((type) => {
-                    const filePath = path.join(this.options.output, urls[type]);
+                    const hash = utils.md5Create(result[type]);
+                    const fileName = utils.createFileName(filename, { fontName, type, hash });
+                    const filePath = path.join(this.options.output, fileName);
                     const urlPath = this.options.auto ? this.options.output : '';
                     let url = '/';
                     if (this.options.publicPath)
-                        url = utils.urlResolve(this.options.publicPath, urls[type]);
+                        url = utils.urlResolve(this.options.publicPath, fileName);
                     else
-                        url = utils.urlResolve(compilation.options.output.publicPath || '', path.join(urlPath, urls[type]));
+                        url = utils.urlResolve(compilation.options.output.publicPath || '', path.join(urlPath, fileName));
                     if (path.sep === '\\')
                         url = url.replace(/\\/g, '/');
                     font[type] = {
                         url,
-                        hash: utils.md5Create(result[type]),
+                        hash,
                     };
                     assets[filePath] = {
                         source: () => result[type],

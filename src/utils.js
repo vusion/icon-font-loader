@@ -23,16 +23,16 @@ module.exports = {
                 if (font.hasOwnProperty(type)) {
                     switch (type) {
                         case 'eot':
-                            srcStr.push('url("' + url + '?' + svgHash + '#iefix") format("embedded-opentype")');
+                            srcStr.push('url("' + url + '#iefix") format("embedded-opentype")');
                             break;
                         case 'woff':
-                            srcStr.push('url("' + url + '?' + svgHash + '") format("woff")');
+                            srcStr.push('url("' + url + '") format("woff")');
                             break;
                         case 'ttf':
-                            srcStr.push('url("' + url + '?' + svgHash + '") format("truetype")');
+                            srcStr.push('url("' + url + '") format("truetype")');
                             break;
                         case 'svg':
-                            srcStr.push('url("' + url + '?' + svgHash + '#' + font.name + '") format("svg")');
+                            srcStr.push('url("' + url + '#' + font.name + '") format("svg")');
                             break;
                         default:
                             break;
@@ -49,5 +49,8 @@ module.exports = {
         if (base && base[base.length - 1] !== '/')
             base = base + '/';
         return url.resolve(base, urlPath);
+    },
+    createFileName(placeholder, data) {
+        return placeholder.replace(/\[([^[]*)\]/g, ($1, $2) => data[$2] || $1);
     },
 };
