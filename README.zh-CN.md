@@ -137,19 +137,28 @@ CSS 的自定义属性名
 - Type: `boolean`
 - Default: false
 
+#### filename
+
+这个参数用于设置生成的文件名称模板，类似于webpack的output filename。模板中支持以下占位符：
+
+* `[ext]` 生成资源文件后缀
+* `[name]` 字体名称
+* `[fontName]` 字体名称
+* `[hash]` 生成文件中svg文件的hash值 (字体文件每一次打包都会变化，使用其hash作为后缀值不符合webpack同进同出的原则)
+* `[<hashType>:hash:<digestType>:<length>]` 生成hash的样式
+  * other `hashType`s, i. e. `sha1`, `md5`, `sha256`, `sha512`
+  * other `digestType`s, i. e. `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
+  * and `length` the length in chars
+
+- Type: `string`
+- Default: `[fontName].[ext]?[hash]`
+
 #### mergeDuplicates
 
 如果有相同的 svg 文件而它们的文件名或路径不同，是否将它们合并起来。开启后，可以减少生成的字体文件大小，但会增加一定的编译时间，建议在发布阶段开启。
 
 - Type: `boolean`
 - Default: false
-
-#### startCodepoint
-
-- Type: `number`
-- Default: `0xF101`
-
-unicode 的字符起始点。
 
 #### startCodepoint
 

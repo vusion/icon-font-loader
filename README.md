@@ -164,6 +164,9 @@ This parameter is used to set the template for the generated file name like webp
   * other `digestType`s, i. e. `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
   * and `length` the length in chars
 
+  - Type: `string`
+- Default: `[fontName].[ext]?[hash]`
+
 #### mergeDuplicates
 
 Whether to merge duplicated icons in font file. If true, it will shrink font file after built, but this makes compilation slower. Recommand that you enable this option in production mode.
