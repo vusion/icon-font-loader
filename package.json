@@ -40,8 +40,7 @@
     "handlebars": "^4.0.10",
     "loader-utils": "^1.1.0",
     "postcss": "^6.0.16",
-    "vusion-webfonts-generator": "^0.4.0",
-    "webpack-sources": "^1.0.1"
+    "vusion-webfonts-generator": "^0.4.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

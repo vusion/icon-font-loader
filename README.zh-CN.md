@@ -128,7 +128,7 @@ CSS 的自定义属性名
 - Type: `boolean`
 - Default: true
 
-### dataURL
+#### dataURL
 
 如果设置为`true`，字体会转换成 data base64 嵌入到 CSS 中，而不是生成对应的字体文件。
 

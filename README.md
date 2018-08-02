@@ -152,6 +152,7 @@ It's recommanded if there are not many icons because font files need extra reque
 - Default: false
 
 #### filename
+
 This parameter is used to set the template for the generated file name like webpack's output filename,The following tokens are replaced in the name parameter:
 
 * `[ext]` the extension of the resource
