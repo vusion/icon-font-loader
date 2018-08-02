@@ -142,7 +142,7 @@ Whether to insert `@font-face` into the `<head>` with a `<style>` tag automatica
 - Type: `boolean`
 - Default: true
 
-### dataURL
+#### dataURL
 
 If true, fonts will be converted into data base64 format embedded in css, instead of emitted as font files.
 
@@ -150,6 +150,18 @@ It's recommanded if there are not many icons because font files need extra reque
 
 - Type: `boolean`
 - Default: false
+
+#### filename
+This parameter is used to set the template for the generated file name like webpack's output filename,The following tokens are replaced in the name parameter:
+
+* `[ext]` the extension of the resource
+* `[name]` the font name
+* `[fontName]` the font name
+* `[hash]` the hash of svg file (Buffer) (by default it's the hex digest of the md5 hash, and all file will use svg'hash)
+* `[<hashType>:hash:<digestType>:<length>]` optionally one can configure
+  * other `hashType`s, i. e. `sha1`, `md5`, `sha256`, `sha512`
+  * other `digestType`s, i. e. `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
+  * and `length` the length in chars
 
 #### mergeDuplicates
 
