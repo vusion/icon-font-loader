@@ -28,7 +28,7 @@ class IconFontPlugin {
             fontOptions: {
                 fontHeight: 1000,
             },
-            filename: '[fontName].[type]?[hash]',
+            filename: '[fontName].[ext]?[hash]',
             publicPath: undefined,
         }, options);
         this.context = '';
@@ -199,8 +199,10 @@ class IconFontPlugin {
                 font.woff = result.woff.toString('base64');
             } else {
                 types.forEach((type) => {
-                    const hash = utils.md5Create(result[type]);
-                    const fileName = utils.createFileName(filename, { fontName, type, hash });
+                    // const hash = utils.md5Create(result[type]);
+                    const fileName = utils.createFileName(filename, {
+                        name: fontName, fontName, ext: type, content: result.svg,
+                    });
                     const filePath = path.join(this.options.output, fileName);
                     const urlPath = this.options.auto ? this.options.output : '';
                     let url = '/';
@@ -212,7 +214,7 @@ class IconFontPlugin {
                         url = url.replace(/\\/g, '/');
                     font[type] = {
                         url,
-                        hash,
+                        // hash,
                     };
                     assets[filePath] = {
                         source: () => result[type],

@@ -3,6 +3,7 @@
 const crypto = require('crypto');
 const url = require('url');
 const path = require('path');
+const loaderUtils = require('loader-utils');
 
 module.exports = {
     md5Create(stream) {
@@ -16,7 +17,7 @@ module.exports = {
             const base64 = font.woff;
             srcStr = `url("data:application/x-font-woff;base64,${base64}") format("woff")`;
         } else {
-            const svgHash = font.svg.hash;
+            // const svgHash = font.svg.hash;
             for (const type in font) {
                 const url = font[type].url;
                 // const hash = font[type].hash;
@@ -51,6 +52,10 @@ module.exports = {
         return url.resolve(base, urlPath);
     },
     createFileName(placeholder, data) {
+        if (data.content) {
+            placeholder = placeholder.replace(/\[(?:(\w+):)?hash(?::([a-z]+\d*))?(?::(\d+))?\]/ig, (all, hashType, digestType, maxLength) => loaderUtils.getHashDigest(data.content, hashType, digestType, parseInt(maxLength)));
+            delete data.content;
+        }
         return placeholder.replace(/\[([^[]*)\]/g, ($1, $2) => data[$2] || $1);
     },
 };
