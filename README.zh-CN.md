@@ -2,7 +2,7 @@
 
 - [README in English](README.md)
 
-这是一款 Webpack loader，它可以自动将 svg 转换成字体图标。
+这是一款可以自动将 svg 转换成字体图标的 Webpack loader。
 
 ## 示例
 
@@ -104,7 +104,7 @@ module.exports = {
 
 #### output
 
-字体和 CSS 等文件对于 webpack 的 output 的相对路径。**必须是一个相对路径。**
+字体和 CSS 等文件相对于 webpack 的 output 的相对路径。**必须是一个相对路径。**
 
 - Type: `string`
 - Default: `./`
