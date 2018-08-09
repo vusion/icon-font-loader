@@ -1,5 +1,7 @@
 # icon-font-loader
 
+- [README in English](README.md)
+
 这是一款 Webpack loader，它可以自动将 svg 转换成字体图标。
 
 ## 示例

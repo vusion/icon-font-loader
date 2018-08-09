@@ -1,5 +1,7 @@
 # icon-font-loader
 
+- [中文说明](README.zh-CN.md)
+
 A webpack loader to convert svgs into font icons in CSS.
 
 [![CircleCI][circleci-img]][circleci-url]
