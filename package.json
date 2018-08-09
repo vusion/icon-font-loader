@@ -15,8 +15,7 @@
     "test": "mocha --timeout 5000 ./tests/final.test.js",
     "test-extract": "mocha --timeout 12000 ./tests/extract-text-webpack.test.js",
     "test-entry": "mocha --timeout 12000 ./tests/entry.test.js",
-    "lint": "eslint ./src",
-    "lint-fix": "eslint ./src --fix"
+    "lint": "eslint ./src --fix"
   },
   "main": "./index.js",
   "repository": "vusion/icon-font-loader",

@@ -107,6 +107,22 @@ module.exports = {
 - Type: `string`
 - Default: `./`
 
+#### filename
+
+用于设置生成文件名的模板，类似于 Webpack 的 output.filename。模板支持以下占位符：
+
+- `[ext]` 生成资源文件后缀
+- `[name]` 字体名称
+- `[fontName]` 字体名称，`[name]`的别名
+- `[hash]` 生成文件中 svg 文件的 hash 值（默认使用16进制 md5 hash，所有文件使用 svg 的 hash，其他文件的 hash 有时会发生改变）
+- `[<hashType>:hash:<digestType>:<length>]` 生成 hash 的样式
+    - `hashType` hash 类型，比如：`sha1`, `md5`, `sha256`, `sha512`
+    - `digestType` 数字进制：`hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
+    - `length` 字符长度
+
+- Type: `string`
+- Default: `[fontName].[ext]?[hash]`
+
 #### localCSSTemplate
 
 局部 CSS 虚拟属性转换后内容, 接受模板内容而不是模板文件的路径。
@@ -136,22 +152,6 @@ CSS 的自定义属性名
 
 - Type: `boolean`
 - Default: false
-
-#### filename
-
-这个参数用于设置生成的文件名称模板，类似于webpack的output filename。模板中支持以下占位符：
-
-* `[ext]` 生成资源文件后缀
-* `[name]` 字体名称
-* `[fontName]` 字体名称
-* `[hash]` 生成文件中svg文件的hash值 (字体文件每一次打包都会变化，使用其hash作为后缀值不符合webpack同进同出的原则)
-* `[<hashType>:hash:<digestType>:<length>]` 生成hash的样式
-  * other `hashType`s, i. e. `sha1`, `md5`, `sha256`, `sha512`
-  * other `digestType`s, i. e. `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
-  * and `length` the length in chars
-
-- Type: `string`
-- Default: `[fontName].[ext]?[hash]`
 
 #### mergeDuplicates
 

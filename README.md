@@ -121,6 +121,22 @@ Path of font and css files relative to webpack output path. **Must be a relative
 - Type: `string`
 - Default: `./`
 
+#### filename
+
+Output filename format like output.filename of Webpack. The following tokens will be replaced:
+
+- `[ext]` the extension of the resource
+- `[name]` the font name
+- `[fontName]` the font name, alias of `[name]`
+- `[hash]` the hash of svg file (Buffer) (by default it's the hex digest of the md5 hash, and all file will use hash of the svg file)
+- `[<hashType>:hash:<digestType>:<length>]` optionally one can configure
+    - other `hashType`s, i. e. `sha1`, `md5`, `sha256`, `sha512`
+    - other `digestType`s, i. e. `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
+    - and `length` the length in chars
+
+- Type: `string`
+- Default: `[fontName].[ext]?[hash]`
+
 #### localCSSTemplate
 
 Template of virtual property transformed local CSS. It accepts template content instead of a template file path。
@@ -150,22 +166,6 @@ It's recommanded if there are not many icons because font files need extra reque
 
 - Type: `boolean`
 - Default: false
-
-#### filename
-
-This parameter is used to set the template for the generated file name like webpack's output filename,The following tokens are replaced in the name parameter:
-
-* `[ext]` the extension of the resource
-* `[name]` the font name
-* `[fontName]` the font name
-* `[hash]` the hash of svg file (Buffer) (by default it's the hex digest of the md5 hash, and all file will use svg'hash)
-* `[<hashType>:hash:<digestType>:<length>]` optionally one can configure
-  * other `hashType`s, i. e. `sha1`, `md5`, `sha256`, `sha512`
-  * other `digestType`s, i. e. `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
-  * and `length` the length in chars
-
-  - Type: `string`
-- Default: `[fontName].[ext]?[hash]`
 
 #### mergeDuplicates
 
