@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const webfontsGenerator = require('vusion-webfonts-generator');
+const webfontsGenerator = require('@vusion/webfonts-generator');
 const utils = require('./utils');
 const getAllModules = require('./getAllModules');
 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;

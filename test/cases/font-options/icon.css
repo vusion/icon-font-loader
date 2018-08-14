@@ -3,12 +3,32 @@
     color: red;
 }
 
+.eiffel-tower::before {
+    icon-font: url('../../icons/eiffel-tower.svg');
+    color: blue;
+}
+
 .loading::before {
     icon-font: url('../../icons/loading.svg');
     color: #aaa;
 }
 
-.eiffel-tower::before {
-    icon-font: url('../../icons/eiffel-tower.svg');
-    color: blue;
+.slice::before {
+    icon-font: url('../../icons/slice.svg');
+    color: green;
+}
+
+.edit::before {
+    icon-font: url('../../icons/edit.svg');
+    color: purple;
+}
+
+.high::before {
+    icon-font: url('../../icons/high.svg');
+    color: purple;
+}
+
+.comment::before {
+    icon-font: url('../../icons/comment.svg');
+    color: purple;
 }

@@ -12,5 +12,9 @@ module.exports = {
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },
-    plugins: [new IconFontPlugin()],
+    plugins: [new IconFontPlugin({
+        fontOptions: {
+            descent: 48,
+        },
+    })],
 };

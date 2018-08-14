@@ -39,7 +39,7 @@
     "handlebars": "^4.0.10",
     "loader-utils": "^1.1.0",
     "postcss": "^6.0.16",
-    "vusion-webfonts-generator": "^0.4.0"
+    "@vusion/webfonts-generator": "^0.5.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
