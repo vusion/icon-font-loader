@@ -100,14 +100,7 @@ module.exports = {
 字体图标的字体名和文件名。
 
 - Type: `string`
-- Default: `icon-font`
-
-#### output
-
-字体和 CSS 等文件相对于 webpack 的 output 的相对路径。**必须是一个相对路径。**
-
-- Type: `string`
-- Default: `./`
+- Default: `'icon-font'`
 
 #### filename
 
@@ -123,7 +116,21 @@ module.exports = {
     - `length` 字符长度
 
 - Type: `string`
-- Default: `[fontName].[ext]?[hash]`
+- Default: `'[fontName].[ext]?[hash]'`
+
+#### output
+
+字体和 CSS 等文件相对于 webpack 的 output 的相对路径。**必须是一个相对路径。**
+
+- Type: `string`
+- Default: `'./'`
+
+#### publicPath
+
+字体在 CSS url 中的路径，与 Webpack 的 publicPath 相同，此选项用于覆盖它。
+
+- Type: `String`
+- Default: `''`
 
 #### localCSSTemplate
 
@@ -137,14 +144,14 @@ module.exports = {
 CSS 的自定义属性名
 
 - Type: `string`
-- Default: `icon-font`
+- Default: `'icon-font'`
 
 #### auto
 
 是否在`<head>`中自动插入有`@font-face`的`<style>`标签，或生成一个含`@font-face`的 CSS 文件。
 
 - Type: `boolean`
-- Default: true
+- Default: `true`
 
 #### dataURL
 
@@ -153,14 +160,14 @@ CSS 的自定义属性名
 在字体图标不多的情况下推荐使用，因为字体文件会产生额外的请求。
 
 - Type: `boolean`
-- Default: false
+- Default: `false`
 
 #### mergeDuplicates
 
 如果有相同的 svg 文件而它们的文件名或路径不同，是否将它们合并起来。开启后，可以减少生成的字体文件大小，但会增加一定的编译时间，建议在发布阶段开启。
 
 - Type: `boolean`
-- Default: false
+- Default: `false`
 
 #### startCodepoint
 
@@ -172,16 +179,9 @@ unicode 的字符起始点。
 #### fontOptions
 
 - Type: `Object`
-- Default: normalize, fontHeight, round, descent
+- Default: `{}`
 
 这个属性将直接覆盖掉[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont)的属性，可以通过这个属性设置字体图标生成后的大小及上下偏移量。
-
-#### publicPath
-
-- Type: `String`
-- Default: undefined
-
-这个属性主要用于设置字体图标的发布获取路径，设置了这个路径将会覆盖掉 Webpack 的 publicPath，我们将会生成类似 publicPath + 文件名的文件路径。
 
 ## 修改日志
 

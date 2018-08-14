@@ -114,14 +114,7 @@ None.
 Name of font family and font files.
 
 - Type: `string`
-- Default: `icon-font`
-
-#### output
-
-Path of font and css files relative to webpack output path. **Must be a relative path.**
-
-- Type: `string`
-- Default: `./`
+- Default: `'icon-font'`
 
 #### filename
 
@@ -137,7 +130,21 @@ Output filename format like output.filename of Webpack. The following tokens wil
     - and `length` the length in chars
 
 - Type: `string`
-- Default: `[fontName].[ext]?[hash]`
+- Default: `'[fontName].[ext]?[hash]'`
+
+#### output
+
+Output path of emitted font and css files, relative to webpack output path. **Must be a relative path.**
+
+- Type: `string`
+- Default: `'./'`
+
+#### publicPath
+
+Font public path in css url, same as webpack output.publicPath. This option is for overriding it.
+
+- Type: `string`
+- Default: `''`
 
 #### localCSSTemplate
 
@@ -151,14 +158,14 @@ Template of virtual property transformed local CSS. It accepts template content 
 Custom CSS property name
 
 - Type: `string`
-- Default: `icon-font`
+- Default: `'icon-font'`
 
 #### auto
 
 Whether to insert `@font-face` into the `<head>` with a `<style>` tag automatically or emit a css file.
 
 - Type: `boolean`
-- Default: true
+- Default: `true`
 
 #### dataURL
 
@@ -167,14 +174,14 @@ If true, fonts will be converted into data base64 format embedded in css, instea
 It's recommanded if there are not many icons because font files need extra requests.
 
 - Type: `boolean`
-- Default: false
+- Default: `false`
 
 #### mergeDuplicates
 
 Whether to merge duplicated icons in font file. If true, it will shrink font file after built, but this makes compilation slower. Recommand that you enable this option in production mode.
 
 - Type: `boolean`
-- Default: false
+- Default: `false`
 
 #### startCodepoint
 
@@ -186,17 +193,10 @@ Starting codepoint. Defaults to beginning of unicode private area.
 #### fontOptions
 
 - Type: `Object`
-- Default: normalize, fontHeight, round, descent
+- Default: `{}`
 
 Options that are passed directly to
 [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
-
-#### publicPath
-
-- Type: `String`
-- Default: undefined
-
-font file public path in css file, this publicPath will cover webpack‘publicPath,and we will generate public path `publicPath/fileName`;
 
 ## Changelog
 
