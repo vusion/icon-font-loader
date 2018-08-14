@@ -1,23 +1,23 @@
 :local(.des){
     composes: item from "./com.css";
 }
-body .icon-arrow-left:before {
+body .icon-arrow-left::before {
     icon-font: url('../../icons/arrow-left.svg');
     color: red;
 }
 
-body span.icon-arrow-slice:before {
+body span.icon-arrow-slice::before {
     font-size:20px;
     color: blue;
     icon-font: url('../../icons/same-name/slice.svg');
 }
 
-.icon-arrow-up:before {
+.icon-arrow-up::before {
     icon-font: url('../../icons/same-name/arrow-left.svg');
     color: green;
 }
 
-.icon-arrow-up-1:before {
+.icon-arrow-up-1::before {
     icon-font: url('../../icons/same-name/arrow-right.svg');
     color: green;
 }

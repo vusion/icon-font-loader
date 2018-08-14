@@ -22,7 +22,7 @@ describe('Webpack Integration Tests', () => {
                 return done(new Error(stats.toString()));
             const filesContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/icon-font.svg'));
             const md5Code = utils.md5Create(filesContent);
-            expect(md5Code).to.eql('65710e1596abed7a7320ad764713d11d');
+            expect(md5Code).to.eql('8a2ce3233cbfe5ab5059f81cfc1ef039');
             const cssContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/index.css')).toString();
             expect(replaceReg.test(cssContent)).to.eql(false);
             done();

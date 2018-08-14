@@ -1,9 +1,9 @@
-.icon-arrow-left:before {
+.icon-arrow-left::before {
     icon-font: url('../../icons/arrow-left.svg');
     color: red;
 }
 
-.icon-arrow-up:before {
+.icon-arrow-up::before {
     icon-font: url('../../icons/arrow-up.svg');
     color: blue;
 }
