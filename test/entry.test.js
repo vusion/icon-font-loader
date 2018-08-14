@@ -11,7 +11,7 @@ const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 
 describe('Webpack Integration Tests', () => {
     const buildCLI = path.resolve(__dirname, '../node_modules/.bin/webpack');
-    const runDir = path.join('../tests/cases/' + value);
+    const runDir = path.join('../test/cases/' + value);
     const outputDirectory = path.join('./cases/' + value + '/dest');
     before(() => {
         shell.cd(path.resolve(__dirname, runDir));

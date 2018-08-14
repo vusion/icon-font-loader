@@ -7,7 +7,7 @@ const testCase = ['default', 'options', 'more-one-css', 'same-name', 'property',
 describe('Webpack Integration Tests', () => {
     testCase.forEach((value) => {
         it('#test webpack integration case: ' + value, (done) => {
-            const configPath = path.join('../tests/cases/', value, '/webpack.config.js');
+            const configPath = path.join('../test/cases/', value, '/webpack.config.js');
             const outputDirectory = path.join('/cases/', value, '/dest');
             const options = require(configPath);
             for (const chunk of Object.keys(options.entry))

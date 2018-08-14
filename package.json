@@ -12,9 +12,9 @@
   ],
   "scripts": {
     "precommit": "bash node_modules/vusion-hooks/pre-commit",
-    "test": "mocha --timeout 5000 ./tests/final.test.js",
-    "test-extract": "mocha --timeout 12000 ./tests/extract-text-webpack.test.js",
-    "test-entry": "mocha --timeout 12000 ./tests/entry.test.js",
+    "test": "mocha --timeout 5000 ./test/final.test.js",
+    "test-extract": "mocha --timeout 12000 ./test/extract-text-webpack.test.js",
+    "test-entry": "mocha --timeout 12000 ./test/entry.test.js",
     "lint": "eslint ./src --fix"
   },
   "main": "./index.js",

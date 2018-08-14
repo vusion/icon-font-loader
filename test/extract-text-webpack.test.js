@@ -8,7 +8,7 @@ const value = 'extract-text-webpack-plugin';
 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 
 describe('Webpack Integration Tests', () => {
-    const configPath = path.join('../tests/cases/' + value + '/webpack.config.js');
+    const configPath = path.join('../test/cases/' + value + '/webpack.config.js');
     const outputDirectory = path.join('./cases/' + value + '/dest');
     const options = require(configPath);
     for (const chunk of Object.keys(options.entry))

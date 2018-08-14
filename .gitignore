@@ -1,7 +1,7 @@
 .DS_Store
 node_modules/
 npm-debug.log
-tests/**/dest/
+test/**/dest/
 __test_tmp_*
 __tmp_*
 .idea
