@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <font id="icon-font" horiz-adv-x="150">
+    <font-face font-family="icon-font"
+      units-per-em="1000" ascent="1000"
+      descent="0" />
+    <missing-glyph horiz-adv-x="0" />
+    <glyph glyph-name="arrow-left"
+      unicode="&#xF101;"
+      horiz-adv-x="1000" d=" M333.3333333333334 500L666.6666666666667 800L666.6666666666667 200z" />
+    <glyph glyph-name="arrow-left-1"
+      unicode="&#x61;&#x72;&#x72;&#x6F;&#x77;&#x2D;&#x6C;&#x65;&#x66;&#x74;"
+      horiz-adv-x="1000" d=" M333.3333333333334 500L666.6666666666667 800L666.6666666666667 200z" />
+    <glyph glyph-name="arrow-up"
+      unicode="&#xF102;"
+      horiz-adv-x="1000" d=" M500 533.3333333333333L800 200L200 200z" />
+    <glyph glyph-name="arrow-up-1"
+      unicode="&#x61;&#x72;&#x72;&#x6F;&#x77;&#x2D;&#x75;&#x70;"
+      horiz-adv-x="1000" d=" M500 533.3333333333333L800 200L200 200z" />
+    <glyph glyph-name="arrow-left-1"
+      unicode="&#xF103;"
+      horiz-adv-x="1000" d=" M333.3333333333334 500L666.6666666666667 800L666.6666666666667 200z" />
+    <glyph glyph-name="arrow-left-1-1"
+      unicode="&#x61;&#x72;&#x72;&#x6F;&#x77;&#x2D;&#x6C;&#x65;&#x66;&#x74;&#x2D;&#x31;"
+      horiz-adv-x="1000" d=" M333.3333333333334 500L666.6666666666667 800L666.6666666666667 200z" />
+  </font>
+</defs>
+</svg>

@@ -1,0 +1,14 @@
+.task::before {
+    icon-font: url('../../icons/task.svg');
+    color: red;
+}
+
+.loading::before {
+    icon-font: url('../../icons/loading.svg');
+    color: #aaa;
+}
+
+.eiffel-tower::before {
+    icon-font: url('../../icons/eiffel-tower.svg');
+    color: blue;
+}
