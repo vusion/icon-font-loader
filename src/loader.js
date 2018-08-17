@@ -4,6 +4,7 @@ const fs = require('fs');
 const handlebars = require('handlebars');
 const utils = require('./utils');
 const css = require('postcss');
+const path = require('path');
 
 const Plugin = require('./Plugin');
 
@@ -34,6 +35,10 @@ function iconFontLoader(source) {
     ast.walkDecls(property, (declaration) => {
         const result = reg.exec(declaration.value);
         const url = result[1];
+        if (path.extname(url) !== '.svg') {
+            callback(`Do not accept images in png format as the source image of the font icon, please replace ${url} with svg image `);
+            return;
+        }
         promises.push(new Promise((resolve, reject) => {
             // This path must be resolved by webpack.
             this.resolve(this.context, url, (err, result) => err ? reject(err) : resolve(result));
