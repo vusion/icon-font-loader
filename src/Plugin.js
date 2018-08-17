@@ -127,20 +127,33 @@ class IconFontPlugin {
         this.pickFileList();
         const fontCodePoints = this.fontCodePoints;
         const allModules = getAllModules(compilation);
-        allModules.filter((module) => module.IconFontSVGModule).forEach((module) => {
-            const source = module._source;
-            let range = [];
-            const replaceDependency = module.dependencies.filter((dependency) => dependency.constructor === ReplaceDependency)[0];
-            if (typeof source === 'string') {
-                range = this.replaceHolder(source, replaceReg, fontCodePoints);
-            } else if (typeof source === 'object' && typeof source._value === 'string') {
-                range = this.replaceHolder(source._value, replaceReg, fontCodePoints);
+        allModules.filter((module) => {
+            // hack for min-css-extract-plugin, this plugin's identifier start with 'css'
+            const identifier = module.identifier();
+            if (/^css[\s]+/g.test(identifier)) {
+                module.thisModuleIsCssModule = true;
+                return true;
             }
-            if (range.length > 0) {
-                if (replaceDependency) {
-                    replaceDependency.updateRange(range);
-                } else {
-                    module.addDependency(new ReplaceDependency(range));
+            return module.IconFontSVGModule;
+        }).forEach((module) => {
+            if (module.thisModuleIsCssModule && module.content) {
+                const content = module.content;
+                module.content = this.replaceStringHolder(content, replaceReg, fontCodePoints);
+            } else {
+                const source = module._source;
+                let range = [];
+                const replaceDependency = module.dependencies.filter((dependency) => dependency.constructor === ReplaceDependency)[0];
+                if (typeof source === 'string') {
+                    range = this.replaceHolder(source, replaceReg, fontCodePoints);
+                } else if (typeof source === 'object' && typeof source._value === 'string') {
+                    range = this.replaceHolder(source._value, replaceReg, fontCodePoints);
+                }
+                if (range.length > 0) {
+                    if (replaceDependency) {
+                        replaceDependency.updateRange(range);
+                    } else {
+                        module.addDependency(new ReplaceDependency(range));
+                    }
                 }
             }
         });
