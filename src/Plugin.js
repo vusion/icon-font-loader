@@ -249,7 +249,7 @@ class IconFontPlugin {
     }
     afterOptimizeTree(compilation) {
         const allModules = getAllModules(compilation);
-        allModules.filter((module) => module.request === this.iconFontStylePath).forEach((module) => {
+        allModules.filter((module) => module.userRequest === this.iconFontStylePath).forEach((module) => {
             const source = module._source;
             if (typeof source === 'string') {
                 module._source = ['module.exports = {',
