@@ -17,9 +17,8 @@ function getNextLoader(loader) {
     return nextLoader;
 }
 
-function iconFontLoader(source) {
+function iconFontLoader(source, meta) {
     const callback = this.async();
-
     this.cacheable();
     const plugin = this.iconFontPlugin;
     const files = plugin.files;
@@ -106,7 +105,7 @@ function iconFontLoader(source) {
                 cssStr += str;
             });
         }
-        callback(null, acceptPostCssAst ? ast : cssStr);
+        callback(null, acceptPostCssAst ? ast : cssStr, meta);
     }).catch((err) => {
         callback(err, source);
     });
