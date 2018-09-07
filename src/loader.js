@@ -49,7 +49,7 @@ function iconFontLoader(source, meta) {
                 file,
             };
             const filesContent = fs.readFileSync(file);
-            const md5Code = utils.md5Create(filesContent);
+            const md5Code = 'H' + utils.md5Create(filesContent);
             const index = md5s.indexOf(md5Code);
             result.md5Code = md5Code;
             result.declaration = declaration;
