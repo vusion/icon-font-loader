@@ -145,7 +145,7 @@ class IconFontPlugin {
                 const replaceDependency = module.dependencies.filter((dependency) => dependency.constructor === ReplaceDependency)[0];
                 if (typeof source === 'string') {
                     range = this.replaceHolder(source, replaceReg, fontCodePoints);
-                } else if (typeof source === 'object' && typeof source._value === 'string') {
+                } else if (source instanceof Object && typeof source._value === 'string') {
                     range = this.replaceHolder(source._value, replaceReg, fontCodePoints);
                 }
                 if (range.length > 0) {
@@ -166,7 +166,7 @@ class IconFontPlugin {
                 const source = module._source;
                 if (typeof source === 'string') {
                     module._source = this.replaceStringHolder(source, replaceReg, fontCodePoints);
-                } else if (typeof source === 'object' && typeof source._value === 'string') {
+                } else if (source instanceof Object && typeof source._value === 'string') {
                     source._value = this.replaceStringHolder(source._value, replaceReg, fontCodePoints);
                 }
             });
