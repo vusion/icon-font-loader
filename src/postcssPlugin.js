@@ -42,6 +42,8 @@ module.exports = postcss.plugin('parse-icon-font', ({ loaderContext }) => (style
         }));
         reg.lastIndex = 0;
     });
+    if (promises.length > 0)
+        plugin.shouldGenerate = true;
     const template = handlebars.compile(plugin.options.localCSSTemplate);
     return Promise.all(promises).then((results) => {
         if (results.length > 0)
@@ -61,7 +63,6 @@ module.exports = postcss.plugin('parse-icon-font', ({ loaderContext }) => (style
             rule.isFontCssselector = true;
             rule.append(`\n\tcontent: ICON_FONT_LOADER_IMAGE(${md5Code});`);
         });
-        const cssStr = '';
         const iconFontCssNames = [];
         styles.walkRules((rule) => {
             if (rule && rule.isFontCssselector && iconFontCssNames.indexOf(rule.selector) === -1)
@@ -76,12 +77,5 @@ module.exports = postcss.plugin('parse-icon-font', ({ loaderContext }) => (style
             cssAdd = `${iconFontCssNamesStr}{\n${cssAdd}\n}\n`;
             styles.insertBefore(styles.first, cssAdd);
         }
-        // css rule stringify
-        // if (!acceptPostCssAst) {
-        //     css.stringify(ast, (str, map) => {
-        //         cssStr += str;
-        //     });
-        // }
-        // callback(null, acceptPostCssAst ? ast : cssStr, meta);
     });
 });
