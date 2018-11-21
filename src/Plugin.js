@@ -7,8 +7,11 @@ const utils = require('./utils');
 const getAllModules = require('./getAllModules');
 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 const NAMESPACE = 'IconFontPlugin';
-const ReplaceDependency = require('./replaceDependency');
-const NullFactory = require('webpack/lib/NullFactory');
+const BasePlugin = require('base-css-image-loader').plugin({
+    NAMESPACE,
+    MODULEMARK: 'IconFontSVGModule',
+    REPLACEREG: replaceReg,
+});
 
 class IconFontPlugin {
     constructor(options) {
@@ -59,46 +62,22 @@ class IconFontPlugin {
                 return result;
             }
         }
-        if (compiler.hooks) {
-            compiler.hooks.environment.tap(NAMESPACE, () => this.environmentCallback(compiler, entryCallBack));
-            compiler.hooks.afterPlugins.tap(NAMESPACE, (compiler) => this.afterPluginCallBack());
-            compiler.hooks.watchRun.tapAsync(NAMESPACE, (compiler, callback) => {
-                this.watching = true;
-                callback();
-            });
-            compiler.hooks.thisCompilation.tap(NAMESPACE, (compilation, params) => {
-                compilation.dependencyFactories.set(ReplaceDependency, new NullFactory());
-                compilation.dependencyTemplates.set(ReplaceDependency, ReplaceDependency.Template);
-                compilation.hooks.afterOptimizeChunks.tap(NAMESPACE, (chunks) => this.afterOptimizeChunks(chunks, compilation));
-                compilation.hooks.optimizeExtractedChunks.tap(NAMESPACE, (chunks) => this.optimizeExtractedChunks(chunks));
-                compilation.hooks.optimizeTree.tapAsync(NAMESPACE, (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
-                compilation.hooks.afterOptimizeTree.tap(NAMESPACE, (modules) => this.afterOptimizeTree(compilation));
-            });
-            compiler.hooks.compilation.tap(NAMESPACE, (compilation, params) => {
-                compilation.hooks.normalModuleLoader.tap(NAMESPACE, (loaderContext, module) => this.normalModuleLoader(loaderContext, module));
-            });
-        } else {
-            compiler.plugin('environment', () => this.environmentCallback(compiler, entryCallBack));
-
-            compiler.plugin('after-plugins', (compiler) => this.afterPluginCallBack());
-
-            compiler.plugin('watch-run', (compiler, callback) => {
-                this.watching = true;
-                callback();
-            });
-
-            compiler.plugin('this-compilation', (compilation, params) => {
-                compilation.dependencyFactories.set(ReplaceDependency, new NullFactory());
-                compilation.dependencyTemplates.set(ReplaceDependency, ReplaceDependency.Template);
-                compilation.plugin('after-optimize-chunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
-                compilation.plugin('optimize-extracted-chunks', (chunks) => this.optimizeExtractedChunks(chunks));
-                compilation.plugin('optimize-tree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
-                compilation.plugin('after-optimize-tree', (modules) => this.afterOptimizeTree(compilation));
-            });
-            compiler.plugin('compilation', (compilation, params) => {
-                compilation.plugin('normal-module-loader', (loaderContext, module) => this.normalModuleLoader(loaderContext, module));
-            });
-        }
+        BasePlugin.plugin(compiler, 'environment', () => this.environmentCallback(compiler, entryCallBack));
+        BasePlugin.plugin(compiler, 'afterPlugins', (compiler) => this.afterPluginCallBack());
+        BasePlugin.plugin(compiler, 'watchRun', (compiler, callback) => {
+            this.watching = true;
+            callback();
+        });
+        BasePlugin.plugin(compiler, 'thisCompilation', (compilation, params) => {
+            BasePlugin.plugin(compilation, 'afterOptimizeChunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
+            BasePlugin.plugin(compilation, 'optimizeExtractedChunks', (chunks) => this.optimizeExtractedChunks(chunks));
+            BasePlugin.plugin(compilation, 'optimizeTree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
+            BasePlugin.plugin(compilation, 'afterOptimizeTree', (modules) => this.afterOptimizeTree(compilation));
+        });
+        BasePlugin.plugin(compiler, 'compilation', (compilation, params) => {
+            BasePlugin.plugin(compilation, 'normalModuleLoader', (loaderContext, module) => this.normalModuleLoader(loaderContext, module));
+        });
+        BasePlugin.apply(compiler);
     }
     environmentCallback(compiler, entryCallBack) {
         const entry = compiler.options.entry;
@@ -125,52 +104,10 @@ class IconFontPlugin {
     }
     afterOptimizeChunks(chunks, compilation) {
         this.pickFileList();
-        const fontCodePoints = this.fontCodePoints;
-        const allModules = getAllModules(compilation);
-        allModules.filter((module) => {
-            // hack for min-css-extract-plugin, this plugin's identifier start with 'css'
-            const identifier = module.identifier();
-            if (/^css[\s]+/g.test(identifier)) {
-                module.thisModuleIsCssModule = true;
-                return true;
-            }
-            return module.IconFontSVGModule;
-        }).forEach((module) => {
-            if (module.thisModuleIsCssModule && module.content) {
-                const content = module.content;
-                module.content = this.replaceStringHolder(content, replaceReg, fontCodePoints);
-            } else {
-                const source = module._source;
-                let range = [];
-                const replaceDependency = module.dependencies.filter((dependency) => dependency.constructor === ReplaceDependency)[0];
-                if (typeof source === 'string') {
-                    range = this.replaceHolder(source, replaceReg, fontCodePoints);
-                } else if (source instanceof Object && typeof source._value === 'string') {
-                    range = this.replaceHolder(source._value, replaceReg, fontCodePoints);
-                }
-                if (range.length > 0) {
-                    if (replaceDependency) {
-                        replaceDependency.updateRange(range);
-                    } else {
-                        module.addDependency(new ReplaceDependency(range));
-                    }
-                }
-            }
-        });
+        BasePlugin.data = this.getFontData(this.fontCodePoints);
     }
-    optimizeExtractedChunks(chunks) {
-        const fontCodePoints = this.fontCodePoints;
-        chunks.forEach((chunk) => {
-            const modules = !chunk.mapModules ? chunk._modules : chunk.mapModules();
-            modules.filter((module) => '_originalModule' in module).forEach((module) => {
-                const source = module._source;
-                if (typeof source === 'string') {
-                    module._source = this.replaceStringHolder(source, replaceReg, fontCodePoints);
-                } else if (source instanceof Object && typeof source._value === 'string') {
-                    source._value = this.replaceStringHolder(source._value, replaceReg, fontCodePoints);
-                }
-            });
-        });
+    optimizeExtractedChunks() {
+        BasePlugin.data = this.getFontData(this.fontCodePoints);
     }
     optimizeTree(compilation, chunks, modules, callback) {
         // If loader doesn't collect icons, then don't generate fonts.
@@ -289,32 +226,22 @@ class IconFontPlugin {
 
         return result;
     }
-    replaceStringHolder(value, replaceReg, fontCodePoints) {
-        return value.replace(replaceReg, ($1, $2) => {
-            if (fontCodePoints[$2]) {
-                const code = '\\F' + fontCodePoints[$2];
-                return `"${code}"`;
-            } else
-                return $1;
-        });
+    getFontDataStr(fontCodePoints) {
+        const data = {};
+        for (const name of Object.keys(fontCodePoints)) {
+            const code = '\\F' + fontCodePoints[name];
+            data[name] = code;
+        }
+        return data;
     }
-    replaceHolder(value, replaceReg, fontCodePoints) {
-        const rangeList = [];
-        const haveChecked = [];
-        value.replace(replaceReg, ($1, $2) => {
-            if (fontCodePoints[$2] && haveChecked.indexOf($1) === -1) {
-                haveChecked.push($1);
-                const code = '\\\\F' + fontCodePoints[$2];
-                const content = `\\"${code}\\"`;
-                let index = value.indexOf($1);
-                while (index !== -1) {
-                    rangeList.push([index, index + $1.length - 1, content]);
-                    index = value.indexOf($1, index + 1);
-                }
-            }
-            return $1;
-        });
-        return rangeList;
+    getFontData(fontCodePoints) {
+        const data = {};
+        for (const name of Object.keys(fontCodePoints)) {
+            const code = '\\\\F' + fontCodePoints[name];
+            const content = `\\"${code}\\"`;
+            data[name] = content;
+        }
+        return data;
     }
     pickFileList() {
         const startCodepoint = this.options.startCodepoint;
