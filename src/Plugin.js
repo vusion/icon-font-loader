@@ -7,19 +7,18 @@ const utils = require('./utils');
 const getAllModules = require('./getAllModules');
 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 const NAMESPACE = 'IconFontPlugin';
-const BasePlugin = require('base-css-image-loader').plugin({
-    NAMESPACE,
-    MODULEMARK: 'IconFontSVGModule',
-    REPLACEREG: replaceReg,
-});
+const BasePlugin = require('base-css-image-loader').plugin;
 
-class IconFontPlugin {
+class IconFontPlugin extends BasePlugin {
     constructor(options) {
-        this.options = Object.assign({
+        super();
+        this.NAMESPACE = NAMESPACE;
+        this.MODULEMARK = 'IconFontSVGModule';
+        this.REPLACEREG = replaceReg;
+        this.options = Object.assign(this.options, {
             property: 'icon-font',
             types: ['ttf', 'eot', 'woff', 'svg'], // @bug: webfonts-generator
             fontName: 'icon-font',
-            output: './',
             localCSSTemplate: fs.readFileSync(path.resolve(__dirname, 'local.css.hbs'), 'utf8'),
             auto: true,
             dataURL: false,
@@ -28,19 +27,15 @@ class IconFontPlugin {
             fontOptions: {
                 fontHeight: 1000,
             },
-            filename: '[fontName].[ext]?[hash]',
-            publicPath: undefined,
         }, options);
         this.context = '';
         this.styleMessage = {};
         this.iconFontStylePath = '';
     }
-
     apply(compiler) {
         const addStylePath = path.resolve(__dirname, './addStyle.js');
         this.iconFontStylePath = path.resolve(__dirname, './iconFontStyle.js');
         this.styleMessage = {};
-
         function entryCallBack(entry) {
             function addStyleModuleToEntry(entry) {
                 let result;
@@ -62,22 +57,21 @@ class IconFontPlugin {
                 return result;
             }
         }
-        BasePlugin.plugin(compiler, 'environment', () => this.environmentCallback(compiler, entryCallBack));
-        BasePlugin.plugin(compiler, 'afterPlugins', (compiler) => this.afterPluginCallBack());
-        BasePlugin.plugin(compiler, 'watchRun', (compiler, callback) => {
+        this.plugin(compiler, 'environment', () => this.environmentCallback(compiler, entryCallBack));
+        this.plugin(compiler, 'afterPlugins', (compiler) => this.afterPluginCallBack());
+        this.plugin(compiler, 'watchRun', (compiler, callback) => {
             this.watching = true;
             callback();
         });
-        BasePlugin.plugin(compiler, 'thisCompilation', (compilation, params) => {
-            BasePlugin.plugin(compilation, 'afterOptimizeChunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
-            BasePlugin.plugin(compilation, 'optimizeExtractedChunks', (chunks) => this.optimizeExtractedChunks(chunks));
-            BasePlugin.plugin(compilation, 'optimizeTree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
-            BasePlugin.plugin(compilation, 'afterOptimizeTree', (modules) => this.afterOptimizeTree(compilation));
+        this.plugin(compiler, 'thisCompilation', (compilation, params) => {
+            this.plugin(compilation, 'afterOptimizeChunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
+            this.plugin(compilation, 'optimizeTree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
+            this.plugin(compilation, 'afterOptimizeTree', (modules) => this.afterOptimizeTree(compilation));
         });
-        BasePlugin.plugin(compiler, 'compilation', (compilation, params) => {
-            BasePlugin.plugin(compilation, 'normalModuleLoader', (loaderContext, module) => this.normalModuleLoader(loaderContext, module));
+        this.plugin(compiler, 'compilation', (compilation, params) => {
+            this.plugin(compilation, 'normalModuleLoader', (loaderContext, module) => this.normalModuleLoader(loaderContext, module));
         });
-        BasePlugin.apply(compiler);
+        super.apply(compiler);
     }
     environmentCallback(compiler, entryCallBack) {
         const entry = compiler.options.entry;
@@ -104,10 +98,8 @@ class IconFontPlugin {
     }
     afterOptimizeChunks(chunks, compilation) {
         this.pickFileList();
-        BasePlugin.data = this.getFontData(this.fontCodePoints);
-    }
-    optimizeExtractedChunks() {
-        BasePlugin.data = this.getFontData(this.fontCodePoints);
+        this.data = this.getFontData(this.fontCodePoints);
+        this.strData = this.getFontDataStr(this.fontCodePoints);
     }
     optimizeTree(compilation, chunks, modules, callback) {
         // If loader doesn't collect icons, then don't generate fonts.
@@ -128,7 +120,6 @@ class IconFontPlugin {
         const types = this.options.types;
         const fontOptions = this.options.fontOptions;
         const startCodepoint = this.options.startCodepoint;
-        const filename = this.options.filename;
         webfontsGenerator(Object.assign({
             files,
             types,
@@ -147,18 +138,11 @@ class IconFontPlugin {
             } else {
                 types.forEach((type) => {
                     // const hash = utils.md5Create(result[type]);
-                    const fileName = utils.createFileName(filename, {
+                    const fileName = this.getFileName({
                         name: fontName, fontName, ext: type, content: result.svg,
                     });
                     const filePath = path.join(this.options.output, fileName);
-                    const urlPath = this.options.auto ? this.options.output : '';
-                    let url = '/';
-                    if (this.options.publicPath)
-                        url = utils.urlResolve(this.options.publicPath, fileName);
-                    else
-                        url = utils.urlResolve(compilation.options.output.publicPath || '', path.join(urlPath, fileName));
-                    if (path.sep === '\\')
-                        url = url.replace(/\\/g, '/');
+                    const url = this.getFilePath(fileName, compilation);
                     font[type] = {
                         url,
                         // hash,
@@ -230,7 +214,7 @@ class IconFontPlugin {
         const data = {};
         for (const name of Object.keys(fontCodePoints)) {
             const code = '\\F' + fontCodePoints[name];
-            data[name] = code;
+            data[name] = `"${code}"`;
         }
         return data;
     }
