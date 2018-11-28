@@ -1,7 +1,5 @@
 const IconFontPlugin = require('../../../index').Plugin;
-const webpack = require('webpack');
-const path = require('path');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 module.exports = {
     entry: {
         bundle: './index.js',
@@ -9,18 +7,17 @@ module.exports = {
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
-        publicPath: '/',
+        publicPath: 'dest/',
     },
     // mode: 'development',
     module: {
-        rules: [
-        {
+        rules: [{
             test: /\.js$/,
             use: [
                 'babel-loader',
             ],
             // exclude: path.resolve('../../../src'),
-        },{
+        }, {
             test: /\.css$/,
             use: [
                 'style-loader',
@@ -29,7 +26,5 @@ module.exports = {
             ],
         }],
     },
-    plugins: [new IconFontPlugin({
-        publicPath: '/',
-    })],
+    plugins: [new IconFontPlugin()],
 };

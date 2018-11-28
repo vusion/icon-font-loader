@@ -1,5 +1,4 @@
 const IconFontPlugin = require('../../../index').Plugin;
-const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -9,7 +8,7 @@ module.exports = {
     output: {
         path: __dirname + '/dest',
         filename: '[name].[hash].js',
-        publicPath: '/',
+        publicPath: 'dest/',
     },
     module: {
         rules: [{
@@ -20,7 +19,8 @@ module.exports = {
             }),
         }],
     },
-    plugins: [new IconFontPlugin({
-        publicPath: './dest',
-    }), new ExtractTextPlugin('index.css')],
+    plugins: [
+        new IconFontPlugin(),
+        new ExtractTextPlugin('index.css'),
+    ],
 };

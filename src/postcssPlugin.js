@@ -6,76 +6,61 @@ const handlebars = require('handlebars');
 
 module.exports = postcss.plugin('parse-icon-font', ({ loaderContext }) => (styles, result) => {
     const promises = [];
-    const plugin = loaderContext.iconFontPlugin;
-    const files = plugin.files;
-    const md5s = plugin.md5s;
-    const startCodepoint = plugin.options.startCodepoint;
+    const plugin = loaderContext.relevantPlugin;
+    const data = plugin.data;
     const property = plugin.options.property;
-    const reg = new RegExp(`url\\(["']?(.*?)["']?\\)`, 'g');
+    const reg = /url\(["']?(.*?)["']?\)/;
+
     styles.walkDecls(property, (declaration) => {
-        const result = reg.exec(declaration.value);
-        const url = result[1];
-        if (path.extname(url) !== '.svg') {
-            throw new Error(`Do not accept images in png format as the source image of the font icon, please replace ${url} with svg image `);
-        }
+        const cap = reg.exec(declaration.value);
+        const url = cap[1];
+
+        if (path.extname(url) !== '.svg')
+            throw new Error(`Format of image '${url}' is not accepted. Please use a svg image.`);
+
         promises.push(new Promise((resolve, reject) => {
             // This path must be resolved by webpack.
             loaderContext.resolve(loaderContext.context, url, (err, result) => err ? reject(err) : resolve(result));
-        }).then((file) => {
-            loaderContext.addDependency(file);
-            const result = {
+        }).then((filePath) => {
+            loaderContext.addDependency(filePath);
+            const file = {
                 url,
-                add: false,
-                file,
+                filePath,
+                md5: undefined,
             };
-            const filesContent = fs.readFileSync(file);
-            const md5Code = 'H' + utils.md5Create(filesContent);
-            const index = md5s.indexOf(md5Code);
-            result.md5Code = md5Code;
-            result.declaration = declaration;
-            result.rule = declaration.parent;
-            if (index < 0)
-                result.add = true;
-            else
-                result.file = files[index].file;
-            return result;
+
+            // Using file content hash instead of absolute file path can prevent cache buster changed.
+            const fileContent = fs.readFileSync(filePath);
+            file.md5 = 'H' + utils.genMD5(fileContent);
+            if (!data[file.md5])
+                data[file.md5] = file;
+
+            declaration.prop = 'content';
+            declaration.value = `ICON_FONT_LOADER_IMAGE(${file.md5})`;
+            const rule = declaration.parent;
+            rule.hasIconFont = true;
+
+            return file;
         }));
-        reg.lastIndex = 0;
     });
-    if (promises.length > 0)
+
+    if (promises.length) {
         plugin.shouldGenerate = true;
+        loaderContext._module.isIconFontModule = true;
+    }
+
     const template = handlebars.compile(plugin.options.localCSSTemplate);
-    return Promise.all(promises).then((results) => {
-        if (results.length > 0)
-            loaderContext._module.IconFontSVGModule = true;
-        results.forEach((item) => {
-            const url = item.url;
-            const add = item.add;
-            const file = item.file;
-            const md5Code = item.md5Code;
-            const declaration = item.declaration;
-            const rule = item.rule;
-            if (add) {
-                files.push({ url, file, md5Code });
-                md5s.push(md5Code);
-            }
-            rule.removeChild(declaration);
-            rule.isFontCssselector = true;
-            rule.append(`\n\tcontent: ICON_FONT_LOADER_IMAGE(${md5Code});`);
-        });
-        const iconFontCssNames = [];
+    return Promise.all(promises).then(() => {
+        const fontSelectors = [];
         styles.walkRules((rule) => {
-            if (rule && rule.isFontCssselector && iconFontCssNames.indexOf(rule.selector) === -1)
-                iconFontCssNames.push(rule.selector);
+            if (rule && rule.hasIconFont && !fontSelectors.includes(rule.selector))
+                fontSelectors.push(rule.selector);
         });
-        if (iconFontCssNames.length > 0) {
-            let cssAdd = template({
-                fontName: plugin.options.fontName,
-                content: '\\' + startCodepoint.toString(16),
-            });
-            const iconFontCssNamesStr = iconFontCssNames.join(',');
-            cssAdd = `${iconFontCssNamesStr}{\n${cssAdd}\n}\n`;
-            styles.insertBefore(styles.first, cssAdd);
+
+        if (fontSelectors.length) {
+            let localCSS = template({ fontName: plugin.options.fontName });
+            localCSS = `${fontSelectors.join(',')} {${localCSS}\n}`;
+            styles.insertBefore(styles.first, localCSS);
         }
     });
 });
