@@ -26,10 +26,11 @@ class IconFontPlugin extends BasePlugin {
             dataURL: false,
             mergeDuplicates: false,
             startCodepoint: 0xF101,
-            fontOptions: {
-                fontHeight: 1000,
-            },
         }, options);
+
+        this.options.fontOptions = Object.assign({
+            fontHeight: 1000,
+        }, options.fontOptions);
 
         this.message = {};
         this.iconFontStylePath = '';
