@@ -176,13 +176,6 @@ It's recommanded if there are not many icons because font files need extra reque
 - Type: `boolean`
 - Default: `false`
 
-#### mergeDuplicates
-
-Whether to merge duplicated icons in font file. If true, it will shrink font file after built, but this makes compilation slower. Recommand that you enable this option in production mode.
-
-- Type: `boolean`
-- Default: `false`
-
 #### startCodepoint
 
 - Type: `number`

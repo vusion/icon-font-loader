@@ -162,13 +162,6 @@ CSS 的自定义属性名
 - Type: `boolean`
 - Default: `false`
 
-#### mergeDuplicates
-
-如果有相同的 svg 文件而它们的文件名或路径不同，是否将它们合并起来。开启后，可以减少生成的字体文件大小，但会增加一定的编译时间，建议在发布阶段开启。
-
-- Type: `boolean`
-- Default: `false`
-
 #### startCodepoint
 
 - Type: `number`
