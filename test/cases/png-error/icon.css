@@ -1,8 +1,8 @@
 body.test .des{
-    color: salmon
+    color: salmon;
 }
-body .icon-arrow-left:before {
-    icon-font: url('../../icons/arrow-left.svg');
+body .home:before {
+    icon-font: url('../../icons/home.png');
     color: red;
 }
 

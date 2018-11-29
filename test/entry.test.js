@@ -6,7 +6,7 @@ const utils = require('../src/utils');
 const shell = require('shelljs');
 const execa = require('execa');
 
-const value = 'entry-test';
+const value = 'entries';
 const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 
 describe('Webpack Integration Tests', () => {

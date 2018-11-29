@@ -9,7 +9,9 @@ const { BasePlugin } = require('base-css-image-loader');
 
 class IconFontPlugin extends BasePlugin {
     constructor(options) {
+        options = options || {};
         super();
+
         this.NAMESPACE = 'IconFontPlugin';
         this.MODULE_MARK = 'isIconFontModule';
         this.REPLACE_REG = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;

@@ -1,6 +1,4 @@
 const IconFontPlugin = require('../../../index').Plugin;
-const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: {
@@ -8,8 +6,8 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dest',
-        filename: '[name].[hash].js',
-        publicPath: '/',
+        filename: '[name].js',
+        publicPath: 'dest/',
     },
     mode: 'development',
     module: {

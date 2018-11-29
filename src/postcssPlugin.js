@@ -16,7 +16,7 @@ module.exports = postcss.plugin('parse-icon-font', ({ loaderContext }) => (style
         const url = cap[1];
 
         if (path.extname(url) !== '.svg')
-            throw new Error(`Format of image '${url}' is not accepted. Please use a svg image.`);
+            throw new Error(`Image format of '${url}' is not accepted. Please use a svg instead.`);
 
         promises.push(new Promise((resolve, reject) => {
             // This path must be resolved by webpack.

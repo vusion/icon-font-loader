@@ -11,7 +11,7 @@ module.exports = {
         publicPath: '/nce/public/',
     },
     module: {
-        rules: [{ test: /\.css$/, use: ["style-loader", "css-loader", require.resolve('../../../index')] }],
+        rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },
     plugins: [new IconFontPlugin({
         output: 'static',

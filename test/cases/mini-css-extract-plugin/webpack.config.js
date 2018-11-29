@@ -8,29 +8,28 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dest',
-        filename: '[name].[hash].js',
-        publicPath: '/',
+        filename: '[name].js',
+        publicPath: 'dest/',
     },
     mode: 'development',
     module: {
         rules: [{
             test: /\.css$/,
-            use: [
-                {
-                    loader: MiniCssExtractPlugin.loader,
-                    options: {
-                        publicPath: '../',
-                    },
+            use: [{
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                    publicPath: '../',
                 },
-                'css-loader',
-                require.resolve('../../../index'),
-            ],
+            },
+            'css-loader',
+            require.resolve('../../../index')],
         }],
     },
-    plugins: [new IconFontPlugin({
-        publicPath: './dest',
-    }), new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
-    })],
+    plugins: [
+        new IconFontPlugin(),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: '[id].css',
+        }),
+    ],
 };
