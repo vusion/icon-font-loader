@@ -2,16 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
-const testCase = ['default', 'options', 'more-one-css', 'same-name', 'property', 'public-path', 'html-webpack-plugin'];
+const cases = ['default', 'more-css', 'same-name', 'options', 'public-path', 'property', 'font-options', 'html-webpack-plugin', 'sass-loader'];
 
 describe('Webpack Integration Tests', () => {
-    testCase.forEach((value) => {
-        it('#test webpack integration case: ' + value, (done) => {
-            const configPath = path.join('../test/cases/', value, '/webpack.config.js');
-            const outputDirectory = path.join('/cases/', value, '/dest');
+    cases.forEach((caseName) => {
+        it('#test webpack integration case: ' + caseName, (done) => {
+            const configPath = path.join('../test/cases/', caseName, '/webpack.config.js');
+            const destPath = path.join('/cases/', caseName, '/dest');
             const options = require(configPath);
             for (const chunk of Object.keys(options.entry))
-                options.entry[chunk] = path.join(__dirname, '/cases/', value, options.entry[chunk]);
+                options.entry[chunk] = path.join(__dirname, '/cases/', caseName, options.entry[chunk]);
 
             webpack(options, (err, stats) => {
                 if (err)

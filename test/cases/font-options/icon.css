@@ -1,34 +1,34 @@
 .task::before {
-    icon-font: url('../../icons/task.svg');
+    icon-font: url('../../fixtures/icons/task.svg');
     color: red;
 }
 
 .eiffel-tower::before {
-    icon-font: url('../../icons/eiffel-tower.svg');
+    icon-font: url('../../fixtures/icons/eiffel-tower.svg');
     color: blue;
 }
 
 .loading::before {
-    icon-font: url('../../icons/loading.svg');
+    icon-font: url('../../fixtures/icons/loading.svg');
     color: #aaa;
 }
 
 .slice::before {
-    icon-font: url('../../icons/slice.svg');
+    icon-font: url('../../fixtures/icons/slice.svg');
     color: green;
 }
 
 .edit::before {
-    icon-font: url('../../icons/edit.svg');
+    icon-font: url('../../fixtures/icons/edit.svg');
     color: purple;
 }
 
 .high::before {
-    icon-font: url('../../icons/high.svg');
+    icon-font: url('../../fixtures/icons/high.svg');
     color: purple;
 }
 
 .comment::before {
-    icon-font: url('../../icons/comment.svg');
+    icon-font: url('../../fixtures/icons/comment.svg');
     color: purple;
 }

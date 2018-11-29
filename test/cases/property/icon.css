@@ -1,19 +1,19 @@
 .icon-arrow-left::before {
-    test: url('../../icons/arrow-left.svg');
+    test: url('../../fixtures/icons/arrow-left.svg');
     color: red;
 }
 
 .icon-arrow-left-2::before {
-    test: url('../../icons/same-name/slice.svg');
+    test: url('../../fixtures/icons/same-name/slice.svg');
     color: red;
 }
 
 .icon-arrow-up::before {
-    test: url('../../icons/same-name/arrow-right.svg');
+    test: url('../../fixtures/icons/same-name/arrow-right.svg');
     color: green;
 }
 
 .icon-arrow-up-1::before {
-    test: url('../../icons/same-name/arrow-right.svg');
+    test: url('../../fixtures/icons/same-name/arrow-right.svg');
     color: green;
 }

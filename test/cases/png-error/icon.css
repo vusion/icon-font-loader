@@ -2,22 +2,22 @@ body.test .des{
     color: salmon;
 }
 body .home:before {
-    icon-font: url('../../icons/home.png');
+    icon-font: url('../../fixtures/icons/home.png');
     color: red;
 }
 
 body span.icon-arrow-slice:before {
     font-size:20px;
     color: blue;
-    icon-font: url('../../icons/same-name/slice.svg');
+    icon-font: url('../../fixtures/icons/same-name/slice.svg');
 }
 
 .icon-arrow-up:before {
-    icon-font: url('../../icons/same-name/arrow-left.svg');
+    icon-font: url('../../fixtures/icons/same-name/arrow-left.svg');
     color: green;
 }
 
 .icon-arrow-up-1:before {
-    icon-font: url('../../icons/same-name/arrow-right.svg');
+    icon-font: url('../../fixtures/icons/same-name/arrow-right.svg');
     color: green;
 }

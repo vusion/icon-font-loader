@@ -8,7 +8,7 @@ const execa = require('execa');
 
 const value = 'public-path';
 
-describe('Webpack Integration Tests', () => {
+describe('Webpack Integration Tests: public-path', () => {
     const buildCLI = path.resolve(__dirname, '../node_modules/.bin/webpack');
     const runDir = path.join('../test/cases/' + value);
     const outputDirectory = path.join('./cases/' + value + '/dest');
@@ -19,7 +19,7 @@ describe('Webpack Integration Tests', () => {
         shell.rm('-rf', path.resolve(__dirname, outputDirectory));
     });
 
-    it('#test webpack public-path with string: ' + value, (done) => {
+    it('#test webpack public-path with string' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.js']).then((res) => {
             const resultReg = /http:\/\/cdn.163.com\/cdn\/static\/icon-font.ttf/g;
             const cssContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/bundle.js')).toString();

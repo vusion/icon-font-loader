@@ -1,9 +1,9 @@
 .low::before {
-    icon-font: url('../../icons/low.svg');
+    icon-font: url('../../fixtures/icons/low.svg');
     color: purple;
 }
 
 .normal::before {
-    icon-font: url('../../icons/normal.svg');
+    icon-font: url('../../fixtures/icons/normal.svg');
     color: purple;
 }
