@@ -44,7 +44,7 @@ class IconFontPlugin extends BasePlugin {
 
         this.plugin(compiler, 'environment', () => {
             if (this.options.auto)
-                compiler.options.entry = utils.prependEntry(addStylePath, compiler.options.entry);
+                this.RUNTIME_MODULES = [addStylePath];
         });
         this.plugin(compiler, 'watchRun', (compiler, callback) => {
             this.watching = true;
