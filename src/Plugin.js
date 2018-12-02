@@ -81,6 +81,8 @@ class IconFontPlugin extends BasePlugin {
         try {
             files = Object.keys(this.data).map((key) => this.data[key].filePath);
             files = this.handleSameName(files);
+            if (!this.watching)
+                files = files.sort();
         } catch (e) {
             return callback(e);
         }
