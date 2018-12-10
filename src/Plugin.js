@@ -44,7 +44,7 @@ class IconFontPlugin extends BasePlugin {
 
         this.plugin(compiler, 'environment', () => {
             if (this.options.auto)
-                this.RUNTIME_MODULES = [addStylePath];
+                this.RUNTIME_MODULES.push(addStylePath);
         });
         this.plugin(compiler, 'watchRun', (compiler, callback) => {
             this.watching = true;
@@ -60,11 +60,10 @@ class IconFontPlugin extends BasePlugin {
     afterOptimizeChunks(chunks, compilation) {
         const startCodepoint = this.options.startCodepoint;
 
-        // when watching, webpack module may be cached, so file list should be kept same as before.
-        // if (!this.watching)
-        //     this.fileSet.sort();
-        const hashs = !this.watching ? Object.keys(this.data).sort() : Object.keys(this.data);
-        hashs.forEach((key, index) => {
+        // When watching, webpack module may be cached, so file list should be kept same as before.
+        const keys = Object.keys(this.data);
+        this.watching && keys.sort();
+        keys.forEach((key, index) => {
             const file = this.data[key];
             const codepoint = (startCodepoint + index).toString(16).slice(1);
             file.codepoint = codepoint;
@@ -79,10 +78,9 @@ class IconFontPlugin extends BasePlugin {
 
         let files;
         try {
-            if (!this.watching)
-                files = Object.keys(this.data).sort().map((key) => this.data[key].filePath);
-            else
-                files = Object.keys(this.data).map((key) => this.data[key].filePath);
+            const keys = Object.keys(this.data);
+            this.watching && keys.sort();
+            files = keys.map((key) => this.data[key].filePath);
             files = this.handleSameName(files);
         } catch (e) {
             return callback(e);
