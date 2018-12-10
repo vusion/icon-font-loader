@@ -20,7 +20,7 @@ describe('Webpack Integration Tests: babel-loader', () => {
             if (stats.hasErrors())
                 return done(new Error(stats.toString()));
             const cssContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/bundle.js')).toString();
-            expect(replaceReg.test(cssContent)).to.eql(false);
+            expect(replaceReg.test(cssContent)).to.be.false;
             done();
         });
     });

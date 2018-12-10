@@ -22,9 +22,9 @@ describe('Webpack Integration Tests: mini-css-extract-plugin', () => {
                 return done(new Error(stats.toString()));
             const fileContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/icon-font.svg'));
             const md5Code = utils.genMD5(fileContent);
-            expect(md5Code).to.eql('dc5320dfffa8c2605ff228bf3e507947');
+            expect(md5Code).to.equal('0206f1ee61b7579cf25b4d7485dfbf40');
             const cssContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/bundle.css')).toString();
-            expect(replaceReg.test(cssContent)).to.eql(false);
+            expect(replaceReg.test(cssContent)).to.be.false;
             done();
         });
     });

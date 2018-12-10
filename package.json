@@ -44,7 +44,6 @@
     "@vusion/webfonts-generator": "^0.5.2",
     "base-css-image-loader": "^0.1.4",
     "handlebars": "^4.0.10",
-    "loader-utils": "^1.1.0",
     "postcss": "^6.0.16"
   },
   "devDependencies": {

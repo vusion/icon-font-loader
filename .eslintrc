@@ -4,5 +4,8 @@
         "commonjs": true,
         "node": true,
         "mocha": true
+    },
+    "rules": {
+        "no-unused-expressions": [0]
     }
 }

@@ -22,9 +22,9 @@ describe('Webpack Integration Tests: extract-text-webpack-plugin', () => {
                 return done(new Error(stats.toString()));
             const fileContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/icon-font.svg'));
             const md5Code = utils.genMD5(fileContent);
-            expect(md5Code).to.eql('2e9ae90a321bf51c9d358c178af4dea7');
+            expect(md5Code).to.equal('2e9ae90a321bf51c9d358c178af4dea7');
             const cssContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/index.css')).toString();
-            expect(replaceReg.test(cssContent)).to.eql(false);
+            expect(replaceReg.test(cssContent)).to.be.false;
             done();
         });
     });
