@@ -3,7 +3,7 @@
 const postcssPlugin = require('./postcssPlugin');
 const { createLoader } = require('base-css-image-loader');
 
-const iconFontLoader = createLoader([postcssPlugin]);
-iconFontLoader.Plugin = require('./Plugin');
+const loader = createLoader([postcssPlugin]);
+loader.Plugin = require('./Plugin');
 
-module.exports = iconFontLoader;
+module.exports = loader;

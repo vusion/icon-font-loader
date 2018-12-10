@@ -4,7 +4,7 @@ const fs = require('fs');
 const utils = require('./utils');
 const handlebars = require('handlebars');
 
-module.exports = postcss.plugin('parse-icon-font', ({ loaderContext }) => (styles, result) => {
+module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styles, result) => {
     const promises = [];
     const plugin = loaderContext.relevantPlugin;
     const data = plugin.data;
