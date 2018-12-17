@@ -62,7 +62,7 @@ class IconFontPlugin extends BasePlugin {
 
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
-        this.watching && keys.sort();
+        !this.watching && keys.sort();
         keys.forEach((key, index) => {
             const file = this.data[key];
             const codepoint = (startCodepoint + index).toString(16).slice(1);
@@ -79,7 +79,7 @@ class IconFontPlugin extends BasePlugin {
         let files;
         try {
             const keys = Object.keys(this.data);
-            this.watching && keys.sort();
+            !this.watching && keys.sort();
             files = keys.map((key) => this.data[key].filePath);
             files = this.handleSameName(files);
         } catch (e) {
