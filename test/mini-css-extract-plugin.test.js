@@ -5,7 +5,7 @@ const expect = require('chai').expect;
 const utils = require('../src/utils');
 
 const value = 'mini-css-extract-plugin';
-const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
+const replaceReg = /ICON_FONT_LOADER_IMAGE\('([^'")]*)'\)/g;
 
 describe('Webpack Integration Tests: mini-css-extract-plugin', () => {
     const configPath = path.join('../test/cases/' + value + '/webpack.config.js');

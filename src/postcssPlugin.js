@@ -24,19 +24,19 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
         }).then((filePath) => {
             loaderContext.addDependency(filePath);
             const file = {
-                url,
+                id: undefined,
                 filePath,
-                md5: undefined,
+                url,
             };
 
             // Using file content hash instead of absolute file path can prevent cache buster changed.
             const fileContent = fs.readFileSync(filePath);
-            file.md5 = 'H' + utils.genMD5(fileContent);
-            if (!data[file.md5])
-                data[file.md5] = file;
+            file.id = 'ID' + utils.genMD5(fileContent);
+            if (!data[file.id])
+                data[file.id] = file;
 
             declaration.prop = 'content';
-            declaration.value = `ICON_FONT_LOADER_IMAGE(${file.md5})`;
+            declaration.value = `ICON_FONT_LOADER_IMAGE('${file.id}')`;
             const rule = declaration.parent;
             rule.hasIconFont = true;
 
@@ -51,6 +51,14 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
 
     const template = handlebars.compile(plugin.options.localCSSTemplate);
     return Promise.all(promises).then(() => {
+        /**
+         * Merge selectors
+         * .font1, .font2, .font3 {
+         *     font-family: ...;
+         *     font-style: normal;
+         *     ...
+         * }
+         */
         const fontSelectors = [];
         styles.walkRules((rule) => {
             if (rule && rule.hasIconFont && !fontSelectors.includes(rule.selector))

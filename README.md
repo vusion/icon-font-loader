@@ -67,7 +67,7 @@ Well, if `dataURL` option enabled, the result is:
 
 Our loader works in a way different to others:
 
-- css only. You can override existing style like this:
+- CSS only. You can override existing style like this:
     ```
     .select:after {
         icon-font: url('../icons/arrow-down.svg');
@@ -78,7 +78,7 @@ Our loader works in a way different to others:
         icon-font: url('../icons/arrow-up.svg');
     }
     ```
-- pseudo elements(`before` or `after`) only. We treat these icon fonts as some certain characters under one font-family by using their property `content`.
+- Pseudo elements(`before` or `after`) only. We treat these icon fonts as some certain characters under one font-family by using their property `content`.
 - Merge duplicated svgs. We will merge those same svgs into only one to keep slim even they lie in different places in your project.
 
 ## Install
@@ -129,8 +129,9 @@ Output filename format like output.filename of Webpack. The following tokens wil
     - other `digestType`s, i. e. `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
     - and `length` the length in chars
 
+
 - Type: `string`
-- Default: `'[fontName].[ext]?[hash]'`
+- Default: `'[name].[ext]?[hash]'`
 
 #### output
 
@@ -155,7 +156,7 @@ Template of virtual property transformed local CSS. It accepts template content 
 
 #### property
 
-Custom CSS property name
+Custom CSS property name.
 
 - Type: `string`
 - Default: `'icon-font'`
@@ -178,18 +179,18 @@ It's recommanded if there are not many icons because font files need extra reque
 
 #### startCodepoint
 
+Starting codepoint. Defaults to beginning of unicode private area.
+
 - Type: `number`
 - Default: `0xF101`
 
-Starting codepoint. Defaults to beginning of unicode private area.
-
 #### fontOptions
-
-- Type: `Object`
-- Default: `{}`
 
 Options that are passed directly to
 [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
+
+- Type: `Object`
+- Default: `{}`
 
 ## Changelog
 

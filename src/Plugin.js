@@ -14,7 +14,7 @@ class IconFontPlugin extends BasePlugin {
 
         this.NAMESPACE = 'IconFontPlugin';
         this.MODULE_MARK = 'isIconFontModule';
-        this.REPLACE_REG = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
+        this.REPLACE_REG = /ICON_FONT_LOADER_IMAGE\('([^'")]*)'\)/g;
 
         this.options = Object.assign(this.options, {
             // @inherit: output: './',
@@ -36,7 +36,7 @@ class IconFontPlugin extends BasePlugin {
 
         this.message = {};
         this.iconFontStylePath = '';
-        this.data = {};
+        this.data = {}; // { [id]: { id, filePath, url } }
     }
     apply(compiler) {
         const addStylePath = path.resolve(__dirname, './addStyle.js');
@@ -62,7 +62,7 @@ class IconFontPlugin extends BasePlugin {
 
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
-        !this.watching && keys.sort();
+        !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
         keys.forEach((key, index) => {
             const file = this.data[key];
             const codepoint = (startCodepoint + index).toString(16).slice(1);
@@ -79,7 +79,7 @@ class IconFontPlugin extends BasePlugin {
         let files;
         try {
             const keys = Object.keys(this.data);
-            !this.watching && keys.sort();
+            !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
             files = keys.map((key) => this.data[key].filePath);
             files = this.handleSameName(files);
         } catch (e) {
