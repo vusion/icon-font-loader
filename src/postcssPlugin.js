@@ -36,7 +36,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
                 data[file.id] = file;
 
             declaration.prop = 'content';
-            declaration.value = `ICON_FONT_LOADER_IMAGE('${file.id}')`;
+            declaration.value = `ICON_FONT_LOADER_IMAGE(${file.id})`;
             const rule = declaration.parent;
             rule.hasIconFont = true;
 

@@ -14,7 +14,7 @@ class IconFontPlugin extends BasePlugin {
 
         this.NAMESPACE = 'IconFontPlugin';
         this.MODULE_MARK = 'isIconFontModule';
-        this.REPLACE_REG = /ICON_FONT_LOADER_IMAGE\('([^'")]*)'\)/g;
+        this.REPLACE_REG = /ICON_FONT_LOADER_IMAGE\(([^'")]*)\)/g;
 
         this.options = Object.assign(this.options, {
             // @inherit: output: './',

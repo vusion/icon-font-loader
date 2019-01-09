@@ -1,4 +1,4 @@
-import iconFontStyle from './iconFontStyle.js';
+var iconFontStyle = require('./iconFontStyle.js');
 var styleId = 'ICON-FONT-FILE-STYLE';
 
 function createStyleContent(fontConfig) {
@@ -33,8 +33,8 @@ addStyle();
 //     window.HAS_CREATE_FONT_STYLE = true;
 // }
 if (module.hot) {
-    module.hot.accept("./iconFontStyle.js", function() {
-        var newContent = require("./iconFontStyle.js");
+    module.hot.accept('./iconFontStyle.js', function() {
+        var newContent = require('./iconFontStyle.js');
         updateStyle(newContent.ICON_FONT_STYLE);
     });
 }
