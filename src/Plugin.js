@@ -6,15 +6,13 @@ const webfontsGenerator = require('@vusion/webfonts-generator');
 const utils = require('./utils');
 const getAllModules = require('base-css-image-loader/src/getAllModules');
 const { BasePlugin } = require('base-css-image-loader');
+const meta = require('./meta');
 
 class IconFontPlugin extends BasePlugin {
     constructor(options) {
         options = options || {};
         super();
-
-        this.NAMESPACE = 'IconFontPlugin';
-        this.MODULE_MARK = 'isIconFontModule';
-        this.REPLACE_REG = /ICON_FONT_LOADER_IMAGE\(([^'")]*)\)/g;
+        Object.assign(this, meta);
 
         this.options = Object.assign(this.options, {
             // @inherit: output: './',
