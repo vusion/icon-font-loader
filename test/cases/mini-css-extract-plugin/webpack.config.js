@@ -9,9 +9,10 @@ module.exports = {
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
-        publicPath: 'dest/',
+        publicPath: '/dest',
     },
     mode: 'development',
+    devtool: 'source-map',
     module: {
         rules: [{
             test: /\.css$/,

@@ -5,6 +5,7 @@ module.exports = {
         bundle: './index.js',
     },
     devtool: 'eval',
+    mode: 'development',
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
@@ -13,7 +14,7 @@ module.exports = {
     // mode: 'development',
     module: {
         rules: [{
-            test: /\.scss$/,
+            test: /\.css$/,
             use: [{
                 loader: require.resolve('style-loader'),
                 options: {
@@ -24,13 +25,26 @@ module.exports = {
                 options: {
                     sourceMap: true,
                 }
-            },
-            require.resolve('../../../index'),
-            {
-                loader: require.resolve('sass-loader'),
-                options: {
-                    sourceMap: true,
-                }
+            },]
+            }, {
+                test: /\.scss$/,
+                use: [{
+                    loader: require.resolve('style-loader'),
+                    options: {
+                        sourceMap: true,
+                    },
+                }, {
+                    loader: require.resolve('css-loader'),
+                    options: {
+                        sourceMap: true,
+                    }
+                },
+                require.resolve('../../../index'),
+                {
+                    loader: require.resolve('sass-loader'),
+                    options: {
+                        sourceMap: true,
+                    }
             }],
         }],
     },
