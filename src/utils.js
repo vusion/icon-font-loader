@@ -6,7 +6,7 @@ utils.createFontFace = function createFontFace(font, dataURL) {
     let output = [];
     if (dataURL) {
         const base64 = font.woff;
-        output = `url('data:application/x-font-woff;base64,${base64}') format('woff')`;
+        output = [`url('data:application/x-font-woff;base64,${base64}') format('woff')`];
     } else {
         Object.keys(font).forEach((type) => {
             const url = font[type].url;
@@ -19,12 +19,16 @@ utils.createFontFace = function createFontFace(font, dataURL) {
             else if (type === 'svg')
                 output.push(`url('${url}#${font.name}') format('svg')`);
         });
-        output = output.join(',\n    ');
     }
-    return `@font-face {
-    font-family: '${font.name}';
-    src: ${output};
-}`;
+    // output = output;
+    return {
+        fontName: font.name,
+        srcContent: output,
+        cssContent: `@font-face {
+            font-family: '${font.name}';
+            src: ${output.join(',\n    ')};
+        }`,
+    };
 };
 
 module.exports = utils;
