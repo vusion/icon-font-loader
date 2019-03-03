@@ -6,15 +6,14 @@ const webfontsGenerator = require('@vusion/webfonts-generator');
 const utils = require('./utils');
 const getAllModules = require('base-css-image-loader/src/getAllModules');
 const { BasePlugin } = require('base-css-image-loader');
+const meta = require('./meta.js');
 
 class IconFontPlugin extends BasePlugin {
     constructor(options) {
         options = options || {};
         super();
 
-        this.NAMESPACE = 'IconFontPlugin';
-        this.MODULE_MARK = 'isIconFontModule';
-        this.REPLACE_REG = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
+        Object.assign(this, meta);
 
         this.options = Object.assign(this.options, {
             // @inherit: output: './',
@@ -34,14 +33,13 @@ class IconFontPlugin extends BasePlugin {
             fontHeight: 1000,
         }, options.fontOptions);
 
-        this.message = {};
+        // this.message = {};
         this.iconFontStylePath = '';
         this.data = {};
     }
     apply(compiler) {
-        const addStylePath = path.resolve(__dirname, './addStyle.js');
-        this.iconFontStylePath = path.resolve(__dirname, './iconFontStyle.js');
-
+        const addStylePath = path.resolve(__dirname, './fontface.css');
+        this.iconFontStylePath = addStylePath;
         this.plugin(compiler, 'environment', () => {
             if (this.options.auto)
                 this.RUNTIME_MODULES.push(addStylePath);
@@ -53,7 +51,11 @@ class IconFontPlugin extends BasePlugin {
         this.plugin(compiler, 'thisCompilation', (compilation, params) => {
             this.plugin(compilation, 'afterOptimizeChunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
             this.plugin(compilation, 'optimizeTree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
-            this.plugin(compilation, 'afterOptimizeTree', (modules) => this.afterOptimizeTree(compilation));
+            this.plugin(compilation, 'afterOptimizeTree', (chunks, modules) => this.replaceInModules(chunks, compilation));
+            this.plugin(compilation, 'optimizeChunkAssets', (chunks, callback) => {
+                this.replaceInCSSAssets(chunks, compilation);
+                callback();
+            });
         });
         super.apply(compiler);
     }
@@ -127,30 +129,30 @@ class IconFontPlugin extends BasePlugin {
             if (!this.options.auto) {
                 // If auto is false, then emit a css file
                 assets[path.join(this.options.output, `${fontName}.css`)] = {
-                    source: () => styleContent,
-                    size: () => styleContent.length,
+                    source: () => styleContent.cssContent,
+                    size: () => styleContent.cssContent.length,
                 };
             }
 
             // Record message
-            this.message.fontName = fontName;
-            this.message.styleContent = styleContent;
+            this.changeReplaceForAfterOptimizeTree(styleContent);
             this.shouldGenerate = false;
             callback();
         });
     }
-    afterOptimizeTree(compilation) {
-        const allModules = getAllModules(compilation);
-        allModules.filter((module) => module.userRequest === this.iconFontStylePath).forEach((module) => {
-            const source = module._source;
-            const result = `module.exports = {
-    ICON_FONT_STYLE: ${JSON.stringify(this.message)},
-}`;
-            if (typeof source === 'string')
-                module._source = result;
-            else if (typeof source === 'object' && typeof source._value === 'string')
-                source._value = result;
-        });
+    changeReplaceForAfterOptimizeTree(styleContent) {
+        this.data = {
+            fontName: {
+                content: styleContent.fontName,
+                escapedContent: styleContent.fontName,
+            },
+            srcContent: {
+                content: styleContent.srcContent.join(',\n    '),
+                escapedContent: styleContent.srcContent.join(',\\n    '),
+            },
+        };
+        this.REPLACER_RE = /ICON_FONT_LOADER_FONTFACE\(([^)]*)\)/g;
+        this.MODULE_MARK = 'isFontFaceModule';
     }
     handleSameName(files) {
         const names = {};

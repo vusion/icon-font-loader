@@ -3,14 +3,18 @@ const path = require('path');
 const fs = require('fs');
 const utils = require('./utils');
 const handlebars = require('handlebars');
+const meta = require('./meta.js');
 
 module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styles, result) => {
     const promises = [];
-    const plugin = loaderContext.relevantPlugin;
+    const plugin = loaderContext[meta.PLUGIN_NAME];
     const data = plugin.data;
     const property = plugin.options.property;
     const reg = /url\(["']?(.*?)["']?\)/;
-
+    if (plugin.iconFontStylePath === loaderContext.resourcePath) {
+        loaderContext._module.isFontFaceModule = true;
+        return Promise.resolve();
+    }
     styles.walkDecls(property, (declaration) => {
         const cap = reg.exec(declaration.value);
         const url = cap[1];
