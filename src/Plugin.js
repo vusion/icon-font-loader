@@ -60,8 +60,8 @@ class IconFontPlugin extends BasePlugin {
         super.apply(compiler);
     }
     afterOptimizeChunks(chunks, compilation) {
+        Object.assign(this, meta);
         const startCodepoint = this.options.startCodepoint;
-
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
         !this.watching && keys.sort();
@@ -141,15 +141,13 @@ class IconFontPlugin extends BasePlugin {
         });
     }
     changeReplaceForAfterOptimizeTree(styleContent) {
-        this.data = {
-            fontName: {
-                content: styleContent.fontName,
-                escapedContent: styleContent.fontName,
-            },
-            srcContent: {
-                content: styleContent.srcContent.join(',\n    '),
-                escapedContent: styleContent.srcContent.join(',\\n    '),
-            },
+        this.data.fontName = {
+            content: styleContent.fontName,
+            escapedContent: styleContent.fontName,
+        };
+        this.data.srcContent = {
+            content: styleContent.srcContent.join(',\n    '),
+            escapedContent: styleContent.srcContent.join(',\\n    '),
         };
         this.REPLACER_RE = /ICON_FONT_LOADER_FONTFACE\(([^)]*)\)/g;
         this.MODULE_MARK = 'isFontFaceModule';
