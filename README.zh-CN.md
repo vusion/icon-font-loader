@@ -149,7 +149,7 @@ CSS 的自定义属性名
 
 #### auto
 
-是否在`<head>`中自动插入有`@font-face`的`<style>`标签，或生成一个含`@font-face`的 CSS 文件。
+是否在chunk中自动插入@font-face css 片段。如果不希望每一chunk都插入这段css，那么设置这个参数未false，我们将会生成额外的css文件供手动插入。
 
 - Type: `boolean`
 - Default: `true`
