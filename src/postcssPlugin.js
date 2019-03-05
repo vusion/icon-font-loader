@@ -11,10 +11,12 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
     const data = plugin.data;
     const property = plugin.options.property;
     const reg = /url\(["']?(.*?)["']?\)/;
-    if (plugin.iconFontStylePath === loaderContext.resourcePath) {
+
+    if (plugin.fontFacePath === loaderContext.resourcePath) {
         loaderContext._module.isFontFaceModule = true;
         return Promise.resolve();
     }
+
     styles.walkDecls(property, (declaration) => {
         const cap = reg.exec(declaration.value);
         const url = cap[1];
