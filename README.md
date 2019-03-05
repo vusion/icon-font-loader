@@ -163,7 +163,7 @@ Custom CSS property name.
 
 #### auto
 
-Whether to insert `@font-face` into the `<head>` with a `<style>` tag automatically or emit a css file.
+Whether to automatically insert @font-face into the chunk. If you don't need to insert a @font-face for every chunk,you can set this value to false to produce a separate css file.
 
 - Type: `boolean`
 - Default: `true`
