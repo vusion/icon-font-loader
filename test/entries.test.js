@@ -7,7 +7,6 @@ const shell = require('shelljs');
 const execa = require('execa');
 
 const value = 'entries';
-const replaceReg = /ICON_FONT_LOADER_IMAGE\(([^)]*)\)/g;
 
 describe('Webpack Integration Tests: entries', () => {
     const buildCLI = path.resolve(__dirname, '../node_modules/.bin/webpack');

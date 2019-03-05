@@ -115,8 +115,9 @@ module.exports = {
     - `digestType` 数字进制：`hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
     - `length` 字符长度
 
+
 - Type: `string`
-- Default: `'[fontName].[ext]?[hash]'`
+- Default: `'[name].[ext]?[hash]'`
 
 #### output
 

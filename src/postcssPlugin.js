@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const utils = require('./utils');
 const handlebars = require('handlebars');
-const meta = require('./meta.js');
+const meta = require('./meta');
 
 module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styles, result) => {
     const promises = [];
@@ -28,19 +28,19 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
         }).then((filePath) => {
             loaderContext.addDependency(filePath);
             const file = {
-                url,
+                id: undefined,
                 filePath,
-                md5: undefined,
+                url,
             };
 
             // Using file content hash instead of absolute file path can prevent cache buster changed.
             const fileContent = fs.readFileSync(filePath);
-            file.md5 = 'H' + utils.genMD5(fileContent);
-            if (!data[file.md5])
-                data[file.md5] = file;
+            file.id = 'ID' + utils.genMD5(fileContent);
+            if (!data[file.id])
+                data[file.id] = file;
 
             declaration.prop = 'content';
-            declaration.value = `ICON_FONT_LOADER_IMAGE(${file.md5})`;
+            declaration.value = `${meta.REPLACER_NAME}(${file.id})`;
             const rule = declaration.parent;
             rule.hasIconFont = true;
 
@@ -50,11 +50,19 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
 
     if (promises.length) {
         plugin.shouldGenerate = true;
-        loaderContext._module.isIconFontModule = true;
+        loaderContext._module[meta.MODULE_MARK] = true;
     }
 
     const template = handlebars.compile(plugin.options.localCSSTemplate);
     return Promise.all(promises).then(() => {
+        /**
+         * Merge selectors
+         * .font1, .font2, .font3 {
+         *     font-family: ...;
+         *     font-style: normal;
+         *     ...
+         * }
+         */
         const fontSelectors = [];
         styles.walkRules((rule) => {
             if (rule && rule.hasIconFont && !fontSelectors.includes(rule.selector))

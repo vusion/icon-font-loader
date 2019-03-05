@@ -4,15 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const webfontsGenerator = require('@vusion/webfonts-generator');
 const utils = require('./utils');
-const getAllModules = require('base-css-image-loader/src/getAllModules');
 const { BasePlugin } = require('base-css-image-loader');
-const meta = require('./meta.js');
+const meta = require('./meta');
 
 class IconFontPlugin extends BasePlugin {
     constructor(options) {
         options = options || {};
         super();
-
         Object.assign(this, meta);
 
         this.options = Object.assign(this.options, {
@@ -35,7 +33,7 @@ class IconFontPlugin extends BasePlugin {
 
         // this.message = {};
         this.iconFontStylePath = '';
-        this.data = {};
+        this.data = {}; // { [id]: { id, filePath, url } }
     }
     apply(compiler) {
         const addStylePath = path.resolve(__dirname, './fontface.css');
@@ -64,7 +62,7 @@ class IconFontPlugin extends BasePlugin {
         const startCodepoint = this.options.startCodepoint;
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
-        !this.watching && keys.sort();
+        !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
         keys.forEach((key, index) => {
             const file = this.data[key];
             const codepoint = (startCodepoint + index).toString(16).slice(1);
@@ -81,7 +79,7 @@ class IconFontPlugin extends BasePlugin {
         let files;
         try {
             const keys = Object.keys(this.data);
-            !this.watching && keys.sort();
+            !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
             files = keys.map((key) => this.data[key].filePath);
             files = this.handleSameName(files);
         } catch (e) {
