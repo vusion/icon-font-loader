@@ -3,30 +3,30 @@
 const { utils } = require('base-css-image-loader');
 
 utils.createFontFace = function createFontFace(font, dataURL) {
-    let output = [];
+    let src = [];
     if (dataURL) {
         const base64 = font.woff;
-        output = [`url('data:application/x-font-woff;base64,${base64}') format('woff')`];
+        src = [`url('data:application/x-font-woff;base64,${base64}') format('woff')`];
     } else {
         Object.keys(font).forEach((type) => {
             const url = font[type].url;
             if (type === 'eot')
-                output.push(`url('${url}#iefix') format('embedded-opentype')`);
+                src.push(`url('${url}#iefix') format('embedded-opentype')`);
             else if (type === 'woff')
-                output.push(`url('${url}') format('woff')`);
+                src.push(`url('${url}') format('woff')`);
             else if (type === 'ttf')
-                output.push(`url('${url}') format('truetype')`);
+                src.push(`url('${url}') format('truetype')`);
             else if (type === 'svg')
-                output.push(`url('${url}#${font.name}') format('svg')`);
+                src.push(`url('${url}#${font.name}') format('svg')`);
         });
     }
-    // output = output;
+
     return {
         fontName: font.name,
-        srcContent: output,
-        cssContent: `@font-face {
+        src,
+        content: `@font-face {
             font-family: '${font.name}';
-            src: ${output.join(',\n    ')};
+            src: ${src.join(',\n    ')};
         }`,
     };
 };

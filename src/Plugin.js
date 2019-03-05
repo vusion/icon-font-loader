@@ -31,16 +31,14 @@ class IconFontPlugin extends BasePlugin {
             fontHeight: 1000,
         }, options.fontOptions);
 
-        // this.message = {};
-        this.iconFontStylePath = '';
+        this.fontFacePath = '';
         this.data = {}; // { [id]: { id, filePath, url } }
     }
     apply(compiler) {
-        const addStylePath = path.resolve(__dirname, './fontface.css');
-        this.iconFontStylePath = addStylePath;
+        this.fontFacePath = path.resolve(__dirname, './fontface.css');
         this.plugin(compiler, 'environment', () => {
             if (this.options.auto)
-                this.RUNTIME_MODULES.push(addStylePath);
+                this.RUNTIME_MODULES.push(this.fontFacePath);
         });
         this.plugin(compiler, 'watchRun', (compiler, callback) => {
             this.watching = true;
@@ -58,7 +56,9 @@ class IconFontPlugin extends BasePlugin {
         super.apply(compiler);
     }
     afterOptimizeChunks(chunks, compilation) {
+        // Reset meta data
         Object.assign(this, meta);
+
         const startCodepoint = this.options.startCodepoint;
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
@@ -123,29 +123,30 @@ class IconFontPlugin extends BasePlugin {
                     };
                 });
             }
-            const styleContent = utils.createFontFace(font, this.options.dataURL);
+
+            const fontFace = utils.createFontFace(font, this.options.dataURL);
             if (!this.options.auto) {
                 // If auto is false, then emit a css file
                 assets[path.join(this.options.output, `${fontName}.css`)] = {
-                    source: () => styleContent.cssContent,
-                    size: () => styleContent.cssContent.length,
+                    source: () => fontFace.content,
+                    size: () => fontFace.content.length,
                 };
             }
 
-            // Record message
-            this.changeReplaceForAfterOptimizeTree(styleContent);
+            // Change replace data
+            this.changeReplaceForAfterOptimizeTree(fontFace);
             this.shouldGenerate = false;
             callback();
         });
     }
-    changeReplaceForAfterOptimizeTree(styleContent) {
+    changeReplaceForAfterOptimizeTree(fontFace) {
         this.data.fontName = {
-            content: styleContent.fontName,
-            escapedContent: styleContent.fontName,
+            content: fontFace.fontName,
+            escapedContent: fontFace.fontName,
         };
-        this.data.srcContent = {
-            content: styleContent.srcContent.join(',\n    '),
-            escapedContent: styleContent.srcContent.join(',\\n    '),
+        this.data.src = {
+            content: fontFace.src.join(',\n    '),
+            escapedContent: fontFace.src.join(',\\n    '),
         };
         this.REPLACER_RE = /ICON_FONT_LOADER_FONTFACE\(([^)]*)\)/g;
         this.MODULE_MARK = 'isFontFaceModule';
