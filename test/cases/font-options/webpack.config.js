@@ -9,6 +9,7 @@ module.exports = {
         filename: '[name].js',
         publicPath: 'dest/',
     },
+    mode: 'development',
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },

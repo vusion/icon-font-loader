@@ -12,6 +12,7 @@ module.exports = {
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },
+    mode: 'development',
     plugins: [new IconFontPlugin({
         fontName: 'awesome-font',
         output: './fonts',

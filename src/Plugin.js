@@ -47,9 +47,13 @@ class IconFontPlugin extends BasePlugin {
         this.plugin(compiler, 'thisCompilation', (compilation, params) => {
             this.plugin(compilation, 'afterOptimizeChunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
             this.plugin(compilation, 'optimizeTree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
-            this.plugin(compilation, 'afterOptimizeTree', (chunks, modules) => this.replaceInModules(chunks, compilation));
-            this.plugin(compilation, 'optimizeChunkAssets', (chunks, callback) => {
+            this.plugin(compilation, 'afterOptimizeTree', (chunks, modules) => {
                 this.changeReplaceForAfterOptimizeTree();
+                this.replaceInModules(chunks, compilation);
+            });
+            this.plugin(compilation, 'optimizeChunkAssets', (chunks, callback) => {
+                // assets source is different from module source, so set escapedContent to content;
+                this.data.src.escapedContent = this.data.src.content;
                 this.replaceInCSSAssets(chunks, compilation);
                 callback();
             });
@@ -147,7 +151,7 @@ class IconFontPlugin extends BasePlugin {
         };
         this.data.src = {
             content: fontFace.src.join(',\n    '),
-            escapedContent: fontFace.src.join(',\n    '),
+            escapedContent: fontFace.src.join(',\\n    '),
         };
         this.REPLACER_RE = /ICON_FONT_LOADER_FONTFACE\(([^)]*)\)/g;
         this.MODULE_MARK = 'isFontFaceModule';

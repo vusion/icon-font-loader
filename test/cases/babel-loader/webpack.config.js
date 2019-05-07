@@ -4,6 +4,7 @@ module.exports = {
     entry: {
         bundle: './index.js',
     },
+    mode: 'development',
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
