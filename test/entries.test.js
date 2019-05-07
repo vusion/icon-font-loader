@@ -19,7 +19,7 @@ describe('Webpack Integration Tests: entries', () => {
         shell.rm('-rf', path.resolve(__dirname, outputDirectory));
     });
 
-    it('#test webpack entry with string' + value, (done) => {
+    it('#test webpack entry with string ' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.string.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
@@ -32,7 +32,7 @@ describe('Webpack Integration Tests: entries', () => {
             done();
         });
     });
-    it('#test webpack entry with array' + value, (done) => {
+    it('#test webpack entry with array ' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.array.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
@@ -45,7 +45,7 @@ describe('Webpack Integration Tests: entries', () => {
             done();
         });
     });
-    it('#test webpack entry with function return string' + value, (done) => {
+    it('#test webpack entry with function return string ' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.function.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
@@ -58,7 +58,7 @@ describe('Webpack Integration Tests: entries', () => {
             done();
         });
     });
-    it('#test webpack entry with function return array' + value, (done) => {
+    it('#test webpack entry with function return array ' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.function.array.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
@@ -71,7 +71,7 @@ describe('Webpack Integration Tests: entries', () => {
             done();
         });
     });
-    it('#test webpack entry with object' + value, (done) => {
+    it('#test webpack entry with object ' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.object.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
@@ -84,7 +84,7 @@ describe('Webpack Integration Tests: entries', () => {
             done();
         });
     });
-    it('#test webpack entry with function return object' + value, (done) => {
+    it('#test webpack entry with function return object ' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.function.object.js']).then((res) => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
