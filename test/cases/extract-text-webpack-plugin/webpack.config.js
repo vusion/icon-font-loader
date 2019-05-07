@@ -7,8 +7,8 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dest',
-        filename: '[name].[hash].js',
-        publicPath: 'dest/',
+        filename: '[name].js',
+        publicPath: '/dest/',
     },
     module: {
         rules: [{

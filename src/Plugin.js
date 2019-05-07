@@ -49,6 +49,7 @@ class IconFontPlugin extends BasePlugin {
             this.plugin(compilation, 'optimizeTree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
             this.plugin(compilation, 'afterOptimizeTree', (chunks, modules) => this.replaceInModules(chunks, compilation));
             this.plugin(compilation, 'optimizeChunkAssets', (chunks, callback) => {
+                this.changeReplaceForAfterOptimizeTree();
                 this.replaceInCSSAssets(chunks, compilation);
                 callback();
             });
@@ -115,7 +116,6 @@ class IconFontPlugin extends BasePlugin {
                         ext: type,
                         content: result.svg,
                     }, compilation);
-
                     font[type] = { url: output.url };
                     assets[output.path] = {
                         source: () => result[type],
@@ -134,19 +134,20 @@ class IconFontPlugin extends BasePlugin {
             }
 
             // Change replace data
-            this.changeReplaceForAfterOptimizeTree(fontFace);
+            this.fontFace = fontFace;
             this.shouldGenerate = false;
             callback();
         });
     }
-    changeReplaceForAfterOptimizeTree(fontFace) {
+    changeReplaceForAfterOptimizeTree() {
+        const fontFace = this.fontFace;
         this.data.fontName = {
             content: fontFace.fontName,
             escapedContent: fontFace.fontName,
         };
         this.data.src = {
             content: fontFace.src.join(',\n    '),
-            escapedContent: fontFace.src.join(',\\n    '),
+            escapedContent: fontFace.src.join(',\n    '),
         };
         this.REPLACER_RE = /ICON_FONT_LOADER_FONTFACE\(([^)]*)\)/g;
         this.MODULE_MARK = 'isFontFaceModule';
