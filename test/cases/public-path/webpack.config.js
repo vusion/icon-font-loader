@@ -10,7 +10,7 @@ module.exports = {
         filename: '[name].js',
         publicPath: '/nce/public/',
     },
-    mode: 'development',
+    mode: 'production',
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },

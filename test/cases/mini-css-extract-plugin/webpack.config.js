@@ -11,7 +11,7 @@ module.exports = {
         filename: '[name].js',
         publicPath: '/dest',
     },
-    mode: 'development',
+    mode: 'production',
     devtool: 'source-map',
     module: {
         rules: [{

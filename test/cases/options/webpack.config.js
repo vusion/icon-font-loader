@@ -9,10 +9,10 @@ module.exports = {
         filename: '[name].js',
         publicPath: 'dest/',
     },
+    mode: 'production',
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],
     },
-    mode: 'development',
     plugins: [new IconFontPlugin({
         fontName: 'awesome-font',
         output: './fonts',

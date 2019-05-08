@@ -52,7 +52,7 @@ class IconFontPlugin extends BasePlugin {
                 this.replaceInModules(chunks, compilation);
             });
             this.plugin(compilation, 'optimizeChunkAssets', (chunks, callback) => {
-                // assets source is different from module source, so set escapedContent to content;
+                // Assets source is different from module source, so set escapedContent to content.
                 this.data.src.escapedContent = this.data.src.content;
                 this.replaceInCSSAssets(chunks, compilation);
                 callback();

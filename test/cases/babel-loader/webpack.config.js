@@ -4,13 +4,12 @@ module.exports = {
     entry: {
         bundle: './index.js',
     },
-    mode: 'development',
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
         publicPath: 'dest/',
     },
-    // mode: 'development',
+    mode: 'production',
     module: {
         rules: [{
             test: /\.js$/,

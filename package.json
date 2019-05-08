@@ -42,7 +42,7 @@
   ],
   "dependencies": {
     "@vusion/webfonts-generator": "^0.5.2",
-    "base-css-image-loader": "^0.2.4",
+    "base-css-image-loader": "^0.2.5",
     "handlebars": "^4.0.10",
     "postcss": "^6.0.16"
   },
