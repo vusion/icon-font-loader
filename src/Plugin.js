@@ -53,7 +53,8 @@ class IconFontPlugin extends BasePlugin {
             });
             this.plugin(compilation, 'optimizeChunkAssets', (chunks, callback) => {
                 // Assets source is different from module source, so set escapedContent to content.
-                this.data.src.escapedContent = this.data.src.content;
+                if (this.data.src)
+                    this.data.src.escapedContent = this.data.src.content;
                 this.replaceInCSSAssets(chunks, compilation);
                 callback();
             });
@@ -145,6 +146,9 @@ class IconFontPlugin extends BasePlugin {
     }
     changeReplaceForAfterOptimizeTree() {
         const fontFace = this.fontFace;
+        if (!fontFace)
+            return;
+
         this.data.fontName = {
             content: fontFace.fontName,
             escapedContent: fontFace.fontName,
