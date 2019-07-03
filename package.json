@@ -16,7 +16,8 @@
     "test:unit": "mocha --timeout 12000 ./test/unit.test.js",
     "test-extract": "mocha --timeout 12000 ./test/extract-text-webpack.test.js",
     "test-entry": "mocha --timeout 12000 ./test/entry.test.js",
-    "lint": "eslint ./src --fix"
+    "lint": "eslint ./src --fix",
+    "testsame": "mocha --timeout 10000 ./test/same-font.test.js"
   },
   "main": "./index.js",
   "repository": "vusion/icon-font-loader",
@@ -63,6 +64,7 @@
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
     "shelljs": "^0.8.2",
+    "speed-measure-webpack-plugin": "^1.3.1",
     "style-loader": "^0.22.1",
     "url-loader": "^0.5.9",
     "vusion-hooks": "^0.2.1",
