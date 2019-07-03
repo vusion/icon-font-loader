@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const webfontsGenerator = require('@vusion/webfonts-generator');
 const utils = require('./utils');
 const { BasePlugin } = require('base-css-image-loader');
@@ -33,6 +34,8 @@ class IconFontPlugin extends BasePlugin {
 
         this.fontFacePath = '';
         this.data = {}; // { [id]: { id, filePath, url } }
+
+        this.cache = null; // cache for last font
     }
     apply(compiler) {
         this.fontFacePath = path.resolve(__dirname, './fontface.css');
@@ -83,11 +86,15 @@ class IconFontPlugin extends BasePlugin {
             return callback();
 
         let files;
+        let md5hash;
         try {
             const keys = Object.keys(this.data);
             !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
             files = keys.map((key) => this.data[key].filePath);
+            const ids = keys.filter((key) => this.data[key].filePath)
+                .map((key) => this.data[key].id);
             files = this.handleSameName(files);
+            md5hash = crypto.createHash('md5').update(ids.join(',')).digest('hex');
         } catch (e) {
             return callback(e);
         }
@@ -98,6 +105,14 @@ class IconFontPlugin extends BasePlugin {
         const types = this.options.types;
         const fontOptions = this.options.fontOptions;
         const startCodepoint = this.options.startCodepoint;
+
+        // cache webfontsGenerator result when no change make to svg files
+        if (this.cache && this.cache.md5hash === md5hash) {
+            this.fontHandler(this.cache.result, compilation);
+            callback();
+            return;
+        }
+        this.cache = { md5hash };
         webfontsGenerator(Object.assign({
             files,
             types,
@@ -108,42 +123,50 @@ class IconFontPlugin extends BasePlugin {
         }, fontOptions), (err, result) => {
             if (err)
                 return callback(err);
-
-            const assets = compilation.assets;
-            const font = { name: fontName };
-            if (this.options.dataURL)
-                font.woff = result.woff.toString('base64');
-            else {
-                types.forEach((type) => {
-                    const output = this.getOutput({
-                        name: fontName,
-                        fontName,
-                        ext: type,
-                        content: result.svg,
-                    }, compilation);
-                    font[type] = { url: output.url };
-                    assets[output.path] = {
-                        source: () => result[type],
-                        size: () => result[type].length,
-                    };
-                });
-            }
-
-            const fontFace = utils.createFontFace(font, this.options.dataURL);
-            if (!this.options.auto) {
-                // If auto is false, then emit a css file
-                assets[path.join(this.options.output, `${fontName}.css`)] = {
-                    source: () => fontFace.content,
-                    size: () => fontFace.content.length,
-                };
-            }
-
-            // Change replace data
-            this.fontFace = fontFace;
-            this.shouldGenerate = false;
+            this.cache.result = result;
+            this.fontHandler(result, compilation);
             callback();
         });
     }
+
+    fontHandler(result, compilation) {
+        const {
+            fontName, types,
+        } = this.options;
+        const assets = compilation.assets;
+        const font = { name: fontName };
+        if (this.options.dataURL)
+            font.woff = result.woff.toString('base64');
+        else {
+            types.forEach((type) => {
+                const output = this.getOutput({
+                    name: fontName,
+                    fontName,
+                    ext: type,
+                    content: result.svg,
+                }, compilation);
+                font[type] = { url: output.url };
+                assets[output.path] = {
+                    source: () => result[type],
+                    size: () => result[type].length,
+                };
+            });
+        }
+
+        const fontFace = utils.createFontFace(font, this.options.dataURL);
+        if (!this.options.auto) {
+            // If auto is false, then emit a css file
+            assets[path.join(this.options.output, `${fontName}.css`)] = {
+                source: () => fontFace.content,
+                size: () => fontFace.content.length,
+            };
+        }
+
+        // Change replace data
+        this.fontFace = fontFace;
+        this.shouldGenerate = false;
+    }
+
     changeReplaceForAfterOptimizeTree() {
         const fontFace = this.fontFace;
         if (!fontFace)
