@@ -71,7 +71,6 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
          *     ...
          * }
          */
-        console.log(pathMap);
         const fontSelectors = [];
         styles.walkRules((rule) => {
             if (rule && rule.hasIconFont && !fontSelectors.includes(rule.selector))
