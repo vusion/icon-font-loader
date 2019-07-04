@@ -9,6 +9,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
     const promises = [];
     const plugin = loaderContext[meta.PLUGIN_NAME];
     const data = plugin.data;
+    const pathMap = plugin.pathMap;
     const property = plugin.options.property;
     const reg = /url\(["']?(.*?)["']?\)/;
 
@@ -41,6 +42,11 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
             if (!data[file.id])
                 data[file.id] = file;
 
+            if (!pathMap[filePath] || pathMap[filePath] !== file.id) {
+                pathMap[filePath] = file.id;
+                pathMap[meta.PATHMAP_CHANGED_FLAG] = true;
+            }
+
             declaration.prop = 'content';
             declaration.value = `${meta.REPLACER_NAME}(${file.id})`;
             const rule = declaration.parent;
@@ -65,6 +71,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
          *     ...
          * }
          */
+        console.log(pathMap);
         const fontSelectors = [];
         styles.walkRules((rule) => {
             if (rule && rule.hasIconFont && !fontSelectors.includes(rule.selector))
