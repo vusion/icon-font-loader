@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-// const crypto = require('crypto');
+const crypto = require('crypto');
 const webfontsGenerator = require('@vusion/webfonts-generator');
 const utils = require('./utils');
 const { BasePlugin } = require('base-css-image-loader');
@@ -36,7 +36,7 @@ class IconFontPlugin extends BasePlugin {
         this.data = {}; // { [id]: { id, filePath, url } }
 
         this.pathMap = new Map();
-        this.cacheResult = null; // cache for last font
+        this.cache = null; // cache for last font
     }
     apply(compiler) {
         this.fontFacePath = path.resolve(__dirname, './fontface.css');
@@ -87,15 +87,15 @@ class IconFontPlugin extends BasePlugin {
             return callback();
 
         let files;
-        // let md5hash;
+        let md5hash;
         try {
             const keys = Object.keys(this.data);
             !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
             files = keys.map((key) => this.data[key].filePath);
-            // const ids = keys.filter((key) => this.data[key].filePath)
-            //     .map((key) => this.data[key].id);
+            const ids = keys.filter((key) => this.data[key].filePath)
+                .map((key) => this.data[key].id);
             files = this.handleSameName(files);
-            // md5hash = crypto.createHash('md5').update(ids.join(',')).digest('hex');
+            md5hash = crypto.createHash('md5').update(ids.join(',')).digest('hex');
         } catch (e) {
             return callback(e);
         }
@@ -108,12 +108,12 @@ class IconFontPlugin extends BasePlugin {
         const startCodepoint = this.options.startCodepoint;
 
         // cache webfontsGenerator result when no change make to svg files
-        if (!this.pathMap[meta.PATHMAP_CHANGED_FLAG]) {
-            this.fontHandler(this.cacheResult, compilation);
+        if (this.cache && this.cache.md5hash === md5hash) {
+            this.fontHandler(this.cache.result, compilation);
             callback();
             return;
         }
-
+        this.cache = { md5hash };
         webfontsGenerator(Object.assign({
             files,
             types,
@@ -124,9 +124,8 @@ class IconFontPlugin extends BasePlugin {
         }, fontOptions), (err, result) => {
             if (err)
                 return callback(err);
-            this.cacheResult = result;
+            this.cache.result = result;
             this.fontHandler(result, compilation);
-            this.pathMap[meta.PATHMAP_CHANGED_FLAG] = false;
             callback();
         });
     }
