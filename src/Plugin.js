@@ -121,14 +121,7 @@ class IconFontPlugin extends BasePlugin {
             writeFiles: false,
             dest: 'build', // Required but not used
             startCodepoint,
-        }, fontOptions, {
-            formatOptions: {
-                // issue #32 eot, ttf, woff fonts generated differently every time
-                ttf: {
-                    ts: 1451512800000,
-                },
-            },
-        }), (err, result) => {
+        }, fontOptions), (err, result) => {
             if (err)
                 return callback(err);
             this.cache.result = result;

@@ -40,7 +40,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
             const fileContent = fs.readFileSync(filePath);
             file.id = 'ID' + utils.genMD5(fileContent);
             // add new file and check old mapping
-            // waring: module change can not apply to data, like delete module reference
+            // @warning: module change can not apply to data, like delete module reference
             if (!data[file.id]) {
                 data[file.id] = file;
                 if (pathMap[filePath]) {
