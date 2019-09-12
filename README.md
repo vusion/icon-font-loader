@@ -192,6 +192,14 @@ Options that are passed directly to
 - Type: `Object`
 - Default: `{}`
 
+#### entries
+
+Specify the entry that needs to be automatically inserted.
+If not specified or an empty array, styles will be inserted for all entries
+
+- Type: `Array`
+- Default: `undefined`
+
 ## Changelog
 
 See [Releases](https://github.com/vusion/icon-font-loader/releases)

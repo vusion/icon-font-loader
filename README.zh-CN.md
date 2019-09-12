@@ -177,6 +177,13 @@ unicode 的字符起始点。
 
 这个属性将直接覆盖掉[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont)的属性，可以通过这个属性设置字体图标生成后的大小及上下偏移量。
 
+#### entries
+
+指定需要插入字体文件引入css的入口，如果没有指定或者是空数组，那么将会为所有的入口插入字体引入样式。
+
+- Type: `Array`
+- Default: `undefined`
+
 ## 修改日志
 
 参见[Releases](https://github.com/vusion/icon-font-loader/releases)
