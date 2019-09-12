@@ -9,7 +9,7 @@ module.exports = {
         filename: '[name].js',
         publicPath: 'dest/',
     },
-    mode: 'development',
+    mode: 'production',
     module: {
         rules: [{
             test: /\.css$/,

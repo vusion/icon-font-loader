@@ -4,14 +4,13 @@ module.exports = {
     entry: {
         bundle: './index.js',
     },
-    devtool: 'eval',
-    mode: 'development',
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
         publicPath: 'dest/',
     },
-    // mode: 'development',
+    mode: 'development',
+    devtool: 'eval',
     module: {
         rules: [{
             test: /\.css$/,
@@ -24,27 +23,27 @@ module.exports = {
                 loader: require.resolve('css-loader'),
                 options: {
                     sourceMap: true,
-                }
-            },]
-            }, {
-                test: /\.scss$/,
-                use: [{
-                    loader: require.resolve('style-loader'),
-                    options: {
-                        sourceMap: true,
-                    },
-                }, {
-                    loader: require.resolve('css-loader'),
-                    options: {
-                        sourceMap: true,
-                    }
                 },
-                require.resolve('../../../index'),
-                {
-                    loader: require.resolve('sass-loader'),
-                    options: {
-                        sourceMap: true,
-                    }
+            }],
+        }, {
+            test: /\.scss$/,
+            use: [{
+                loader: require.resolve('style-loader'),
+                options: {
+                    sourceMap: true,
+                },
+            }, {
+                loader: require.resolve('css-loader'),
+                options: {
+                    sourceMap: true,
+                },
+            },
+            require.resolve('../../../index'),
+            {
+                loader: require.resolve('sass-loader'),
+                options: {
+                    sourceMap: true,
+                },
             }],
         }],
     },

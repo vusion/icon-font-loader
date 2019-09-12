@@ -1,7 +1,7 @@
 {
   "name": "icon-font-loader",
   "description": "A webpack loader to convert svgs into font icons in CSS",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "moujintao <moujintaotest@163.com>",
   "contributors": [
     "Rainfore <rainforest92@126.com>",
@@ -14,8 +14,9 @@
     "precommit": "node node_modules/vusion-hooks/precommit",
     "test": "mocha --timeout 5000 ./test/final.test.js",
     "test:unit": "mocha --timeout 12000 ./test/unit.test.js",
-    "test-extract": "mocha --timeout 12000 ./test/extract-text-webpack.test.js",
-    "test-entry": "mocha --timeout 12000 ./test/entry.test.js",
+    "test:extract": "mocha --timeout 12000 ./test/extract-text-webpack.test.js",
+    "test:entry": "mocha --timeout 12000 ./test/entry.test.js",
+    "test:same": "mocha --timeout 10000 ./test/same-font.test.js",
     "lint": "eslint ./src --fix"
   },
   "main": "./index.js",
@@ -41,8 +42,8 @@
     "loader"
   ],
   "dependencies": {
-    "@vusion/webfonts-generator": "^0.5.2",
-    "base-css-image-loader": "^0.2.4",
+    "@vusion/webfonts-generator": "^0.5.3",
+    "base-css-image-loader": "^0.2.5",
     "handlebars": "^4.0.10",
     "postcss": "^6.0.16"
   },
@@ -63,6 +64,7 @@
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
     "shelljs": "^0.8.2",
+    "speed-measure-webpack-plugin": "^1.3.1",
     "style-loader": "^0.22.1",
     "url-loader": "^0.5.9",
     "vusion-hooks": "^0.2.1",

@@ -9,6 +9,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
     const promises = [];
     const plugin = loaderContext[meta.PLUGIN_NAME];
     const data = plugin.data;
+    const pathMap = plugin.pathMap;
     const property = plugin.options.property;
     const reg = /url\(["']?(.*?)["']?\)/;
 
@@ -38,8 +39,17 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
             // Using file content hash instead of absolute file path can prevent cache buster changed.
             const fileContent = fs.readFileSync(filePath);
             file.id = 'ID' + utils.genMD5(fileContent);
-            if (!data[file.id])
+            // add new file and check old mapping
+            // @warning: module change can not apply to data, like delete module reference
+            if (!data[file.id]) {
                 data[file.id] = file;
+                if (pathMap[filePath]) {
+                    const id = pathMap[filePath];
+                    data[id] = undefined;
+                    delete data[id];
+                }
+                pathMap[filePath] = file.id;
+            }
 
             declaration.prop = 'content';
             declaration.value = `${meta.REPLACER_NAME}(${file.id})`;

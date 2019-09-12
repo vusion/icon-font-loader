@@ -4,12 +4,12 @@ module.exports = {
     entry: {
         bundle: './index.js',
     },
-    mode: 'development',
     output: {
         path: __dirname + '/dest',
         filename: '[name].js',
         publicPath: 'dest/',
     },
+    mode: 'production',
     devtool: 'source-map',
     module: {
         rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader', require.resolve('../../../index')] }],

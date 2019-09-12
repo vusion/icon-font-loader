@@ -19,11 +19,10 @@ describe('Webpack Integration Tests: public-path', () => {
         shell.rm('-rf', path.resolve(__dirname, outputDirectory));
     });
 
-    it('#test webpack public-path with string' + value, (done) => {
+    it('#test webpack public-path with string ' + value, (done) => {
         execa(buildCLI, ['--config', './webpack.config.js']).then((res) => {
-            const resultReg = /http:\/\/cdn.163.com\/cdn\/static\/icon-font.ttf/g;
             const cssContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/bundle.js')).toString();
-            expect(resultReg.test(cssContent)).to.be.true;
+            expect(cssContent.includes('http://cdn.163.com/cdn/static/icon-font.ttf')).to.be.true;
             done();
         });
     });
