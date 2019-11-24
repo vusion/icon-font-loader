@@ -1,0 +1,19 @@
+.icon-arrow-left::before {
+    icon-font: url('../../fixtures/icons/arrow-left.svg');
+    color: red;
+}
+
+.icon-arrow-left-2::before {
+    icon-font: url('../../fixtures/icons/same-name/slice.svg');
+    color: red;
+}
+
+.icon-arrow-up::before {
+    icon-font: url('../../fixtures/icons/same-name/arrow-right.svg');
+    color: green;
+}
+
+.icon-arrow-up-1::before {
+    icon-font: url('../../fixtures/icons/same-name/arrow-right.svg');
+    color: green;
+}

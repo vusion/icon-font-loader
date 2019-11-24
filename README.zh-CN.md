@@ -137,8 +137,53 @@ module.exports = {
 
 局部 CSS 虚拟属性转换后内容, 接受模板内容而不是模板文件的路径。
 
+如果设置该选项值为空，则不会生成局部 CSS。
+
 - Type: `string`
 - Default: [global.css.hbs的内容](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
+
+比如，该模板变量会生成下面 CSS 规则中的内容。
+
+``` css
+.icon-1::before, .icon-2::before .icon-3::before {
+    font-family: '{{ fontName }}';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: inherit;
+    text-rendering: optimizeLegibility;
+    text-transform: none;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+```
+
+#### localCSSSelector
+
+局部 CSS 的选择器默认是当前文件所有图标选择器的合并。
+
+如果设置该选项，默认的选择器会被设置的值代替。
+
+- Type: `string`
+- Default: `''`
+
+举例说明，比如设置该选项为`'.my-icon'`, 局部 CSS 会生成成下面的代码:
+
+``` css
+.my-icon {
+    font-family: '{{ fontName }}';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: inherit;
+    text-rendering: optimizeLegibility;
+    text-transform: none;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+```
 
 #### property
 

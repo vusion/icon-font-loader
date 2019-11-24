@@ -65,7 +65,6 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
         loaderContext._module[meta.MODULE_MARK] = true;
     }
 
-    const template = handlebars.compile(plugin.options.localCSSTemplate);
     return Promise.all(promises).then(() => {
         /**
          * Merge selectors
@@ -75,15 +74,20 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
          *     ...
          * }
          */
+        if (!plugin.options.localCSSTemplate) // Empty will disable insert this css rule
+            return;
+        const template = handlebars.compile(plugin.options.localCSSTemplate);
+
         const fontSelectors = [];
         styles.walkRules((rule) => {
             if (rule && rule.hasIconFont && !fontSelectors.includes(rule.selector))
                 fontSelectors.push(rule.selector);
         });
+        const localCSSSelector = plugin.options.localCSSSelector || fontSelectors.join(',');
 
-        const localCSS = template({ fontName: plugin.options.fontName });
-        if (fontSelectors.length && localCSS !== '') {
-            styles.insertBefore(styles.first, `${fontSelectors.join(',')} {${localCSS}\n}`);
+        if (localCSSSelector) {
+            const localCSS = template({ fontName: plugin.options.fontName });
+            styles.insertBefore(styles.first, `${localCSSSelector} {\n${localCSS}\n}`);
         }
     });
 });

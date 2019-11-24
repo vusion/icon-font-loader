@@ -151,8 +151,53 @@ Font public path in css url, same as webpack output.publicPath. This option is f
 
 Template of virtual property transformed local CSS. It accepts template content instead of a template file path。
 
+If set empty, local CSS won't be generated.
+
 - Type: `string`
 - Default: [content of global.css.hbs](https://github.com/vusion/icon-font-loader/blob/master/src/global.css.hbs)
+
+For example, this template generate content inside the following rule:
+
+``` css
+.icon-1::before, .icon-2::before .icon-3::before {
+    font-family: '{{ fontName }}';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: inherit;
+    text-rendering: optimizeLegibility;
+    text-transform: none;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+```
+
+#### localCSSSelector
+
+Font selector of local CSS defaults to selectors concatenation of all icons in a file.
+
+If set this option, selector will be specified as the value.
+
+- Type: `string`
+- Default: `''`
+
+For example, if set this option `'.my-icon'`, local CSS will be like this:
+
+``` css
+.my-icon {
+    font-family: '{{ fontName }}';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: inherit;
+    text-rendering: optimizeLegibility;
+    text-transform: none;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+```
 
 #### property
 

@@ -14,6 +14,7 @@
     "precommit": "node node_modules/vusion-hooks/precommit",
     "test": "mocha --timeout 5000 ./test/final.test.js",
     "test:unit": "mocha --timeout 12000 ./test/unit.test.js",
+    "test:integration": "mocha --timeout 12000 ./test/integration.test.js",
     "test:extract": "mocha --timeout 12000 ./test/extract-text-webpack.test.js",
     "test:entry": "mocha --timeout 12000 ./test/entry.test.js",
     "test:same": "mocha --timeout 10000 ./test/same-font.test.js",

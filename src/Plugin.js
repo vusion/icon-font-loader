@@ -22,6 +22,7 @@ class IconFontPlugin extends BasePlugin {
             fontName: 'icon-font',
             types: ['ttf', 'eot', 'woff', 'svg'], // @bug: webfonts-generator
             localCSSTemplate: fs.readFileSync(path.resolve(__dirname, 'local.css.hbs'), 'utf8'),
+            localCSSSelector: '',
             auto: true,
             dataURL: false,
             mergeDuplicates: false,
