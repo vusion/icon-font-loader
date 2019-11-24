@@ -81,10 +81,9 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
                 fontSelectors.push(rule.selector);
         });
 
-        if (fontSelectors.length) {
-            let localCSS = template({ fontName: plugin.options.fontName });
-            localCSS = `${fontSelectors.join(',')} {${localCSS}\n}`;
-            styles.insertBefore(styles.first, localCSS);
+        const localCSS = template({ fontName: plugin.options.fontName });
+        if (fontSelectors.length && localCSS !== '') {
+            styles.insertBefore(styles.first, `${fontSelectors.join(',')} {${localCSS}\n}`);
         }
     });
 });
