@@ -83,7 +83,18 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
             if (rule && rule.hasIconFont && !fontSelectors.includes(rule.selector))
                 fontSelectors.push(rule.selector);
         });
-        const localCSSSelector = plugin.options.localCSSSelector || fontSelectors.join(',');
+        let localCSSSelector = plugin.options.localCSSSelector;
+        if (!localCSSSelector) {
+            if (plugin.options.smartSelector) {
+                const selectorMap = {};
+                fontSelectors.forEach((selector) => {
+                    selector = selector.replace(/\[.*?\]/g, '');
+                    selectorMap[selector] = true;
+                });
+                localCSSSelector = Object.keys(selectorMap).join(',');
+            } else
+                localCSSSelector = fontSelectors.join(',');
+        }
 
         if (localCSSSelector) {
             const localCSS = template({ fontName: plugin.options.fontName });

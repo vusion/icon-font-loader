@@ -23,6 +23,7 @@ class IconFontPlugin extends BasePlugin {
             types: ['ttf', 'eot', 'woff', 'svg'], // @bug: webfonts-generator
             localCSSTemplate: fs.readFileSync(path.resolve(__dirname, 'local.css.hbs'), 'utf8'),
             localCSSSelector: '',
+            smartSelector: false, // experimental
             auto: true,
             dataURL: false,
             mergeDuplicates: false,
@@ -31,6 +32,8 @@ class IconFontPlugin extends BasePlugin {
 
         this.options.fontOptions = Object.assign({
             fontHeight: 1000,
+            descent: 140,
+            centerHorizontally: true,
         }, options.fontOptions);
 
         this.fontFacePath = '';
