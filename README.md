@@ -234,8 +234,17 @@ Starting codepoint. Defaults to beginning of unicode private area.
 Options that are passed directly to
 [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
 
+The `descent` option is set by default so that for most icons no extra `vertical-align` style needs to be added. It's a best practice.
+
 - Type: `Object`
-- Default: `{}`
+- Default:
+  ``` js
+  {
+    fontHeight: 1000,
+    descent: 140,
+    centerHorizontally: true,
+  }
+  ```
 
 #### entries
 

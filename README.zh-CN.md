@@ -217,10 +217,19 @@ unicode 的字符起始点。
 
 #### fontOptions
 
-- Type: `Object`
-- Default: `{}`
+这个属性将直接传入[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont)。
 
-这个属性将直接覆盖掉[svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont)的属性，可以通过这个属性设置字体图标生成后的大小及上下偏移量。
+默认设置了`descent`字体基线选项，这样对于大部分图标来说，不用额外添加`vertical-align`样式。这是一个最佳实践。
+
+- Type: `Object`
+- Default:
+  ``` js
+  {
+    fontHeight: 1000,
+    descent: 140,
+    centerHorizontally: true,
+  }
+  ```
 
 #### entries
 
