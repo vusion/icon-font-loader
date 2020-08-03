@@ -76,7 +76,7 @@ class IconFontPlugin extends BasePlugin {
         const startCodepoint = this.options.startCodepoint;
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
-        !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
+        // !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
         keys.forEach((key, index) => {
             const file = this.data[key];
             const codepoint = (startCodepoint + index).toString(16).slice(1);
@@ -94,7 +94,7 @@ class IconFontPlugin extends BasePlugin {
         let md5hash;
         try {
             const keys = Object.keys(this.data);
-            !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
+            // !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
             files = keys.map((key) => this.data[key].filePath);
             const ids = keys.filter((key) => this.data[key].filePath)
                 .map((key) => this.data[key].id);
