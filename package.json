@@ -46,7 +46,9 @@
     "@vusion/webfonts-generator": "^0.6.0",
     "base-css-image-loader": "^0.2.5",
     "handlebars": "^4.0.10",
-    "postcss": "^6.0.16"
+    "postcss": "^6.0.16",
+    "punycode": "^2.1.1",
+    "underscore": "^1.10.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

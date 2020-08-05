@@ -7,6 +7,8 @@ const webfontsGenerator = require('@vusion/webfonts-generator');
 const utils = require('./utils');
 const { BasePlugin } = require('base-css-image-loader');
 const meta = require('./meta');
+const _ = require('underscore');
+const { ucs2 } = require('punycode');
 
 class IconFontPlugin extends BasePlugin {
     constructor(options) {
@@ -74,15 +76,34 @@ class IconFontPlugin extends BasePlugin {
         Object.assign(this, meta);
 
         const startCodepoint = this.options.startCodepoint;
+        // 同步 font generate 中 关于 unicode 的算法
+        // from webfonts-generator
+        let currentCodepoint = startCodepoint;
+        const codepoints = {};
+        function getNextCodepoint() {
+            const codepointsValues = _.values(codepoints);
+            while (_.contains(codepointsValues, currentCodepoint)) {
+                currentCodepoint++;
+            }
+            const res = currentCodepoint;
+            currentCodepoint++;
+            return res;
+        }
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
         !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
         keys.forEach((key, index) => {
             const file = this.data[key];
-            const codepoint = (startCodepoint + index).toString(16).slice(1);
+            if (!codepoints[key]) {
+                codepoints[key] = getNextCodepoint();
+            }
+            // from svgicons2svgfont
+            const codepoint = codepoints[key];
+            const unicode = String.fromCharCode(codepoint);
+            const unicodeStr = ucs2.decode(unicode).map((point) => point.toString(16).toUpperCase()).join('');
             file.codepoint = codepoint;
-            file.content = `'\\F${codepoint}'`;
-            file.escapedContent = `\\'\\\\F${codepoint}\\'`;
+            file.content = `'\\${unicodeStr}'`;
+            file.escapedContent = `\\'\\\\${unicodeStr}'`;
         });
     }
     optimizeTree(compilation, chunks, modules, callback) {
