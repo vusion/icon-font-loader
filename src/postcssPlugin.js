@@ -88,7 +88,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
             if (plugin.options.smartSelector) {
                 const selectorMap = {};
                 fontSelectors.forEach((selector) => {
-                    selector = selector.replace(/\[.*?\]/g, '');
+                    selector = selector.replace(/\[.*?\](?!\))/g, '');
                     selectorMap[selector] = true;
                 });
                 localCSSSelector = Object.keys(selectorMap).join(',');
