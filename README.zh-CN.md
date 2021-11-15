@@ -11,6 +11,8 @@
 ``` css
 .select:after {
     icon-font: url('../icons/arrow-down.svg');
+    /* 自定义字体 unicode */
+    /* icon-font: url('../icons/arrow-down.svg') '\ff12'; */
     color: #666;
 }
 ```
@@ -24,6 +26,7 @@
     font-weight: normal;
     ...
     content: '\f106';
+    /* content: '\ff12'; */
     color: #666;
 }
 ```
