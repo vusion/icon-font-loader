@@ -12,6 +12,8 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
     const pathMap = plugin.pathMap;
     const property = plugin.options.property;
     const reg = /url\(["']?(.*?)["']?\)/;
+    // Get custom unicode
+    const unicodeReg = /url\(["']?(.*?)["']?\) ["']?([A-Fa-f0-9]{4})["']?/;
 
     if (plugin.fontFacePath === loaderContext.resourcePath) {
         loaderContext._module.isFontFaceModule = true;
@@ -21,6 +23,8 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
     styles.walkDecls(property, (declaration) => {
         const cap = reg.exec(declaration.value);
         const url = cap[1];
+        const unicodeCap = unicodeReg.exec(declaration.value);
+        const unicode = unicodeCap ? `_${unicodeCap[2]}` : '';
 
         if (path.extname(url) !== '.svg')
             throw new Error(`Image format of '${url}' is not accepted. Please use a svg instead.`);
@@ -38,7 +42,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
 
             // Using file content hash instead of absolute file path can prevent cache buster changed.
             const fileContent = fs.readFileSync(filePath);
-            file.id = 'ID' + utils.genMD5(fileContent);
+            file.id = `ID${utils.genMD5(fileContent)}${unicode}`;
             // add new file and check old mapping
             // @warning: module change can not apply to data, like delete module reference
             if (!data[file.id]) {
