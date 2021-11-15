@@ -1,7 +1,7 @@
 {
   "name": "icon-font-loader",
   "description": "A webpack loader to convert svgs into font icons in CSS",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "author": "moujintao <moujintaotest@163.com>",
   "contributors": [
     "Rainfore <rainforest92@126.com>",
