@@ -11,8 +11,7 @@
 ``` css
 .select:after {
     icon-font: url('../icons/arrow-down.svg');
-    /* 自定义字体 unicode */
-    /* icon-font: url('../icons/arrow-down.svg') '\ff12'; */
+    /* icon-font: url('../icons/arrow-down.svg') '\ff12'; */ /* 指定最终的 unicode */
     color: #666;
 }
 ```
@@ -26,7 +25,7 @@
     font-weight: normal;
     ...
     content: '\f106';
-    /* content: '\ff12'; */
+    /* content: '\ff12'; */ /* 指定最终的 unicode */
     color: #666;
 }
 ```

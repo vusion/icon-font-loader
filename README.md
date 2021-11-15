@@ -25,8 +25,7 @@ Import svg file with a custom property called `icon-font` by default where you w
 ``` css
 .select:after {
     icon-font: url('../icons/arrow-down.svg');
-    /* custom unicode */
-    /* icon-font: url('../icons/arrow-down.svg') '\ff12'; */
+    /* icon-font: url('../icons/arrow-down.svg') '\ff12'; */ /* Specify final unicode */
     color: #666;
 }
 ```
@@ -40,7 +39,7 @@ Then `icon-font-loader` will generate corresponding css so web browsers can reco
     font-weight: normal;
     ...
     content: '\f106';
-    /* content: '\ff12'; */
+    /* content: '\ff12'; */ /* Specify final unicode */
     color: #666;
 }
 ```

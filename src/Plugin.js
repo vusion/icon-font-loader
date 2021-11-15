@@ -78,7 +78,7 @@ class IconFontPlugin extends BasePlugin {
         // When watching, webpack module may be cached, so file list should be kept same as before.
         const keys = Object.keys(this.data);
         !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
-        const unicodeReg = /_([A-Fa-f0-9]{4})/; // Get custom unicode
+        const unicodeReg = /_([A-Fa-f0-9]{4})/; // Get specified unicode
         keys.forEach((key, index) => {
             const file = this.data[key];
             const codepoint = startCodepoint + index;
