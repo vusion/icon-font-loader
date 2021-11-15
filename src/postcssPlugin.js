@@ -13,7 +13,7 @@ module.exports = postcss.plugin('icon-font-parser', ({ loaderContext }) => (styl
     const property = plugin.options.property;
     const reg = /url\(["']?(.*?)["']?\)/;
     // Get custom unicode
-    const unicodeReg = /url\(["']?(.*?)["']?\) ["']?([A-Fa-f0-9]{4})["']?/;
+    const unicodeReg = /url\(["']?(.*?)["']?\) ["']?\\([A-Fa-f0-9]{4})["']?/;
 
     if (plugin.fontFacePath === loaderContext.resourcePath) {
         loaderContext._module.isFontFaceModule = true;

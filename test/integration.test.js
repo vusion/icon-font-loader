@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
-const cases = ['default', 'more-css', 'same-name', 'options', 'public-path', 'property', 'custom-selector', 'font-options', 'html-webpack-plugin', 'sass-loader'];
+const cases = ['default', 'more-css', 'same-name', 'options', 'public-path', 'property', 'custom-selector', 'custom-unicode', 'font-options', 'html-webpack-plugin', 'sass-loader'];
 
 describe('Webpack Integration Tests', () => {
     cases.forEach((caseName) => {

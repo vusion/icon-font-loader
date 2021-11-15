@@ -1,0 +1,9 @@
+.icon-arrow-left::before {
+    icon-font: url('../../fixtures/icons/arrow-left.svg') '\FFFE';
+    color: red;
+}
+
+.icon-arrow-up::before {
+    icon-font: url('../../fixtures/icons/arrow-up.svg') '\FFFF';
+    color: blue;
+}
