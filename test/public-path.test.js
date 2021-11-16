@@ -1,27 +1,17 @@
 const fs = require('fs');
 const path = require('path');
-const webpack = require('webpack');
+const runWebpack = require('base-css-image-loader/test/fixtures/runWebpack');
 const expect = require('chai').expect;
-const utils = require('../src/utils');
-const shell = require('shelljs');
-const execa = require('execa');
 
-const value = 'public-path';
+const caseName = 'public-path';
 
-describe('Webpack Integration Tests: public-path', () => {
-    const buildCLI = path.resolve(__dirname, '../node_modules/.bin/webpack');
-    const runDir = path.join('../test/cases/' + value);
-    const outputDirectory = path.join('./cases/' + value + '/dest');
-    before(() => {
-        shell.cd(path.resolve(__dirname, runDir));
-    });
-    afterEach(() => {
-        shell.rm('-rf', path.resolve(__dirname, outputDirectory));
-    });
+describe(`Webpack Integration Tests: ${caseName}`, () => {
+    it('#test webpack public-path with string ' + caseName, (done) => {
+        runWebpack(caseName, { casesPath: path.resolve(__dirname, './cases') }, (err, data) => {
+            if (err)
+                return done(err);
 
-    it('#test webpack public-path with string ' + value, (done) => {
-        execa(buildCLI, ['--config', './webpack.config.js']).then((res) => {
-            const cssContent = fs.readFileSync(path.resolve(__dirname, outputDirectory + '/bundle.js')).toString();
+            const cssContent = fs.readFileSync(path.resolve(data.outputPath, 'bundle.js')).toString();
             expect(cssContent.includes('http://cdn.163.com/cdn/static/icon-font.ttf')).to.be.true;
             done();
         });
