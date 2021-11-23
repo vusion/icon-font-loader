@@ -16,7 +16,7 @@ describe('Unit tests', () => {
             path.resolve(__dirname, './fixtures/icons/arrow-up.svg'),
         ];
         const result = plugin.handleSameName(files);
-        expect(result).to.eql(files);
+        expect(result.files).to.eql(files);
         done();
     });
     it('#function handleSameName file list have same name test', (done) => {
@@ -27,11 +27,11 @@ describe('Unit tests', () => {
             path.resolve(__dirname, './fixtures/icons/arrow-up.svg'),
         ];
         const result = plugin.handleSameName(files);
-        const file = result[1];
+        const file = result.files[1];
         // file.metadata = { name: 'arrow-left-1' };
         if (!(file instanceof fs.ReadStream))
             throw new Error('don\'t create a ReadStream for same name svg file');
-        expect(result).to.eql([
+        expect(result.files).to.eql([
             path.resolve(__dirname, './fixtures/icons/arrow-left.svg'),
             file,
             path.resolve(__dirname, './fixtures/icons/arrow-right.svg'),
