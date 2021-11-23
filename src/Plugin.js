@@ -81,11 +81,12 @@ class IconFontPlugin extends BasePlugin {
         const unicodeReg = /_([A-Fa-f0-9]{4})/; // Get specified unicode
         keys.forEach((key, index) => {
             const file = this.data[key];
-            const codepoint = startCodepoint + index;
+            let codepoint = startCodepoint + index;
             const unicodeCap = unicodeReg.exec(key);
             let unicodeStr;
             if (unicodeCap) {
-                unicodeStr = unicodeCap[1];
+                unicodeStr = unicodeCap[1].toUpperCase();
+                codepoint = parseInt(`0x${unicodeStr}`);
             } else {
                 const unicode = String.fromCharCode(codepoint);
                 unicodeStr = ucs2.decode(unicode).map((point) => point.toString(16).toUpperCase()).join('');
@@ -102,13 +103,17 @@ class IconFontPlugin extends BasePlugin {
 
         let files;
         let md5hash;
+        let codepointMap = {};
         try {
             const keys = Object.keys(this.data);
             !this.watching && keys.sort(); // Make sure same cachebuster in uncertain file loaded order
             files = keys.map((key) => this.data[key].filePath);
+            const codepoints = keys.map((key) => this.data[key].codepoint);
             const ids = keys.filter((key) => this.data[key].filePath)
                 .map((key) => this.data[key].id);
-            files = this.handleSameName(files);
+            const result = this.handleSameName(files, codepoints);
+            codepointMap = result.codepointMap;
+            files = result.files;
             md5hash = crypto.createHash('md5').update(ids.join(',')).digest('hex');
         } catch (e) {
             return callback(e);
@@ -135,6 +140,7 @@ class IconFontPlugin extends BasePlugin {
             writeFiles: false,
             dest: 'build', // Required but not used
             startCodepoint,
+            codepoints: codepointMap,
         }, fontOptions), (err, result) => {
             if (err)
                 return callback(err);
@@ -198,9 +204,10 @@ class IconFontPlugin extends BasePlugin {
         this.REPLACER_RE = /ICON_FONT_LOADER_FONTFACE\(([^)]*)\)/g;
         this.MODULE_MARK = 'isFontFaceModule';
     }
-    handleSameName(files) {
+    handleSameName(files, codepoints = []) {
         const names = {};
-        const result = [];
+        const uniqueFiles = [];
+        const codepointMap = {};
 
         const getUniqueName = (name) => {
             let num = 1;
@@ -209,7 +216,7 @@ class IconFontPlugin extends BasePlugin {
             return `${name}-${num}`;
         };
 
-        files.forEach((file) => {
+        files.forEach((file, index) => {
             if (!fs.existsSync(file))
                 file = path.resolve(__dirname, 'empty.svg');
             let name = path.basename(file, '.svg');
@@ -218,12 +225,14 @@ class IconFontPlugin extends BasePlugin {
                 name = getUniqueName(name);
                 file.metadata = { name };
             }
-
+            if (codepoints && codepoints.length > index) {
+                codepointMap[name] = codepoints[index];
+            }
             names[name] = true;
-            result.push(file);
+            uniqueFiles.push(file);
         });
 
-        return result;
+        return { files: uniqueFiles, codepointMap };
     }
 }
 
