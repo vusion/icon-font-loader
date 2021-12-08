@@ -54,18 +54,22 @@ class IconFontPlugin extends BasePlugin {
             callback();
         });
         this.plugin(compiler, 'thisCompilation', (compilation, params) => {
+            const useLegacy = !('processAssets' in compilation.hooks);
+
             this.plugin(compilation, 'afterOptimizeChunks', (chunks) => this.afterOptimizeChunks(chunks, compilation));
             this.plugin(compilation, 'optimizeTree', (chunks, modules, callback) => this.optimizeTree(compilation, chunks, modules, callback));
             this.plugin(compilation, 'afterOptimizeTree', (chunks, modules) => {
                 this.changeReplaceForAfterOptimizeTree();
                 this.replaceInModules(chunks, compilation);
             });
-            this.plugin(compilation, 'optimizeChunkAssets', (chunks, callback) => {
+            this.plugin(compilation, useLegacy ? 'optimizeChunkAssets' : 'processAssets', (compilationAssets, callback) => {
                 // Assets source is different from module source, so set escapedContent to content.
                 if (this.data.src)
                     this.data.src.escapedContent = this.data.src.content;
-                this.replaceInCSSAssets(chunks, compilation);
-                callback();
+                this.replaceInCSSAssets(compilation.chunks, compilation);
+                callback && callback();
+            }, !useLegacy && {
+                stage: compilation.PROCESS_ASSETS_STAGE_OPTIMIZE,
             });
         });
         super.apply(compiler);
@@ -151,10 +155,12 @@ class IconFontPlugin extends BasePlugin {
     }
 
     fontHandler(result, compilation) {
+        const { webpack = false } = compilation.compiler;
+        const { RawSource } = webpack ? webpack.sources : { RawSource: require('webpack-sources').RawSource };
+
         const {
             fontName, types,
         } = this.options;
-        const assets = compilation.assets;
         const font = { name: fontName };
         if (this.options.dataURL)
             font.woff = result.woff.toString('base64');
@@ -167,20 +173,19 @@ class IconFontPlugin extends BasePlugin {
                     content: result.svg,
                 }, compilation);
                 font[type] = { url: output.url };
-                assets[output.path] = {
-                    source: () => result[type],
-                    size: () => result[type].length,
-                };
+
+                this.emitAsset(compilation, output.path, new RawSource(result[type]));
             });
         }
 
         const fontFace = utils.createFontFace(font, this.options.dataURL);
         if (!this.options.auto) {
             // If auto is false, then emit a css file
-            assets[path.join(this.options.output, `${fontName}.css`)] = {
-                source: () => fontFace.content,
-                size: () => fontFace.content.length,
-            };
+            this.emitAsset(
+                compilation,
+                path.join(this.options.output, `${fontName}.css`),
+                new RawSource(fontFace.content)
+            );
         }
 
         // Change replace data

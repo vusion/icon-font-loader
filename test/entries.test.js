@@ -1,14 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 const expect = require('chai').expect;
-const utils = require('../src/utils');
 const shell = require('shelljs');
-const execa = require('execa');
+const _runWebpack = require('base-css-image-loader/test/fixtures/runWebpack');
 
 const caseName = 'entries';
 
+const runWebpack = (webpackConfig, done) => {
+    _runWebpack(
+        caseName,
+        {
+            casesPath: path.resolve(__dirname, './cases'),
+            webpackConfig
+        },
+        () => done()
+    )
+}
+
 describe(`Webpack Integration Tests: ${caseName}`, () => {
-    const buildCLI = path.resolve(__dirname, '../node_modules/.bin/webpack');
     const runDir = path.join('../test/cases/' + caseName);
     const outputDirectory = path.join('./cases/' + caseName + '/dest');
     before(() => {
@@ -19,7 +28,7 @@ describe(`Webpack Integration Tests: ${caseName}`, () => {
     });
 
     it('#test webpack entry with string ' + caseName, (done) => {
-        execa(buildCLI, ['--config', './webpack.config.string.js']).then((res) => {
+        runWebpack(require(`./cases/${caseName}/webpack.config.string.js`) , () => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
                 'icon-font.eot',
@@ -32,7 +41,7 @@ describe(`Webpack Integration Tests: ${caseName}`, () => {
         });
     });
     it('#test webpack entry with array ' + caseName, (done) => {
-        execa(buildCLI, ['--config', './webpack.config.array.js']).then((res) => {
+        runWebpack(require(`./cases/${caseName}/webpack.config.array.js`), () => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
                 'icon-font.eot',
@@ -45,7 +54,7 @@ describe(`Webpack Integration Tests: ${caseName}`, () => {
         });
     });
     it('#test webpack entry with function return string ' + caseName, (done) => {
-        execa(buildCLI, ['--config', './webpack.config.function.js']).then((res) => {
+        runWebpack(require(`./cases/${caseName}/webpack.config.function.js`), () => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
                 'icon-font.eot',
@@ -58,7 +67,7 @@ describe(`Webpack Integration Tests: ${caseName}`, () => {
         });
     });
     it('#test webpack entry with function return array ' + caseName, (done) => {
-        execa(buildCLI, ['--config', './webpack.config.function.array.js']).then((res) => {
+        runWebpack(require(`./cases/${caseName}/webpack.config.function.array.js`), () => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
                 'icon-font.eot',
@@ -71,7 +80,7 @@ describe(`Webpack Integration Tests: ${caseName}`, () => {
         });
     });
     it('#test webpack entry with object ' + caseName, (done) => {
-        execa(buildCLI, ['--config', './webpack.config.object.js']).then((res) => {
+        runWebpack(require(`./cases/${caseName}/webpack.config.object.js`), () => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
                 'bundle.js',
@@ -84,7 +93,7 @@ describe(`Webpack Integration Tests: ${caseName}`, () => {
         });
     });
     it('#test webpack entry with function return object ' + caseName, (done) => {
-        execa(buildCLI, ['--config', './webpack.config.function.object.js']).then((res) => {
+        runWebpack(require(`./cases/${caseName}/webpack.config.function.object.js`), () => {
             const files = fs.readdirSync(path.resolve(__dirname, outputDirectory));
             expect(files).to.eql([
                 'bundle.js',

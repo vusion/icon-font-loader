@@ -16,9 +16,6 @@ module.exports = {
             test: /\.css$/,
             use: [{
                 loader: require.resolve('style-loader'),
-                options: {
-                    sourceMap: true,
-                },
             }, {
                 loader: require.resolve('css-loader'),
                 options: {
@@ -29,9 +26,6 @@ module.exports = {
             test: /\.scss$/,
             use: [{
                 loader: require.resolve('style-loader'),
-                options: {
-                    sourceMap: true,
-                },
             }, {
                 loader: require.resolve('css-loader'),
                 options: {

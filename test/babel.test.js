@@ -7,7 +7,7 @@ const caseName = 'babel-loader';
 const replaceReg = /\$\{ICON_FONT_STYLE\}/g;
 
 describe(`Webpack Integration Tests: ${caseName}`, () => {
-    it('#test webpack babel case' + caseName, (done) => {
+    it('#test webpack babel case: ' + caseName, (done) => {
         runWebpack(caseName, { casesPath: path.resolve(__dirname, './cases') }, (err, data) => {
             if (err)
                 return done(err);
